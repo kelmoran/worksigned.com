@@ -73,7 +73,9 @@
             <p class="section-lead">
                 WorkSigned is built as an <strong>Equitable Corporation</strong> &mdash; a company
                 structure we designed so its core promises are <em>locked at inception</em>,
-                not a policy that can be quietly revised later. What you see below cannot be
+                not a policy that can be quietly revised later. The platform is <em>user-auditable</em>:
+                public logs and open financials mean you can check the commitments for yourself,
+                not just take our word for them. What you see below cannot be
                 bought away or walked back &mdash; by us, or by anyone who comes after.
             </p>
             <div class="trust-cards">
@@ -88,6 +90,10 @@
                 <div class="trust-card reveal">
                     <h3>Rules that can't change</h3>
                     <p>The core commitments are locked at inception. A future majority vote, a new board, or a change of ownership cannot quietly revise them away.</p>
+                </div>
+                <div class="trust-card reveal">
+                    <h3>Auditable by you</h3>
+                    <p>Public logs and open financial reports. The commitments aren't just promised &mdash; they're checkable, by you, at any time.</p>
                 </div>
             </div>
             <p class="trust-cta">
@@ -120,9 +126,7 @@
                 or you're a founder who wants to build on the same trust foundation &mdash;
                 tell us who you are.
             </p>
-            <form class="apply-form" action="https://formspree.io/f/xdhzrqap" method="POST" onsubmit="return submitApply(event)">
-                <input type="hidden" name="_subject" value="New WorkSigned access request">
-                <input type="hidden" name="_next" value="https://worksigned.com/?sent=1">
+            <form class="apply-form" id="apply-form" onsubmit="return submitApply(event)">
                 <div class="form-row">
                     <div class="form-field">
                         <label for="name">Name</label>
@@ -134,10 +138,10 @@
                     </div>
                 </div>
                 <div class="form-field">
-                    <label for="what">What kind of work do you want to protect?</label>
-                    <textarea id="what" name="what" rows="3" placeholder="Research, writing, software, art, a business, &hellip;"></textarea>
+                    <label for="message">What kind of work do you want to protect?</label>
+                    <textarea id="message" name="message" rows="3" placeholder="Research, writing, software, art, a business, &hellip;"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary btn-wide">Request access</button>
+                <button type="submit" class="btn btn-primary btn-wide" id="apply-submit">Request access</button>
                 <p class="apply-success" id="apply-success"></p>
             </form>
         </div>

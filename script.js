@@ -22,30 +22,65 @@ if (revealEls.length) {
 }
 
 // ==========================================================================
-// APPLICATION FORM — submits to Formspree, which emails the entries to the
-// owner. We POST the raw form data (Formspree needs the original inputs),
-// then let it redirect to the ?sent=1 thank-you state.
+// APPLICATION FORM — submits to FormZero (self-hosted on Cloudflare Workers).
+// We fetch() a JSON payload {name, email, message} to the form's endpoint and
+// show an inline success message (no page reload / no third-party email).
 // ==========================================================================
-(function () {
-    // Show a thank-you message if we came back from the Formspree redirect.
-    if (/[?&]sent=1/.test(window.location.search)) {
-        const success = document.querySelector('.apply-success');
-        if (success) {
-            success.textContent = 'Thanks — your request is in. We\'ll be in touch soon.';
-            success.classList.add('show');
-        }
+const FORMZERO_ENDPOINT = 'https://formzero.ethanweimd.workers.dev/api/forms/worksigned/submissions';
+
+function showApplySuccess(msg) {
+    const success = document.querySelector('#apply-success');
+    if (success) {
+        success.textContent = msg || 'Thanks — your request is in. We\'ll be in touch soon.';
+        success.classList.add('show');
     }
-})();
+}
+
+function showApplyError(msg) {
+    const success = document.querySelector('#apply-success');
+    if (success) {
+        success.textContent = msg || 'Sorry, something went wrong. Please try again.';
+        success.classList.remove('show');
+        success.classList.add('show', 'error');
+    }
+}
 
 function submitApply(e) {
     const form = e.target;
-    // Light client-side validation, then hand off to Formspree (real submit).
     const name = form.querySelector('#name');
     const email = form.querySelector('#email');
+    const message = form.querySelector('#message');
     if (!name.value.trim() || !email.value.trim() || !email.checkValidity()) {
         e.preventDefault();
         return false;
     }
-    // Allow the form's native POST to Formspree to proceed.
-    return true;
+    e.preventDefault();
+    const btn = document.querySelector('#apply-submit');
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+    fetch(FORMZERO_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: name.value.trim(),
+            email: email.value.trim(),
+            message: message ? message.value.trim() : ''
+        })
+    })
+        .then(function (response) { return response.json().then(function (d) { return { ok: response.ok, d: d }; }); })
+        .then(function (res) {
+            if (res.ok) {
+                form.reset();
+                showApplySuccess();
+            } else {
+                showApplyError(res.d && res.d.error ? res.d.error : 'Sorry, something went wrong. Please try again.');
+            }
+        })
+        .catch(function () {
+            showApplyError('Network error — please try again.');
+        })
+        .finally(function () {
+            if (btn) { btn.disabled = false; btn.textContent = 'Request access'; }
+        });
+    return false;
 }

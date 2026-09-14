@@ -1,0 +1,349 @@
+/* ==========================================================================
+   WorkSigned — Landing page (worksigned_landing)
+   Modern, clean design system.
+
+   LAYOUT RULES:
+   - A single .container is centered on the page and used for EVERY section.
+     Because they share the same width and auto-margins, all section titles,
+     lead text, and card grids align to the same centerline.
+   - Two small-text tiers only (both linked to one token each):
+       .section-lead / .step p / .charter p / .pill  ->  --fs-body   (16.5px)
+       .hero-note / .footer-copy / .eyebrow          ->  --fs-small  (14px)
+     No other small size exists, so all "small" text is uniform.
+   ========================================================================== */
+
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+:root {
+    --bg: #0b0d12;
+    --bg-elev: #12151d;
+    --bg-elev-2: #171b25;
+    --border: #232838;
+    --border-strong: #2f3648;
+
+    --text: #f4f6fb;
+    --text-muted: #a7afc0;
+    --text-faint: #6f7789;
+
+    --accent: #5b8cff;
+    --accent-2: #34d3a6;
+    --accent-soft: rgba(91, 140, 255, 0.14);
+    --grad: linear-gradient(100deg, #5b8cff 0%, #34d3a6 100%);
+
+    /* ---- Two small-text tiers (the ONLY two small sizes on the page) ---- */
+    --fs-body: 16.5px;   /* readable body / card / lead text */
+    --fs-small: 14px;    /* fine print: notes, footer, eyebrow */
+
+    --radius: 16px;
+    --radius-sm: 10px;
+    --maxw: 1120px;
+    --maxw-narrow: 760px;
+
+    --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ==========================================================================
+   RESET + BASE
+   ========================================================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: var(--fs-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* Subtle radial glow behind the hero */
+body::before {
+    content: "";
+    position: fixed;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 900px; height: 600px;
+    background: radial-gradient(circle, rgba(91,140,255,0.18) 0%, rgba(52,211,166,0.06) 45%, transparent 70%);
+    z-index: 0; pointer-events: none;
+}
+
+/* ==========================================================================
+   LAYOUT CONTAINERS  (shared centerline for every section)
+   ========================================================================== */
+.container {
+    width: 100%;
+    max-width: var(--maxw);
+    margin: 0 auto;          /* centered */
+    padding: 0 24px;
+}
+.container.narrow { max-width: var(--maxw-narrow); }
+
+/* ==========================================================================
+   TOP NAVIGATION
+   ========================================================================== */
+.nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 28px;
+    background: rgba(11,13,18,0.72);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+}
+.brand {
+    font-size: 19px; font-weight: 800; letter-spacing: -0.4px;
+    display: inline-flex; align-items: center; gap: 8px;
+}
+.brand-mark {
+    display: inline-grid; place-items: center;
+    width: 26px; height: 26px; border-radius: 8px;
+    background: var(--grad); color: #0b0d12; font-size: 15px; font-weight: 900;
+}
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { font-size: var(--fs-small); font-weight: 500; color: var(--text-muted); transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+    color: var(--text) !important;
+    background: var(--accent-soft); border: 1px solid var(--border-strong);
+    padding: 8px 18px; border-radius: 999px;
+    transition: background 0.2s, border-color 0.2s;
+}
+.nav-cta:hover { background: rgba(91,140,255,0.24); border-color: var(--accent); }
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.hero {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 110px 0 84px;
+}
+.eyebrow {
+    display: inline-block;
+    font-size: var(--fs-small); font-weight: 600; letter-spacing: 0.4px;
+    color: var(--accent-2);
+    background: rgba(52,211,166,0.12); border: 1px solid rgba(52,211,166,0.3);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 26px;
+}
+.hero h1 {
+    font-size: clamp(40px, 7vw, 84px);
+    font-weight: 800; line-height: 1.02; letter-spacing: -2px; margin-bottom: 26px;
+}
+.grad {
+    background: var(--grad);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.hero .sub {
+    font-size: clamp(17px, 2.2vw, 21px);
+    color: var(--text-muted);
+    max-width: 720px; margin: 0 auto 36px; line-height: 1.65;
+}
+.hero .sub strong { color: var(--text); font-weight: 600; }
+.hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.hero-note { font-size: var(--fs-small); color: var(--text-faint); }
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 14px 28px; border-radius: 999px;
+    font-size: var(--fs-body); font-weight: 600; border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--grad); color: #0b0d12; box-shadow: 0 8px 24px rgba(91,140,255,0.28); }
+.btn-primary:hover { box-shadow: 0 10px 30px rgba(91,140,255,0.4); transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.btn-ghost:hover { border-color: var(--accent); background: var(--accent-soft); }
+.btn-wide { width: 100%; }
+
+/* ==========================================================================
+   SECTIONS (shared, all use .container so they stay centered)
+   ========================================================================== */
+.section { position: relative; z-index: 1; padding: 84px 0; border-top: 1px solid var(--border); }
+.section-alt { background: var(--bg-elev); }
+
+.section-title {
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 800; letter-spacing: -1px;
+    text-align: center; margin-bottom: 16px;
+}
+.section-title.light { color: var(--text); }
+
+/* Lead text: tier 1 small size, centered to match the cards below it */
+.section-lead {
+    font-size: var(--fs-body);
+    color: var(--text-muted);
+    max-width: 640px;
+    margin: 0 auto 48px;
+    text-align: center;
+}
+.section-lead strong { color: var(--text); font-weight: 600; }
+.section-lead.light { color: rgba(244,246,251,0.75); }
+
+/* ==========================================================================
+   HOW IT WORKS — steps
+   ========================================================================== */
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    max-width: 960px;
+    margin: 0 auto;                 /* centered under the title + lead */
+}
+.step {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.step:hover { transform: translateY(-6px); border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.step-num {
+    display: inline-grid; place-items: center;
+    width: 40px; height: 40px; border-radius: 12px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 18px; font-weight: 800; margin-bottom: 20px;
+}
+.step h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px; }
+.step p { font-size: var(--fs-body); color: var(--text-muted); }
+
+/* ==========================================================================
+   TRUST NOTE (brief — links out to the Equitable sites)
+   ========================================================================== */
+.trust-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    max-width: 960px;
+    margin: 0 auto 36px;
+}
+.trust-card {
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border);
+    border-top: 3px solid transparent;
+    border-radius: var(--radius);
+    padding: 28px 26px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.trust-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--border-strong);
+    border-top-color: var(--accent-2);
+    box-shadow: var(--shadow-sm);
+}
+.trust-card h3 {
+    font-size: 19px; font-weight: 700; letter-spacing: -0.3px;
+    margin-bottom: 10px;
+}
+.trust-card p { font-size: var(--fs-body); color: var(--text-muted); }
+.trust-cta { text-align: center; }
+
+/* ==========================================================================
+   WHY NOW — big quote
+   ========================================================================== */
+.big-quote {
+    font-size: clamp(22px, 3.4vw, 34px);
+    font-weight: 600; line-height: 1.45; letter-spacing: -0.5px;
+    color: var(--text); text-align: center;
+}
+.big-quote strong {
+    background: var(--grad);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* ==========================================================================
+   CTA BAND + APPLICATION FORM
+   ========================================================================== */
+.cta-band {
+    background:
+        radial-gradient(1200px 400px at 50% -10%, rgba(91,140,255,0.18), transparent 60%),
+        var(--bg-elev);
+}
+.apply-form {
+    max-width: 560px; margin: 40px auto 0;
+    text-align: left;
+    background: var(--bg-elev-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-field { margin-bottom: 16px; }
+.form-field label {
+    display: block; font-size: var(--fs-small); font-weight: 600;
+    color: var(--text-muted); margin-bottom: 7px;
+}
+.form-field input, .form-field textarea {
+    width: 100%; padding: 12px 14px;
+    border-radius: var(--radius-sm); border: 1px solid var(--border-strong);
+    background: var(--bg); color: var(--text);
+    font-size: var(--fs-body); font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-field input::placeholder, .form-field textarea::placeholder { color: var(--text-faint); }
+.form-field input:focus, .form-field textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,140,255,0.18);
+}
+.form-field textarea { resize: vertical; }
+.apply-success {
+    display: none; margin-top: 18px; text-align: center;
+    font-size: var(--fs-body); font-weight: 600; color: var(--accent-2);
+}
+.apply-success.show { display: block; }
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.footer { border-top: 1px solid var(--border); padding: 28px 0; position: relative; z-index: 1; }
+.footer-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+}
+.footer .brand { font-size: 16px; }
+.footer-copy { font-size: var(--fs-small); color: var(--text-faint); }
+.footer-copy a { color: var(--text-muted); }
+.footer-copy a:hover { color: var(--text); }
+
+/* ==========================================================================
+   SCROLL REVEAL
+   ========================================================================== */
+.reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.steps .reveal:nth-child(2) { transition-delay: 0.12s; }
+.steps .reveal:nth-child(3) { transition-delay: 0.24s; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+    .steps { grid-template-columns: 1fr; max-width: 460px; }
+    .trust-cards { grid-template-columns: 1fr; max-width: 460px; }
+}
+@media (max-width: 640px) {
+    .nav { padding: 14px 18px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .hero { padding: 78px 0 56px; }
+    .section { padding: 60px 0; }
+    .container { padding: 0 18px; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+}

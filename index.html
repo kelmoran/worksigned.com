@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Page metadata: charset, viewport, title, fonts, stylesheet -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WorkSigned — a platform that automatically produces irrefutable, cryptographically verified records of your work. Private by design, so the promise to protect you can never be bought away.">
+    <title>WorkSigned — Proof that your work is yours</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Top navigation bar: brand + anchor links -->
+    <header class="nav">
+        <a href="#top" class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</a>
+        <nav class="nav-links">
+            <a href="#how">How it works</a>
+            <a href="#trust">Our promise</a>
+            <a href="#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <!-- ============================== HERO ============================== -->
+    <section class="hero" id="top">
+        <div class="container">
+            <h1>Your work, <span class="grad">signed</span> and sealed.</h1>
+            <p class="sub">
+                WorkSigned builds an <strong>irrefutable, cryptographically verified record</strong>
+                of your work &mdash; research, books, novel ideas. Private by design,
+                and structured so the promise to protect you
+                <strong>can never be bought away.</strong>
+            </p>
+            <div class="hero-cta">
+                <a href="#apply" class="btn btn-primary">Request access</a>
+                <a href="#how" class="btn btn-ghost">See how it works</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ HOW IT WORKS ============================ -->
+    <section class="section" id="how">
+        <div class="container">
+            <h2 class="section-title">How it works</h2>
+            <p class="section-lead">One workspace. Every step, recorded. A single file that is your proof.</p>
+
+            <div class="steps">
+                <div class="step reveal">
+                    <div class="step-num">1</div>
+                    <h3>Your workspace</h3>
+                    <p>Research, manage files, and work alongside an <em>AI research assistant</em> built into the workspace &mdash; so even your thinking gets captured in the record.</p>
+                </div>
+                <div class="step reveal">
+                    <div class="step-num">2</div>
+                    <h3>Every step, captured</h3>
+                    <p>As you work, the platform records the exact steps you took to reach a result &mdash; what changed, and when.</p>
+                </div>
+                <div class="step reveal">
+                    <div class="step-num">3</div>
+                    <h3>One sealed record</h3>
+                    <p>It all becomes a complete, tamper-evident record of the entire lifespan of your work &mdash; verifiable at any time, robust evidence that <em>you</em> did it, <em>when</em> you did it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== BRIEF TRUST NOTE (links out) ==================== -->
+    <section class="section section-alt" id="trust">
+        <div class="container narrow">
+            <h2 class="section-title">A promise that can't be broken</h2>
+            <p class="section-lead">
+                WorkSigned is built as an <strong>Equitable Corporation</strong> &mdash; a company
+                structure we designed so its core promises are <em>locked at inception</em>,
+                not a policy that can be quietly revised later. What you see below cannot be
+                bought away, restructured, or walked back &mdash; by us, or by anyone who comes after.
+            </p>
+            <div class="trust-cards">
+                <div class="trust-card reveal">
+                    <h3>Your data stays yours</h3>
+                    <p>Never sold. Never licensed. Never used for anything you didn't ask for. You own what you produce &mdash; and the record of it.</p>
+                </div>
+                <div class="trust-card reveal">
+                    <h3>Protected from takeovers</h3>
+                    <p>No investor, no matter how large, can ever gain enough control to rewrite the rules or extract value from your work. The structure prevents it by design.</p>
+                </div>
+                <div class="trust-card reveal">
+                    <h3>Rules that can't change</h3>
+                    <p>The core commitments are locked at inception. A future majority vote, a new board, or a change of ownership cannot quietly revise them away.</p>
+                </div>
+            </div>
+            <p class="trust-cta">
+                <a href="https://equitablecorporation.com" target="_blank" class="btn btn-ghost">
+                    Learn about the structure &rarr;
+                </a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================ WHY NOW ============================ -->
+    <section class="section">
+        <div class="container narrow center">
+            <h2 class="section-title">Why this, why now</h2>
+            <p class="big-quote reveal">
+                The flow of data and credit is drifting toward the few. We believe the
+                insistence that <strong>the people who create the work keep proof of it</strong>
+                will be looked back on as the turning point for the whole field.
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================ CTA / APPLY ============================ -->
+    <section class="section cta-band" id="apply">
+        <div class="container narrow center">
+            <h2 class="section-title light">Be among the first</h2>
+            <p class="section-lead light">
+                We're onboarding a small group of early users. If you'd like in &mdash;
+                or you're a founder who wants to build on the same trust foundation &mdash;
+                tell us who you are.
+            </p>
+            <form class="apply-form" onsubmit="return submitApply(event)">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required autocomplete="name">
+                    </div>
+                    <div class="form-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="what">What kind of work do you want to protect?</label>
+                    <textarea id="what" name="what" rows="3" placeholder="Research, writing, software, art, a business, &hellip;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-wide">Request access</button>
+                <p class="apply-success" id="apply-success"></p>
+            </form>
+        </div>
+    </section>
+
+    <!-- ============================== FOOTER ============================== -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned &middot; An Equitable Corporation &middot;
+                <a href="https://equitablestandard.com" target="_blank">equitablestandard.com</a>
+            </span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -22,27 +22,30 @@ if (revealEls.length) {
 }
 
 // ==========================================================================
-// APPLICATION FORM — client-side only for now (no backend yet).
-// Shows a success message and would POST to /api/apply when the backend is wired.
+// APPLICATION FORM — submits to Formspree, which emails the entries to the
+// owner. We POST the raw form data (Formspree needs the original inputs),
+// then let it redirect to the ?sent=1 thank-you state.
 // ==========================================================================
-function submitApply(e) {
-    e.preventDefault();
-    const form = e.target;
-    const data = {
-        name: form.querySelector('#name').value.trim(),
-        email: form.querySelector('#email').value.trim(),
-        what: form.querySelector('#what').value.trim(),
-    };
-
-    // Placeholder for the real submission. When the FastAPI/HTTP backend is
-    // in place, replace this with a fetch() POST to /api/apply with `data`.
-    console.log('WorkSigned apply request:', data);
-
-    const success = document.querySelector('.apply-success');
-    if (success) {
-        success.textContent = 'Thanks, ' + (data.name || 'friend') + ' — we\'ll be in touch at ' + data.email + '.';
-        success.classList.add('show');
+(function () {
+    // Show a thank-you message if we came back from the Formspree redirect.
+    if (/[?&]sent=1/.test(window.location.search)) {
+        const success = document.querySelector('.apply-success');
+        if (success) {
+            success.textContent = 'Thanks — your request is in. We\'ll be in touch soon.';
+            success.classList.add('show');
+        }
     }
-    form.reset();
-    return false;
+})();
+
+function submitApply(e) {
+    const form = e.target;
+    // Light client-side validation, then hand off to Formspree (real submit).
+    const name = form.querySelector('#name');
+    const email = form.querySelector('#email');
+    if (!name.value.trim() || !email.value.trim() || !email.checkValidity()) {
+        e.preventDefault();
+        return false;
+    }
+    // Allow the form's native POST to Formspree to proceed.
+    return true;
 }

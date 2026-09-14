@@ -119,7 +119,9 @@
                 or you're a founder who wants to build on the same trust foundation &mdash;
                 tell us who you are.
             </p>
-            <form class="apply-form" onsubmit="return submitApply(event)">
+            <form class="apply-form" action="https://formspree.io/f/xdhzrqap" method="POST" onsubmit="return submitApply(event)">
+                <input type="hidden" name="_subject" value="New WorkSigned access request">
+                <input type="hidden" name="_next" value="https://worksigned.com/?sent=1">
                 <div class="form-row">
                     <div class="form-field">
                         <label for="name">Name</label>

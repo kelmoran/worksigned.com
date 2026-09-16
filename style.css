@@ -222,9 +222,9 @@ body::before {
    ========================================================================== */
 .trust-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 22px;
-    max-width: 960px;
+    max-width: 1000px;
     margin: 0 auto 36px;
 }
 .trust-card {
@@ -245,7 +245,16 @@ body::before {
     font-size: 19px; font-weight: 700; letter-spacing: -0.3px;
     margin-bottom: 10px;
 }
-.trust-card p { font-size: var(--fs-body); color: var(--text-muted); }
+.trust-card .tc-problem {
+    font-size: var(--fs-body);
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+.trust-card .tc-fix {
+    font-size: var(--fs-body);
+    color: var(--text);
+}
+.trust-card .tc-fix strong { color: var(--accent-2); font-weight: 700; }
 .trust-cta { text-align: center; }
 
 /* ==========================================================================

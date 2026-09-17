@@ -36,7 +36,16 @@
         .proc-body p strong { color: #7df0e0; font-weight: 700; }
 
         /* ===== realistic signed-trail example (horizontal connected timeline) ===== */
-        .trail-example { margin: 52px auto 0; max-width: 900px; }
+        .trail-example { margin: 104px auto 0; max-width: 900px; }
+        .te-heading {
+            font-size: clamp(32px, 4.2vw, 52px); font-weight: 800; text-align: center;
+            color: var(--text); margin: 0 0 16px; letter-spacing: -1px;
+        }
+        .te-lead {
+            font-size: var(--fs-body); color: var(--text-muted); text-align: center;
+            max-width: 640px; margin: 0 auto 34px; line-height: 1.55;
+        }
+        .te-lead strong, .te-lead em { color: #7df0e0; font-weight: 700; }
         .te-label {
             font-size: .74rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
             color: var(--text-faint); text-align: center; margin-bottom: 22px;
@@ -78,17 +87,17 @@
         .te-item.zoomed .te-kind { color: #7df0e0; }
         /* the callout "lens" connector (a thin beam from the node down to the panel) */
         .te-lens { position: relative; height: 58px; display: flex; justify-content: center; }
-        .te-lens::before {  /* left beam */
+        .te-lens::before {  /* left beam: top at node 5's left edge, bottom at panel left corner */
             content: ""; position: absolute; top: 0;
-            left: calc(50% - 250px); height: 100%;
+            left: calc(50% + 187px); height: 100%;
             width: 2px; background: linear-gradient(180deg, rgba(94,234,212,.55), rgba(94,234,212,.12));
-            transform-origin: top center; transform: rotate(9deg);
+            transform-origin: top center; transform: rotate(-27deg);
         }
-        .te-lens::after {   /* right beam */
+        .te-lens::after {   /* right beam: top at node 5's right edge, bottom at panel right corner */
             content: ""; position: absolute; top: 0;
-            right: calc(50% - 250px); height: 100%;
+            right: calc(50% + 187px); height: 100%;
             width: 2px; background: linear-gradient(180deg, rgba(94,234,212,.55), rgba(94,234,212,.12));
-            transform-origin: top center; transform: rotate(-9deg);
+            transform-origin: top center; transform: rotate(27deg);
         }
         .te-lens-tag {
             position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
@@ -129,7 +138,7 @@
         @media (max-width: 820px) {
             .mg-row { grid-template-columns: 60px 88px 1fr; }
             .mg-hash { display: none; }
-            .te-lens::before, .te-lens::after { left: calc(50% - 120px); right: auto; }
+            .te-lens::before { left: calc(50% - 120px); transform: rotate(0deg); }
             .te-lens::after { display: none; }
         }
         @media (max-width: 820px) {
@@ -190,7 +199,7 @@
         .sl-link::after { content: "\2195"; font-size: .7em; margin-left: 3px; opacity: .7; }
         .sl-card {
             position: absolute; top: 0; left: 0; z-index: 40;
-            width: min(420px, 86vw);
+            width: min(500px, 88vw);
             background: linear-gradient(180deg, var(--bg-elev), #0b1626);
             border: 1px solid rgba(94,234,212,.45);
             border-radius: 18px; padding: 22px 24px 20px;
@@ -365,6 +374,8 @@
 
             <!-- ===== REALISTIC SIGNED-TRAIL EXAMPLE ===== -->
             <div class="trail-example">
+                <h2 class="te-heading">The Work Ledger acts as both the proof that the work was done, how it was done, and what it cost.</h2>
+                <p class="te-lead">Every project keeps one signed ledger. Zoom out and it&rsquo;s the whole story; zoom in and it&rsquo;s <em>every keystroke, mouse move, and dollar</em> that built the work.</p>
                 <p class="te-label">A real trail looks like this &mdash; our <strong>immutable ledger</strong></p>
                 <div class="te-track">
                     <div class="te-item work">
@@ -399,7 +410,7 @@
                         <span class="te-who">Dr. Chen</span>
                         <span class="te-hash">0x91f0…7d3c</span>
                     </div>
-                    <div class="te-item fund">
+                    <div class="te-item fund zoomed">
                         <div class="te-dot">5</div>
                         <div class="te-time">Mar 7 &middot; 16:31</div>
                         <div class="te-kind">Funding spent</div>
@@ -416,6 +427,67 @@
                         <span class="te-hash">0xde02…91cc</span>
                     </div>
                 </div>
+
+                <!-- ===== ZOOM-IN: fine-grained micro-keystroke ledger ===== -->
+                <div class="te-lens"><span class="te-lens-tag">&darr; one node, magnified &times;1000</span></div>
+                <div class="mg-panel">
+                    <div class="mg-head">
+                        <span class="mg-zoom">&times;1000</span>
+                        <span class="mg-title">Node 5 &mdash; <em>results_v1.csv</em>, 16:31:04.882 &rarr; 16:31:09.114</span>
+                    </div>
+                    <p class="mg-sub">The same one save, at full resolution. Every keystroke, mouse move, and click is captured &mdash; not just the file that ended up on disk.</p>
+                    <div class="mg-rows">
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:04.882</span>
+                            <span class="mg-kind k-type">type</span>
+                            <span class="mg-detail"><code>"0.042</code> &rarr; cell <em>B7</em></span>
+                            <span class="mg-hash">0x7a11…c02d</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:05.114</span>
+                            <span class="mg-kind k-move">move</span>
+                            <span class="mg-detail">cursor <em>x:612&thinsp;y:148</em> &rarr; <em>x:614&thinsp;y:152</em></span>
+                            <span class="mg-hash">0x2f38…91ab</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:05.630</span>
+                            <span class="mg-kind k-type">type</span>
+                            <span class="mg-detail"><code>"±0.003"</code> &rarr; cell <em>B7</em></span>
+                            <span class="mg-hash">0x8c40…33e1</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:06.020</span>
+                            <span class="mg-kind k-del">backspace &times;2</span>
+                            <span class="mg-detail">remove trailing comma &amp; space</span>
+                            <span class="mg-hash">0x1d07…b4f2</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:06.470</span>
+                            <span class="mg-kind k-type">type</span>
+                            <span class="mg-detail"><code>"p&lt;0.01"</code> &rarr; cell <em>C7</em></span>
+                            <span class="mg-hash">0x99ee…08cd</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:08.990</span>
+                            <span class="mg-kind k-move">click</span>
+                            <span class="mg-detail"><em>Save</em> button &middot; (x:1240, y:64)</span>
+                            <span class="mg-hash">0x4410…6b77</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:09.114</span>
+                            <span class="mg-kind k-save">sealed</span>
+                            <span class="mg-detail"><em>results_v1.csv</em> &middot; sha256 <code>b2e4…44aa</code></span>
+                            <span class="mg-hash">0xde02…91cc</span>
+                        </div>
+                    </div>
+                    <p class="mg-foot">
+                        This is the <strong>actual proof</strong> of the work: not &ldquo;a file exists,&rdquo; but
+                        <strong>every single keystroke and mouse movement that produced it</strong>, timestamped
+                        to the millisecond and hash-chained. You can&rsquo;t fake the <em>process</em> the way you
+                        can fake the <em>product</em> &mdash; and a back-dated file would leave no trail of how it was typed.
+                    </p>
+                </div>
+
                 <p class="te-foot">
                     Every entry is <strong>append-only &amp; hash-chained</strong> &mdash; work, milestones,
                     and spend in one signed record. <strong>Nothing can be edited, deleted, or back-dated.</strong>

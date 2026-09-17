@@ -340,7 +340,6 @@ function submitApply(e) {
         },
         {
             headline: "Proof of work, on the record",
-            cta: true,
             detail: "WorkSigned is local-first — your data stays yours — and produces a signed, shareable proof page that a third party can verify in seconds. The promise to protect you is structured so it can't be bought away."
         }
     ];

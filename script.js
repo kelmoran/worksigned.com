@@ -393,36 +393,26 @@ function submitApply(e) {
     }).join("");
     var dotEls = Array.prototype.slice.call(dotsEl.querySelectorAll(".cases-dot"));
 
-    // Split a detail string into sentence-ish chunks so they can fade in one by one.
-    // Keeps inline <b>…</b> markup intact; breaks after . / ? / ! (and keeps trailing
-    // date-tags like (Sept 2026) attached to their sentence).
-    function chunkDetail(html) {
-        // protect <b>…</b> spans from being split by temporarily blanking their inner text
-        var guards = [];
-        var protected_ = html.replace(/<b>([\s\S]*?)<\/b>/g, function (m, inner) {
-            guards.push('<b>' + inner + '</b>');
-            return '\u0001' + (guards.length - 1) + '\u0001';
+    // Tag each <b>…</b> term with a staggered animation delay so the key
+    // phrases "light up" one by one in reading order. The muted body text
+    // is always visible; only the emphasized terms animate.
+    function animateBolds(html, baseDelay) {
+        var i = 0;
+        return html.replace(/<b>/g, function () {
+            var d = baseDelay + i * 0.5;
+            i += 1;
+            return '<b class="case-em" style="animation-delay:' + d + 's">';
         });
-        // split on sentence terminators, keeping the delimiter with the chunk
-        var parts = protected_.split(/(?<=[.?!])\s+/);
-        var chunks = parts.map(function (p) {
-            // restore guarded <b> markers in this chunk
-            return p.replace(/\u0001(\d+)\u0001/g, function (_, n) { return guards[+n]; });
-        }).filter(function (p) { return p.trim().length; });
-        return chunks;
     }
 
     function render(i) {
         current = (i + CASES.length) % CASES.length;
         var c = CASES[current];
         var ctaRow = c.cta ? '<a href="#apply" class="case-cta case-cta-final">Request access</a>' : '';
-        // headline + detail split into staggered chunks (+ optional CTA)
-        var chunks = chunkDetail(c.detail).map(function (chunk, k) {
-            return '<span class="case-chunk" style="animation-delay:' + (k * 0.45) + 's">' + chunk + (k < chunkDetail(c.detail).length - 1 ? ' ' : '') + '</span>';
-        }).join("");
+        // headline + continuous paragraph; bold terms fade in one by one
         var card = '<div class="case-big">'
                  +   '<h2 class="case-headline">' + c.headline + '</h2>'
-                 +   '<p class="case-detail">' + chunks + '</p>'
+                 +   '<p class="case-detail">' + animateBolds(c.detail, 0.15) + '</p>'
                  +   ctaRow
                  + '</div>';
         // re-trigger the fade-in

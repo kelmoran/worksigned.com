@@ -18,6 +18,7 @@
         <a href="#top" class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</a>
         <nav class="nav-links">
             <a href="#how">How it works</a>
+            <a href="#tools">Tools</a>
             <a href="#trust">Our promise</a>
             <a href="#apply" class="nav-cta">Join</a>
         </nav>
@@ -37,10 +38,20 @@
                 <a href="#apply" class="btn btn-primary">Request access</a>
                 <a href="#how" class="btn btn-ghost">See how it works</a>
             </div>
+
+            <!-- Cases deck, bound into the hero (filled by script.js from the CASES data set) -->
+            <div class="cases-hero">
+                <div class="cases-panel">
+                    <div class="cases-grid" id="cases-grid"></div>
+                </div>
+                <div class="cases-bar">
+                    <span class="cases-count" id="cases-count">1 / 9</span>
+                    <div class="cases-dots" id="cases-dots"></div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- ============================ HOW IT WORKS ============================ -->
     <section class="section" id="how">
         <div class="container">
             <h2 class="section-title">How it works</h2>
@@ -65,10 +76,52 @@
             </div>
         </div>
     </section>
+    <!-- ======================= SHOWCASE — THE FULL TOOL SUITE ======================= -->
+    <section class="showcase" id="tools">
+        <div class="container">
+            <div style="text-align:center;">
+                <h2 class="section-title">One platform. <span class="grad">Every tool</span> you work in.</h2>
+                <p class="section-lead">
+                    Code, documents, spreadsheets, presentations, LaTeX, and AI chat &mdash;
+                    not bolted-on plugins, but native tools that <strong>all write to the same
+                    signed record.</strong> And code you write in the editor
+                    <strong>runs right in the platform.</strong>
+                </p>
+            </div>
+
+            <!-- The framed product window -->
+            <div class="window">
+                <div class="window-bar">
+                    <div class="window-dots"><i></i><i></i><i></i></div>
+                    <div class="window-url">
+                        <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        <span id="showcase-url">app.worksigned.com/&#8203;code</span>
+                    </div>
+                    <span class="window-live"><span class="pulse"></span> sealed</span>
+                </div>
+                <div class="stage" id="showcase-stage">
+                    <!-- Slides are filled by script.js from the TOOLS data set -->
+                </div>
+                <button class="showcase-nav prev" id="showcase-prev" aria-label="Previous tool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button class="showcase-nav next" id="showcase-next" aria-label="Next tool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+
+            <!-- live caption describing the current tool -->
+            <p class="showcase-caption" id="showcase-caption"></p>
+
+            <!-- Segmented tab rail: one tab per tool -->
+            <div class="showcase-tabs" id="showcase-tabs"></div>
+        </div>
+    </section>
+
 
     <!-- ==================== BRIEF TRUST NOTE (links out) ==================== -->
     <section class="section section-alt" id="trust">
-        <div class="container narrow">
+        <div class="container">
             <h2 class="section-title">A promise that can't be walked back</h2>
             <p class="section-lead">
                 WorkSigned is built as an <strong>Equitable Corporation</strong> &mdash; a company

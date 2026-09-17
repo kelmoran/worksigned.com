@@ -384,7 +384,7 @@ function submitApply(e) {
     var dotsEl  = document.getElementById("cases-dots");
     if (!grid) return;
 
-    var AUTO_MS = 3000;
+    var AUTO_MS = 5000;
     var current = 0;
 
     // Build dot rail (one per slide)

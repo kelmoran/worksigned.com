@@ -23,7 +23,7 @@
     --border-strong: #2f3648;
 
     --text: #f4f6fb;
-    --text-muted: #a7afc0;
+    --text-muted: #cfd5e2;
     --text-faint: #6f7789;
 
     --accent: #5b8cff;
@@ -32,7 +32,7 @@
     --grad: linear-gradient(100deg, #5b8cff 0%, #34d3a6 100%);
 
     /* ---- Two small-text tiers (the ONLY two small sizes on the page) ---- */
-    --fs-body: 18px;    /* readable body / card / lead text */
+    --fs-body: 22px;    /* readable body / card / lead text */
     --fs-small: 15px;   /* fine print: notes, footer, eyebrow */
 
     --radius: 16px;
@@ -147,7 +147,11 @@ body::before {
     max-width: 720px; margin: 0 auto 36px; line-height: 1.65;
 }
 .hero .sub strong { color: var(--text); font-weight: 600; }
-.hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.hero .sub a { color: #7df0e0; font-weight: 700; text-decoration: none; cursor: pointer; border-bottom: 1px dotted #5eead4; transition: color .2s, border-color .2s; }
+.hero .sub a::after { content: "\2195"; font-size: .7em; margin-left: 3px; opacity: .7; }
+.hero .sub a:hover { color: #a8fff2; border-color: #a8fff2; }
+.hero-cta { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.hero-cta .btn { padding: 19px 40px; font-size: var(--fs-body); font-weight: 700; border-radius: 999px; }
 .hero-note { font-size: var(--fs-small); color: var(--text-faint); }
 
 /* ==========================================================================

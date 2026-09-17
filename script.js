@@ -125,6 +125,9 @@ function submitApply(e) {
         { id: "chat",   icon: "chat",   cap: "AI Chat",   url: "app.worksigned.com/chat",
           img: "assets/chat.png",
           desc: "Work alongside an AI research assistant — the whole conversation is on the record too." },
+        { id: "funding",icon: "sheets", cap: "Funding ledger", url: "app.worksigned.com/funding",
+          img: "assets/sheets.png",
+          desc: "Log spend against grants as you go — every dollar on the same signed timeline as the work it produced." },
         { id: "all",    icon: "run",    cap: "All of it, in one place", url: "app.worksigned.com",
           montage: true,
           desc: "Math, engineering, content creation, and scientific tools — every discipline, one signed record."
@@ -467,4 +470,42 @@ function submitApply(e) {
     });
 
     setSlide(0);
+})();
+
+/* ===== Stealth mode: hover on the inline link -> pop up the card next to it ===== */
+(function () {
+    var link = document.querySelector(".sl-link");
+    var outer = document.querySelector(".sl-outer");
+    var card = outer ? outer.querySelector(".sl-card") : null;
+    if (!link || !outer || !card) return;
+
+    function place() {
+        // position the card just below + to the right of the link, clamped to the viewport
+        var lr = link.getBoundingClientRect();
+        var cw = card.offsetWidth || 420;
+        var x = lr.left - (outer.getBoundingClientRect().left);
+        var y = (lr.bottom - outer.getBoundingClientRect().top) + 12;
+        var maxX = window.innerWidth - cw - 16;
+        x = Math.max(16, Math.min(x, maxX));
+        card.style.left = x + "px";
+        card.style.top = y + "px";
+    }
+
+    function show() { place(); outer.classList.add("sl-open"); }
+    function hide() { outer.classList.remove("sl-open"); }
+
+    link.addEventListener("mouseenter", show);
+    link.addEventListener("mouseleave", hide);
+    card.addEventListener("mouseenter", show);   // can move onto the card
+    card.addEventListener("mouseleave", hide);
+    window.addEventListener("resize", function(){ if (outer.classList.contains("sl-open")) place(); });
+
+    // tap-to-toggle for touch devices (no hover)
+    link.addEventListener("click", function (e) {
+        if (!matchMedia("(hover: hover)").matches) {
+            e.preventDefault();
+            var open = outer.classList.toggle("sl-open");
+            if (open) place();
+        }
+    });
 })();

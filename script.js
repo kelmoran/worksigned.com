@@ -308,39 +308,39 @@ function submitApply(e) {
     var CASES = [
         {
             headline: "AI tools are now inside the research process",
-            detail: "Researchers routinely paste unpublished drafts, proofs, and code into AI tools to iterate and get feedback. When a tool later produces a similar result, it can be hard to show who did the original work — and when it was made."
+            detail: "Researchers routinely paste <b>unpublished drafts, proofs, and code</b> into AI tools to iterate and get feedback. When a tool later produces a similar result, it can be hard to show <b>who did the original work</b> \u2014 and <b>when it was made</b>."
         },
         {
             headline: "A researcher was working on a result a lab also wanted",
-            detail: "By mid-August 2026, a mathematician had obtained a related result and had it formally machine-checked, iterating drafts with frontier AI tools as their paper's own \"AI statement\" describes. Weeks later, a major AI lab ran a large multi-agent effort aimed at a closely related result."
+            detail: "By <b>mid-August 2026</b>, a mathematician had obtained a related result and had it <b>formally machine-checked</b>, iterating drafts with frontier AI tools. Weeks later, a <b>major AI lab</b> ran a <b>large multi-agent effort</b> aimed at a closely related result."
         },
         {
             headline: "The lab announced it. The researcher disputed the sequence.",
-            detail: "In early September 2026 the lab publicly announced an AI-produced result. The researcher said their unpublished work may have been involved; the lab said it could not have influenced the system — and revised those statements over the following days. No lawsuit. Still unresolved."
+            detail: "In <b>early September 2026</b> the lab publicly announced an <b>AI-produced result</b>. The researcher said their <b>unpublished work</b> may have been involved; the lab said it <b>could not have influenced</b> the system \u2014 and <b>revised those statements</b> over the following days. <b>No lawsuit. Still unresolved.</b>"
         },
         {
             headline: "The key questions have no clean answer yet",
-            detail: "Did unpublished inputs reach the model? A user's opt-out may not cover \"de-identified\" or derivative data. Who gets credit for a result the AI reproduced? And what should govern priority in the AI era? 25 Fields Medalists wrote a public letter on the last question. (Sept 2026)"
+            detail: "Did <b>unpublished inputs</b> reach the model? A user's opt-out may not cover <b>\"de-identified\" or derivative data</b>. Who gets <b>credit</b> for a result the AI reproduced? 25 <b>Fields Medalists</b> wrote a public letter on the last question. <b>(Sept 2026)</b>"
         },
         {
             headline: "The same pattern shows up far beyond math",
-            detail: "Illustrators and photographers sued over image-model training (May 2025). Major labels and musicians raised claims over style and voice cloning (Aug 2026). Dozens of newsrooms and reference publishers are litigating over training on their writing (ongoing since 2023)."
+            detail: "<b>Illustrators and photographers</b> sued over image-model training <b>(May 2025)</b>. Major labels and <b>musicians</b> raised claims over <b>voice cloning</b> <b>(Aug 2026)</b>. Dozens of <b>newsrooms and publishers</b> are litigating over <b>training on their writing</b> <b>(ongoing since 2023)</b>."
         },
         {
             headline: "In each case, the gap is the same",
-            detail: "Work used in ways that aren't obviously consented to, credit that becomes ambiguous once a tool reproduces the result, and no tamper-evident way to show the work existed before a tool saw it. The dispute turns on a fact no one can currently prove: when."
+            detail: "Work used in ways that <b>aren't obviously consented to</b>, credit that becomes <b>ambiguous</b> once a tool reproduces the result, and <b>no tamper-evident way</b> to show the work existed first. The dispute turns on a fact no one can currently prove: <b>when</b>."
         },
         {
             headline: "Why \"I made it first\" is hard to prove today",
-            detail: "A copy elsewhere can be re-timestamped. \"De-identified\" or reasoning data may sit outside an opt-out. And \"we saw it after you published\" is only a statement — it can be asserted, but not easily checked against a record you control."
+            detail: "A copy elsewhere can be <b>re-timestamped</b>. \"De-identified\" or reasoning data may sit <b>outside an opt-out</b>. And <b>\"we saw it after you published\"</b> is only a statement \u2014 it can be asserted, but not easily <b>checked against a record you control</b>."
         },
         {
             headline: "A tamper-evident record makes it checkable",
-            detail: "Every save is hash-chained with a timestamp that can't be quietly edited. The record shows which files went to which tool, and when. A journal, funder, or court can verify the whole chain independently — in seconds."
+            detail: "Every save is <b>hash-chained</b> with a timestamp that <b>can't be quietly edited</b>. The record shows <b>which files went to which tool, and when</b>. A <b>journal, funder, or court</b> can verify the whole chain \u2014 <b>in seconds</b>."
         },
         {
             headline: "Proof of work, on the record",
-            detail: "WorkSigned is local-first — your data stays yours — and produces a signed, shareable proof page that a third party can verify in seconds. The promise to protect you is structured so it can't be bought away."
+            detail: "WorkSigned is <b>local-first</b> \u2014 your data stays yours \u2014 and produces a <b>signed, shareable proof page</b> that a third party can <b>verify in seconds</b>. The promise to protect you is <b>structured so it can't be bought away</b>."
         }
     ];
 
@@ -393,14 +393,36 @@ function submitApply(e) {
     }).join("");
     var dotEls = Array.prototype.slice.call(dotsEl.querySelectorAll(".cases-dot"));
 
+    // Split a detail string into sentence-ish chunks so they can fade in one by one.
+    // Keeps inline <b>…</b> markup intact; breaks after . / ? / ! (and keeps trailing
+    // date-tags like (Sept 2026) attached to their sentence).
+    function chunkDetail(html) {
+        // protect <b>…</b> spans from being split by temporarily blanking their inner text
+        var guards = [];
+        var protected_ = html.replace(/<b>([\s\S]*?)<\/b>/g, function (m, inner) {
+            guards.push('<b>' + inner + '</b>');
+            return '\u0001' + (guards.length - 1) + '\u0001';
+        });
+        // split on sentence terminators, keeping the delimiter with the chunk
+        var parts = protected_.split(/(?<=[.?!])\s+/);
+        var chunks = parts.map(function (p) {
+            // restore guarded <b> markers in this chunk
+            return p.replace(/\u0001(\d+)\u0001/g, function (_, n) { return guards[+n]; });
+        }).filter(function (p) { return p.trim().length; });
+        return chunks;
+    }
+
     function render(i) {
         current = (i + CASES.length) % CASES.length;
         var c = CASES[current];
         var ctaRow = c.cta ? '<a href="#apply" class="case-cta case-cta-final">Request access</a>' : '';
-        // one big card: headline + detail (+ optional CTA)
+        // headline + detail split into staggered chunks (+ optional CTA)
+        var chunks = chunkDetail(c.detail).map(function (chunk, k) {
+            return '<span class="case-chunk" style="animation-delay:' + (k * 0.45) + 's">' + chunk + (k < chunkDetail(c.detail).length - 1 ? ' ' : '') + '</span>';
+        }).join("");
         var card = '<div class="case-big">'
                  +   '<h2 class="case-headline">' + c.headline + '</h2>'
-                 +   '<p class="case-detail">' + c.detail + '</p>'
+                 +   '<p class="case-detail">' + chunks + '</p>'
                  +   ctaRow
                  + '</div>';
         // re-trigger the fade-in

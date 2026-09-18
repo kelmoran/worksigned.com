@@ -1,45 +1,26 @@
-
-Docs
-MUST be professional and extensive, use siomple english no corny or non technical stuff (not overly technical either)
-
-
-should have every app availabe in new tab
-
-    should have every function implemented for each app - LONG list for libreoffice - but list then - take them from libreoffice docs
-
-should be divided into sections - section links on left - make it official documentation type style page
-
-
-main doc should describe in a technical tone of how it works
-
-can operate in multiple modes - worksigned/bring your own private cloud, browser, local; public/private llms, that we have our own dedicated llms
-
-
-should discuss technical details of proof chain
-    how its constructed - a combination ofa  git style file repo plus user actions - files as starting point, then clicks and keypresses mutate the state
-    verify the state after each files/app closed
-
-    give examples - we also store llm and human email/chat interactions
-
-    describe convincingly how accounting and events are inserted into the ledger (append only)
-
-
-
-
-auditing
-    users should be able to audit the Worksigned servers - the data servers are server b
-        they should be able to send a prebaked command eg via web gui to the servers, listing all their processes eg ps aux and even iotop and kernel stuff ntop to see traffic pertaining to their user, as well as shared and root daemons 
-
-        this is done at an interval for transparency
-
-        they can also come and audit in person by appointment
-
-        wire this up as an inline demo
-
-        they should be able to read their logs - grep their user to avoid privacy issues
-
-        they should be able to see the flow of their data and their queries - network hops and machines, and where it was encrypted, where the tunnel exits are, who in the middle is an isp or whatever
-
-
-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>WorkSigned</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0d12;color:#e6e8ee;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;align-items:center;justify-content:center;}
+  .card{text-align:center;padding:48px 28px;max-width:440px;}
+  .brand{font-weight:700;font-size:22px;letter-spacing:.2px;margin-bottom:16px;}
+  .brand span{color:#38d39f;}
+  h1{font-size:22px;font-weight:600;margin:0 0 10px;}
+  p{color:#9aa0ad;font-size:16px;line-height:1.55;margin:0;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">Work<span>Signed</span></div>
+    <h1>Coming soon</h1>
+    <p>Provable research, in preparation.</p>
+  </div>
+</body>
+</html>

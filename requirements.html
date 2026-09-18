@@ -118,7 +118,7 @@
                         <tr><td>Web, cloud LLM + cloud storage</td><td>10 Mbps sustained, low latency preferred.</td></tr>
                         <tr><td>Web, local LLM + local files</td><td>Minimal. Initial app load only.</td></tr>
                         <tr><td>Desktop, local LLM + local files</td><td>Optional. Runs offline after install.</td></tr>
-                        <tr><td>Custom private cloud</td><td>Depends on your infrastructure. A backend proxy must be configured.</td></tr>
+                        <tr><td>Custom private cloud</td><td>Depends on your infrastructure. A backend proxy must be configured so the browser can reach your storage (your storage won't send the CORS headers the platform needs, so requests are routed through a server-side proxy).</td></tr>
                     </tbody>
                 </table>
             </section>
@@ -150,7 +150,7 @@
                     <thead><tr><th>Option</th><th>Setup</th><th>Description</th></tr></thead>
                     <tbody>
                         <tr><td><strong>1. WorkSigned Private Cloud</strong></td><td>None</td><td>Files stored on WorkSigned infrastructure. Fully accessible and auditable by the user. Default cloud mode.</td></tr>
-                        <tr><td><strong>2. Custom Private Cloud</strong></td><td>Backend proxy required</td><td>Connect WorkSigned to your own file server (S3-compatible or NFS). A backend proxy must be configured to bridge the platform to your storage.</td></tr>
+                        <tr><td><strong>2. Custom Private Cloud</strong></td><td>Backend proxy required</td><td>Connect WorkSigned to your own file server (S3-compatible or NFS). A backend proxy must be configured to bridge the platform to your storage &mdash; your server won't send the CORS headers the browser needs, so requests are routed through a server-side proxy.</td></tr>
                         <tr><td><strong>3. Local machine</strong></td><td>Desktop app install required</td><td>Files stay on your workstation, captured by the desktop client. Maximum privacy; requires the desktop app.</td></tr>
                         <tr><td><strong>4. No files (browser only)</strong></td><td>None</td><td>Light usage entirely in the browser, including JupyterLite for notebooks. No external storage required.</td></tr>
                     </tbody>

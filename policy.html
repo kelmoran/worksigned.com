@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data &amp; security policy — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation (uniform: brand + Docs + Requirements left, anchors + Join right) -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</a>
+            <nav class="nav-links nav-links-left">
+                <a href="docs.html">Docs</a>
+                <a href="requirements.html">Requirements</a>
+                <a href="policy.html">Policy</a>
+            </nav>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html#process">The process</a>
+            <a href="index.html#tools">Tools</a>
+            <a href="index.html#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Data &amp; Security Policy</span>
+            <div class="doc-group">Overview</div>
+            <a href="#data" class="active">What data we keep</a>
+            <a href="#logging">No user-data logging</a>
+            <a href="#billing">Billing &amp; login data</a>
+            <div class="doc-group">Encryption</div>
+            <a href="#workspace">Encrypted cloud workspace</a>
+            <a href="#keys">How your keys are stored</a>
+            <a href="#recovery">Key recovery</a>
+            <a href="#why">Why it works</a>
+            <div class="doc-group">Related</div>
+            <a href="docs.html">Platform documentation</a>
+            <a href="requirements.html">System requirements</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Trust</div>
+            <h1>Data &amp; security policy</h1>
+            <p class="doc-lede">WorkSigned is a signing authority, and its value depends on you trusting it to keep your data yours. This policy states, plainly, what we store, what we don't, and how the highest-security workspaces are encrypted so that <em>we cannot read your files</em> &mdash; and so a compromise of our servers can't hand your data and keys to an attacker.</p>
+
+            <!-- ========================================================= -->
+            <section id="data">
+                <h2>What data we keep</h2>
+                <p>The short version: <strong>we do not log user data.</strong> The only data we retain about you is what's strictly required to bill your account and let you log in. Your research, your files, your activity, your conversations, and your trail are yours &mdash; not a data set we mine, sell, or read.</p>
+                <div class="doc-callout">Rule of thumb: if it isn't needed to run your account (billing) or prove you're you (login), we don't keep a copy of it on the platform as a logged record.</div>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="logging">
+                <h2>No user-data logging</h2>
+                <p>WorkSigned does not log the content of your work. We do not record your research to a searchable or analyzable store, we do not train on it, and we do not use it to build profiles or products. The trail the platform produces is <em>yours</em> &mdash; it belongs to you and to your project, and it is the artifact that is sealed and signed, not a backend log we keep for ourselves.</p>
+                <ul>
+                    <li>No logging of research content, file contents, or conversation content.</li>
+                    <li>No training on your data. No mining, no licensing, no resale.</li>
+                    <li>Server logs (for operations) are user-auditable &mdash; you can see what they are.</li>
+                </ul>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="billing">
+                <h2>Billing &amp; login data</h2>
+                <p>The only user data we retain is the minimum needed to operate your account:</p>
+                <ul>
+                    <li><strong>Login.</strong> Your identity (email, credentials / auth tokens) so you can sign in.</li>
+                    <li><strong>Billing.</strong> Account and payment details required to bill you &mdash; held under standard PCI-style handling, not on the research data path.</li>
+                </ul>
+                <p>That's it. It is functionally separated from your research data, and it is never combined into an analyzable profile.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="workspace">
+                <h2>Encrypted cloud workspace <span class="h2-sub">An optional, maximum-security mode.</span></h2>
+                <p>For the most sensitive work, you can run an <strong>encrypted cloud workspace</strong>. In this mode your project files live inside an <strong>encrypted volume</strong> &mdash; a full-disk-encrypted image &mdash; and the keys to decrypt it are <strong>supplied by you at runtime</strong>. The platform mounts and works with the volume while you're logged in, but at rest it is ciphertext we cannot open.</p>
+                <ul>
+                    <li>Files live in an encrypted image (block-level encryption), not as plaintext on our storage.</li>
+                    <li>The decryption key comes from you at runtime &mdash; not from us, not from a database row we control.</li>
+                    <li>Even an operator of the storage cannot read the files without your key.</li>
+                </ul>
+                <div class="doc-callout">This is the difference between "we promise not to read your files" and "we <em>can't</em> read your files." Encrypted-workspace mode gives you the second one.</div>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="keys">
+                <h2>How your keys are stored</h2>
+                <p>We deliberately do <strong>not</strong> store your decryption keys in a plain database, and we do not keep them in any form we could use ourselves. Instead, the key material is protected <strong>asymmetrically</strong> and placed in an unconventional blob &mdash; not a readable field in a table, but a sealed object that requires a specific private key to open.</p>
+                <p>Put concretely:</p>
+                <ul>
+                    <li>Your key is <strong>asymmetrically sealed</strong> (encrypted/appended with a public key) into a blob. Only the matching private key can unseal it.</li>
+                    <li>The private key is <strong>not on any of our online servers.</strong> It exists on a dedicated <strong>air-gapped machine</strong> that is not reachable from the network.</li>
+                    <li>At runtime, the key comes from <em>you</em>. We never hold a usable copy of the plaintext key in our systems.</li>
+                </ul>
+                <p>The design goal is that no single point &mdash; not our database, not our servers, not an inside operator &mdash; can produce your plaintext key or your plaintext files on its own.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="recovery">
+                <h2>Key recovery</h2>
+                <p>If you lose access to your keys, the sealed blob is not lost &mdash; it is <strong>recovered through the air-gapped path</strong>:</p>
+                <ol>
+                    <li>The sealed blob (your key, asymmetrically protected) is transferred to our <strong>air-gapped machine</strong>.</li>
+                    <li>That machine, holding the private key, unseals the blob and recovers your key.</li>
+                    <li>Access to your workspace is restored.</li>
+                </ol>
+                <p>Because the private key only exists on a machine that is physically offline, recovery is something that can be done <em>deliberately, at the machine</em> &mdash; not something an attacker can trigger remotely against our live infrastructure.</p>
+                <div class="doc-callout">This is feasible and is a recognized pattern &mdash; it is the same shape as customer-managed-key (BYOK) encryption with a hardware-isolated recovery path, as used by HSM-backed key services and GPG key-recovery schemes. The security property you get: remote compromise of our online systems cannot reach the private key, so it cannot be used to bulk-decrypt your data.</div>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="why">
+                <h2>Why it works</h2>
+                <p>The whole design reduces to one property: <strong>your data keys and your files cannot be leaked together, because no one we operate holds both.</strong></p>
+                <ul>
+                    <li><strong>Files</strong> are encrypted at rest; the key is supplied by you at runtime.</li>
+                    <li><strong>Keys</strong> are asymmetrically sealed into a blob &mdash; not a plain database, not readable by us.</li>
+                    <li><strong>The private key</strong> lives only on an air-gapped machine, unreachable from the network.</li>
+                </ul>
+                <p>So a hacker who compromises our servers gets encrypted files and an unsealable blob, but not the key that opens either. A bulk exfiltration of "the data and its keys" is structurally impossible, because the key and the ciphertext are separated by a network boundary that an attacker can cross on only one side at a time.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned &middot; An Equitable Corporation &middot;
+                <a href="https://equitablestandard.com" target="_blank">equitablestandard.com</a>
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy.
+    (function () {
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        function onScroll() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 60);
+            var pos = window.scrollY + 120, current = sections[0];
+            for (var i = 0; i < sections.length; i++) {
+                if (sections[i].offsetTop <= pos) current = sections[i];
+            }
+            if (atBottom && sections.length) current = sections[sections.length - 1];
+            if (current) setActive(current.id);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+    </script>
+</body>
+</html>

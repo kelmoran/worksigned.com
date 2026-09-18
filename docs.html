@@ -14,6 +14,7 @@
             <nav class="nav-links nav-links-left">
                 <a href="docs.html">Docs</a>
                 <a href="requirements.html">Requirements</a>
+                <a href="policy.html">Policy</a>
             </nav>
         </div>
         <nav class="nav-links">
@@ -460,10 +461,12 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             if (map[id]) map[id].classList.add('active');
         }
         function onScroll() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 60);
             var pos = window.scrollY + 120, current = sections[0];
             for (var i = 0; i < sections.length; i++) {
                 if (sections[i].offsetTop <= pos) current = sections[i];
             }
+            if (atBottom && sections.length) current = sections[sections.length - 1];
             if (current) setActive(current.id);
         }
         window.addEventListener('scroll', onScroll, { passive: true });

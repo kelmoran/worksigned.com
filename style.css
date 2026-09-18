@@ -2,6 +2,33 @@
    WorkSigned — Landing page (worksigned_landing)
    Modern, clean design system.
 
+   FONT: Inter is SELF-HOSTED (assets/fonts/) — no CDN dependency, no swap.
+   ========================================================================== */
+@font-face {
+    font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("assets/fonts/inter-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("assets/fonts/inter-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap;
+    src: url("assets/fonts/inter-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("assets/fonts/inter-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter"; font-style: normal; font-weight: 800; font-display: swap;
+    src: url("assets/fonts/inter-latin-800-normal.woff2") format("woff2");
+}
+
+/* ==========================================================================
+   WorkSigned — Landing page (worksigned_landing)
+   Modern, clean design system.
+
    LAYOUT RULES:
    - A single .container is centered on the page and used for EVERY section.
      Because they share the same width and auto-margins, all section titles,
@@ -57,10 +84,16 @@ body {
     color: var(--text);
     line-height: 1.6;
     font-size: var(--fs-body);
+    font-weight: 400;
+    font-synthesis: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
 }
+/* Neutralize any stray heavy font-weight so the body can never render fake-bold.
+   (A phantom 900 was being applied to section containers; this pins body text
+   to the real Inter 400 and disables synthesized/fallback weight.) */
+body p, body .section-lead, body .proc-body, body .container { font-weight: 400; }
 
 a { color: inherit; text-decoration: none; }
 
@@ -123,7 +156,7 @@ body::before {
 .hero {
     position: relative; z-index: 1;
     text-align: center;
-    padding: 110px 0 84px;
+    padding: 124px 0 96px;
 }
 .eyebrow {
     display: inline-block;
@@ -134,7 +167,7 @@ body::before {
 }
 .hero h1 {
     font-size: clamp(40px, 7vw, 84px);
-    font-weight: 800; line-height: 1.02; letter-spacing: -2px; margin-bottom: 26px;
+    font-weight: 800; line-height: 1.02; letter-spacing: -2px; margin-bottom: 38px;
 }
 .grad {
     background: var(--grad);
@@ -144,7 +177,7 @@ body::before {
 .hero .sub {
     font-size: clamp(17px, 2.2vw, 21px);
     color: var(--text-muted);
-    max-width: 720px; margin: 0 auto 36px; line-height: 1.65;
+    max-width: 720px; margin: 0 auto 44px; line-height: 1.65;
 }
 .hero .sub strong { color: var(--text); font-weight: 600; }
 .hero .sub a { color: #7df0e0; font-weight: 700; text-decoration: none; cursor: pointer; border-bottom: 1px dotted #5eead4; transition: color .2s, border-color .2s; }
@@ -180,7 +213,7 @@ body::before {
 .section-title {
     font-size: clamp(32px, 4.2vw, 52px);
     font-weight: 800; letter-spacing: -1px;
-    text-align: center; margin-bottom: 16px;
+    text-align: center; margin-bottom: 30px;
 }
 .section-title.light { color: var(--text); }
 
@@ -350,7 +383,7 @@ body::before {
 .showcase-caption .desc { font-weight: 600; color: var(--text); }
 
 /* ---- segmented tab rail (every tool) ---- */
-.showcase-tabs { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; max-width: var(--content-max); margin: 24px auto 0; }
+.showcase-tabs { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; max-width: var(--content-max); margin: 24px auto 0; }
 .tab {
     position: relative; display: flex; flex-direction: column; gap: 0;
     border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
@@ -372,7 +405,7 @@ body::before {
     font-size: 10px; font-weight: 700; letter-spacing: 0.4px; color: #0b0d12;
     background: var(--accent-2); padding: 2px 7px; border-radius: 999px; }
 
-@media (max-width: 920px) { .showcase-tabs { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 920px) { .showcase-tabs { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 640px) { .showcase-tabs { grid-template-columns: repeat(3, 1fr); } .showcase-nav { display: none; } }
 @media (max-width: 420px) { .showcase-tabs { grid-template-columns: repeat(2, 1fr); } }
 /* ==========================================================================
@@ -551,9 +584,154 @@ body::before {
     will-change: opacity, transform;
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Major sections fade + rise in as you scroll (applied to the section's container). */
+#process > .container,
+#institutions > .container,
+#tools > .container,
+#trust > .container {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+#process > .container.in,
+#institutions > .container.in,
+#tools > .container.in,
+#trust > .container.in { opacity: 1; transform: translateY(0); }
+
+/* Work Ledger — its own scroll-triggered fade so it animates when it enters
+   the viewport (it sits below the #process title, so the whole-section fade
+   completes before it's in view). */
+.trail-example { opacity: 0; transform: translateY(34px);
+    transition: opacity 0.8s ease, transform 0.8s ease; }
+.trail-example.in { opacity: 1; transform: translateY(0); }
 .steps .reveal:nth-child(2) { transition-delay: 0.12s; }
 .steps .reveal:nth-child(3) { transition-delay: 0.24s; }
 .steps .reveal:nth-child(4) { transition-delay: 0.36s; }
+
+/* ==========================================================================
+   DOCUMENTATION + REQUIREMENTS PAGES
+   Shared, official-doc layout: left sidebar nav + scrollable content.
+   ========================================================================== */
+.doc-shell {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    min-height: calc(100vh - 64px);
+}
+.doc-sidebar {
+    position: sticky; top: 64px;
+    align-self: start;
+    height: calc(100vh - 64px);
+    overflow-y: auto;
+    padding: 28px 20px 40px 28px;
+    border-right: 1px solid var(--border);
+    font-size: 15px;
+}
+.doc-sidebar .doc-side-brand {
+    display: block; margin-bottom: 22px; font-weight: 700; font-size: 15px;
+    color: var(--text-faint); letter-spacing: .02em;
+}
+.doc-sidebar .doc-group {
+    font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-faint); margin: 20px 0 8px;
+}
+.doc-sidebar a {
+    display: block; padding: 6px 10px; margin: 0 -10px;
+    border-radius: 8px; color: var(--text-muted); line-height: 1.4;
+    border-left: 2px solid transparent; transition: color .15s, background .15s;
+}
+.doc-sidebar a:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.doc-sidebar a.active { color: var(--text); background: var(--accent-soft); border-left-color: var(--accent); }
+
+.doc-content {
+    padding: 56px clamp(24px, 5vw, 72px) 96px;
+    max-width: 900px;
+}
+.doc-content .doc-hero-eyebrow {
+    font-size: var(--fs-small); font-weight: 600; color: var(--accent-2);
+    letter-spacing: .06em; text-transform: uppercase; margin-bottom: 14px;
+}
+.doc-content h1 {
+    font-size: clamp(34px, 4.4vw, 50px); font-weight: 800; letter-spacing: -1px;
+    line-height: 1.1; margin-bottom: 20px;
+}
+.doc-content .doc-lede {
+    font-size: var(--fs-body); color: var(--text-muted); max-width: 720px; margin-bottom: 40px;
+}
+.doc-content .doc-lede strong { color: var(--text); font-weight: 600; }
+.doc-content section { margin-bottom: 64px; scroll-margin-top: 80px; }
+.doc-content section > h2 {
+    font-size: 28px; font-weight: 700; letter-spacing: -.4px;
+    margin-bottom: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.doc-content section > h2 .h2-sub {
+    display: block; font-size: 15px; font-weight: 400; color: var(--text-faint); margin-top: 6px;
+}
+.doc-content h3 { font-size: 19px; font-weight: 600; margin: 26px 0 10px; color: var(--text); }
+.doc-content p { margin: 0 0 16px; color: var(--text-muted); font-size: 18px; line-height: 1.7; }
+.doc-content p strong { color: var(--text); font-weight: 600; }
+.doc-content ul, .doc-content ol { margin: 0 0 18px 0; padding-left: 22px; color: var(--text-muted); font-size: 18px; line-height: 1.7; }
+.doc-content li { margin-bottom: 8px; }
+.doc-content li strong { color: var(--text); font-weight: 600; }
+.doc-content li code, .doc-content p code, .doc-content td code {
+    font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-size: 14px; background: var(--bg-elev-2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1px 6px; color: #cdd6ff;
+}
+.doc-content .doc-callout {
+    background: var(--bg-elev); border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent); border-radius: 10px;
+    padding: 18px 20px; margin: 20px 0; font-size: 17px; color: var(--text-muted);
+}
+.doc-content .doc-callout strong { color: var(--text); }
+.doc-content .doc-callout.ok { border-left-color: var(--accent-2); }
+
+/* tables */
+.doc-content table {
+    width: 100%; border-collapse: collapse; margin: 18px 0 24px;
+    font-size: 16px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.doc-content th, .doc-content td {
+    text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+.doc-content th {
+    background: var(--bg-elev); color: var(--text); font-weight: 600; font-size: 14px;
+    letter-spacing: .03em; text-transform: uppercase;
+}
+.doc-content td { color: var(--text-muted); }
+.doc-content td strong { color: var(--text); }
+.doc-content tr:last-child td { border-bottom: none; }
+.doc-content .req-num { font-weight: 700; color: var(--accent-2); white-space: nowrap; }
+
+/* ledger example block */
+.doc-ledger {
+    background: #080a0f; border: 1px solid var(--border-strong); border-radius: 12px;
+    padding: 18px 20px; margin: 18px 0; overflow-x: auto;
+    font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-size: 13px; line-height: 1.7; color: #c3cbe6; white-space: pre;
+}
+.doc-ledger .l-h { color: #6f7789; }
+.doc-ledger .l-ok { color: var(--accent-2); }
+.doc-ledger .l-id { color: #7d93ff; }
+
+/* requirement cards */
+.doc-reqgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+.doc-reqcard {
+    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px;
+}
+.doc-reqcard .rc-label { font-size: 13px; color: var(--text-faint); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.doc-reqcard .rc-val { font-size: 22px; font-weight: 700; color: var(--text); margin: 6px 0 4px; }
+.doc-reqcard .rc-note { font-size: 15px; color: var(--text-muted); }
+
+/* responsive: sidebar collapses on mobile */
+@media (max-width: 860px) {
+    .doc-shell { grid-template-columns: 1fr; }
+    .doc-sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 20px 18px; }
+    .doc-content { padding: 40px 18px 72px; }
+}
 
 /* ==========================================================================
    RESPONSIVE
@@ -577,4 +755,8 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; transition: none; }
+    #process > .container,
+    #institutions > .container,
+    #tools > .container,
+    #trust > .container { opacity: 1; transform: none; transition: none; }
 }

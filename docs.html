@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <a href="index.html" class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</a>
+        <nav class="nav-links">
+            <a href="index.html#process">The process</a>
+            <a href="docs.html">Docs</a>
+            <a href="requirements.html">Requirements</a>
+            <a href="index.html#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Documentation</span>
+
+            <div class="doc-group">Platform</div>
+            <a href="#how" class="active">How it works</a>
+            <a href="#modes">Operating modes</a>
+            <a href="#llm">LLM backends</a>
+            <a href="#proof">The proof chain</a>
+            <a href="#ledger">Ledger &amp; events</a>
+
+            <div class="doc-group">Applications</div>
+            <a href="#app-code">Code editor</a>
+            <a href="#app-run">Live runner</a>
+            <a href="#app-latex">LaTeX</a>
+            <a href="#app-docs">Documents (Writer)</a>
+            <a href="#app-sheets">Sheets (Calc)</a>
+            <a href="#app-slides">Slides (Impress)</a>
+            <a href="#app-chat">AI Chat</a>
+            <a href="#app-funding">Funding ledger</a>
+
+            <div class="doc-group">Related</div>
+            <a href="requirements.html">System requirements</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Documentation</div>
+            <h1>How WorkSigned works</h1>
+            <p class="doc-lede">WorkSigned is a research platform that captures, signs, and seals everything you do so that the work &mdash; and who did it &mdash; is provable. This document explains the technical design in plain terms: how the platform is built, the modes it runs in, how the proof chain is constructed, and what every application on the platform can do.</p>
+
+            <!-- ========================================================= -->
+            <section id="how">
+                <h2>How it works <span class="h2-sub">A single client, a single signed record.</span></h2>
+                <p>WorkSigned is one workspace that hosts every tool a researcher uses &mdash; code, documents, spreadsheets, slides, LaTeX, an AI assistant, and a funding ledger. Each tool opens in its own tab. What makes it different is the layer underneath: every action across every tool is captured, timestamped, hashed, and appended to one tamper-evident <strong>Work Ledger</strong>.</p>
+                <p>The design has three parts that work together:</p>
+                <ul>
+                    <li><strong>Capture.</strong> The client records file state (every create, edit, save) and user state (clicks, keystrokes, app switches). These are the raw events.</li>
+                    <li><strong>Sign.</strong> Each event is content-hashed (SHA-256) and linked to the previous one, forming a hash chain. Milestones are additionally signed with a signing key so the chain is not merely tamper-evident but attributable.</li>
+                    <li><strong>Seal.</strong> When a file, document, or app session is closed or saved, its final state is sealed &mdash; the hash of that exact content is written to the ledger so a verifier can later confirm the file has not changed since.</li>
+                </ul>
+                <p>Because every tool writes to the same ledger, the record is continuous: a paragraph typed in the document editor, a number entered in a spreadsheet, a line of code committed, a dollar logged in the funding tool &mdash; all on one signed timeline, in order, attributed to the person who performed them.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="modes">
+                <h2>Operating modes <span class="h2-sub">WorkSigned runs in a few configurations. Pick by where you need files and models to live.</span></h2>
+                <p>Two independent choices define the mode: <strong>where files are stored</strong> and <strong>which LLM handles AI-assisted work</strong>. Combined with whether you use the browser or the desktop client, that gives a small matrix of configurations.</p>
+                <table>
+                    <thead><tr><th>Dimension</th><th>Options</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Client</strong></td><td>Web (browser) or Desktop (macOS, Windows, Linux).</td></tr>
+                        <tr><td><strong>Files</strong></td><td>WorkSigned Private Cloud, Custom Private Cloud (your storage, via a backend proxy), Local machine (desktop app), or no files (browser-only, includes JupyterLite).</td></tr>
+                        <tr><td><strong>LLM</strong></td><td>Public / WorkSigned-dedicated LLMs, or your own private LLM (local or on-premises endpoint).</td></tr>
+                    </tbody>
+                </table>
+                <p>Every mode produces the same kind of ledger and the same verification. The mode changes only <em>where the bytes live and which model does the inference</em>; it never changes what is captured or how it is sealed.</p>
+                <div class="doc-callout"><strong>Local-first default.</strong> Nothing about the proof depends on the cloud. A researcher can run entirely on their own machine (local files + local LLM) and still produce a complete, verifiable trail &mdash; they are their own trust anchor.</div>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="llm">
+                <h2>LLM backends <span class="h2-sub">Public, private, and dedicated models.</span></h2>
+                <p>WorkSigned supports both <strong>public</strong> and <strong>private</strong> LLMs, and it operates its own <strong>dedicated LLMs</strong> for the default cloud experience. The platform is agnostic to which model serves the request &mdash; it speaks the standard OpenAI-compatible chat-completions API, so any endpoint works.</p>
+                <ul>
+                    <li><strong>WorkSigned-dedicated LLMs.</strong> The default for cloud usage. These are models operated by WorkSigned that do <em>not</em> train on your data. Your prompts, files, and completions are not used for model improvement.</li>
+                    <li><strong>Public LLMs.</strong> Bring a frontier or commercial model for maximum capability. Be aware of that provider's own data-handling terms.</li>
+                    <li><strong>Private / local LLMs.</strong> Point the platform at a model you control &mdash; a local inference server (<code>llama.cpp</code>, <code>vLLM</code>, <code>Ollama</code>) or an on-premises endpoint at your institution. This is the fully-private path: no prompt data ever leaves your hardware.</li>
+                </ul>
+                <p>Regardless of backend, the AI conversation itself is captured on the ledger (see <a href="#app-chat">AI Chat</a>), so an LLM-assisted contribution is attributable just like any human one.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="proof">
+                <h2>The proof chain <span class="h2-sub">How the tamper-evident record is actually constructed.</span></h2>
+                <p>The core idea: a proof of work is only as good as the process behind the file. A back-dated file can be forged; the <em>sequence of keystrokes and clicks that produced it</em> cannot. WorkSigned builds its chain around that principle.</p>
+
+                <h3>Files are the starting point</h3>
+                <p>The ledger does not begin with a blank slate. Each project's <strong>files are the initial state</strong> &mdash; the baseline the trail is measured against. Every file is content-hashed on creation and on every save. Think of it as a Git-style repository where the object being tracked is the exact byte content, and the history is the sequence of user actions that moved it from one state to the next.</p>
+
+                <h3>Clicks and keystrokes mutate the state</h3>
+                <p>On top of the file baseline, WorkSigned records <strong>user actions as state transitions</strong>. A keystroke changes a cell or a line of text; a click changes which tool, file, or view is active. Each action is an event with a type, a payload (what changed, and where), a timestamp to the millisecond, and a hash linking it to the event before it.</p>
+                <p>The full picture of a project is therefore:</p>
+                <ul>
+                    <li>the set of files (content-hashed), plus</li>
+                    <li>the ordered stream of user actions that produced and mutated those files, plus</li>
+                    <li>the higher-level events &mdash; milestones, funding entries, app sessions &mdash; interleaved on the same timeline.</li>
+                </ul>
+
+                <h3>The state is verified when a file or app is closed</h3>
+                <p>Verification is anchored at natural boundaries. When you <strong>close or save a file</strong>, or <strong>close an app session</strong>, WorkSigned seals that state: it computes the hash of the final content and writes a <code>sealed</code> event to the ledger. A verifier later re-hashes the file and checks it against the sealed entry. If they match, the file is provably the one you produced at that moment; if not, the file changed afterward.</p>
+                <p>This gives you fine-grained and coarse-grained proof at the same time. Zoom out and the ledger is the whole story &mdash; projects, milestones, spend, authorship. Zoom in on any single save and it is every keystroke, mouse move, and click that produced it, timestamped and hash-chained.</p>
+
+                <h3>Examples of what is on the chain</h3>
+                <ul>
+                    <li><strong>File saves.</strong> Every create/edit/save, content-hashed and appended.</li>
+                    <li><strong>Keystrokes and mouse events.</strong> The raw input that produced a save &mdash; not just the resulting file.</li>
+                    <li><strong>App sessions.</strong> Which tool was open, when it opened, and when it closed (a state-verification boundary).</li>
+                    <li><strong>Milestones.</strong> Author-anchored checkpoints, e.g. "Baseline assay validated &mdash; 14 files signed."</li>
+                    <li><strong>Funding events.</strong> Every dollar logged against a grant, on the same timeline as the work it funded.</li>
+                    <li><strong>LLM interactions.</strong> The full AI-assisted conversation (prompts and completions), so model-generated work is on the record.</li>
+                    <li><strong>Email / chat interactions.</strong> Human and LLM correspondence is captured the same way &mdash; a claim of collaboration or handoff is verifiable, not just asserted.</li>
+                </ul>
+                <p>Two researchers both contributing to the same file, a funding decision that came after a specific data point, an LLM draft that a human then edited &mdash; all of it resolves to "who did what, and when," down to the individual.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="ledger">
+                <h2>Ledger &amp; events <span class="h2-sub">Append-only accounting.</span></h2>
+                <p>Every project keeps <strong>one signed ledger</strong>. It is append-only: entries are added, never edited or deleted. You cannot rewrite history because each entry's hash incorporates the previous entry's hash &mdash; change any entry and every hash after it breaks, which is immediately detectable.</p>
+                <h3>How events are inserted</h3>
+                <p>Insertion is a single, strict path. An event is produced by the client (a save, a keystroke, a milestone, a funding line), then:</p>
+                <ol>
+                    <li><strong>Structured.</strong> The event is serialized into a canonical form &mdash; type, actor, payload, timestamp, and any associated content hash.</li>
+                    <li><strong>Hashed.</strong> The entry is hashed, and its hash includes the hash of the previous entry in the chain. This is what makes it tamper-evident and order-locked.</li>
+                    <li><strong>Appended.</strong> The entry is written to the ledger at the end. There is no update or delete operation in the format; a correction is a <em>new</em> event that references the one it supersedes.</li>
+                    <li><strong>Optionally signed.</strong> Milestones and sealed states are additionally signed with the project's signing key, making them attributable (not merely tamper-evident).</li>
+                </ol>
+                <p>Because the ledger is a single ordered stream, "accounting" is just a subset of it. Spend events and work events live on the same chain, so a grant ledger and a research timeline are the same artifact &mdash; no separate accounting software, no way to reconcile one against the other by hand.</p>
+
+                <h3>What a sealed entry looks like</h3>
+                <div class="doc-ledger"><span class="l-h">// ledger — project zinc-kinase (excerpt)</span>
+seq  00004  <span class="l-h">ts 2026-03-07T16:31:04.882Z</span>  <span class="l-h">actor dr.chen</span>
+type  keystroke        payload "0.042" -> cell B7
+prev  0x7a11...c02d    <span class="l-id">hash 0x2f38...91ab</span>
+
+seq  00005  <span class="l-h">ts 2026-03-07T16:31:05.630Z</span>  <span class="l-h">actor dr.chen</span>
+type  keystroke        payload "+/-0.003" -> cell B7
+prev  0x2f38...91ab    <span class="l-id">hash 0x8c40...33e1</span>
+
+seq  00006  <span class="l-h">ts 2026-03-07T16:31:09.114Z</span>  <span class="l-h">actor dr.chen</span>
+type  <span class="l-ok">sealed</span>           file results_v1.csv
+content sha256 b2e4...44aa
+prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span class="l-h">// signed</span>
+
+<span class="l-h">// verify: re-hash results_v1.csv, walk the chain from a
+// trusted anchor. Any break = tamper detected.</span></div>
+                <p>The <code>sealed</code> event is the anchor a verifier uses: it ties a specific file, with a specific hash, to a specific moment and a specific person, with a chain of input events behind it showing exactly how that content was produced.</p>
+            </section>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:40px 0;">
+            <div class="doc-hero-eyebrow">Applications</div>
+            <h1 style="font-size:clamp(28px,3.4vw,40px);">Every tool on the platform</h1>
+            <p class="doc-lede">Each application opens in its own tab and writes to the same ledger. Below is what each one does.</p>
+
+            <!-- CODE -->
+            <section id="app-code">
+                <h2>Code editor</h2>
+                <p>A full-featured source editor for any text-based file &mdash; Python, R, shell, JSON, TOML, and more, with syntax highlighting, multiple open files, and search. Every save is content-hashed and appended to the ledger, so the evolution of a script or config is fully recorded.</p>
+                <ul>
+                    <li>Multi-file tabs with per-file language detection and syntax highlighting.</li>
+                    <li>Find/replace across the open buffer.</li>
+                    <li>Every save sealed to the trail; every edit attributable.</li>
+                    <li>Works alongside the live runner to go from edit to execution in one place.</li>
+                </ul>
+            </section>
+
+            <!-- RUN -->
+            <section id="app-run">
+                <h2>Live runner</h2>
+                <p>Code you write in the editor runs inside the platform &mdash; not just saved, but executed. This is what "runs live" means: the environment is part of the toolchain, so the inputs, the code, and the outputs are all captured together. Running a script or a cell is itself a logged event.</p>
+                <ul>
+                    <li>Execute code directly in the workspace and capture stdout/stderr to the record.</li>
+                    <li>Outputs (plots, tables, result files) are sealed like any other artifact.</li>
+                    <li>Reproducible: the exact code + the exact run are both on the trail.</li>
+                </ul>
+            </section>
+
+            <!-- LATEX -->
+            <section id="app-latex">
+                <h2>LaTeX</h2>
+                <p>Write LaTeX and compile it to a rendered paper in the same tab &mdash; source on one side, typeset output on the other. Both the <code>.tex</code> source and the compiled PDF are sealed, so the paper you submit is provably the one you authored.</p>
+                <ul>
+                    <li>Side-by-side source editor and live-compiled preview.</li>
+                    <li>Common document classes and equation support.</li>
+                    <li>Source and rendered output both content-hashed onto the trail.</li>
+                    <li>BibTeX / bibliography and figure inclusion.</li>
+                </ul>
+            </section>
+
+            <!-- DOCS / WRITER -->
+            <section id="app-docs">
+                <h2>Documents <span class="h2-sub">A full word processor in the browser (LibreOffice Writer).</span></h2>
+                <p>The document editor is the complete Writer word processor compiled to run in the browser. It is not a reduced web form &mdash; it is the full writing environment. The complete feature set:</p>
+                <ul>
+                    <li><strong>Text &amp; formatting.</strong> Rich text; fonts, sizes, weights, styles; character and paragraph formatting; inline styles.</li>
+                    <li><strong>Styles &amp; templates.</strong> Built-in and custom styles; apply/define template documents.</li>
+                    <li><strong>Lists &amp; numbering.</strong> Bulleted, numbered, and multilevel lists; captions and numbered headings.</li>
+                    <li><strong>Headings &amp; outline.</strong> Heading styles that drive the document outline and navigation.</li>
+                    <li><strong>Tables.</strong> Create and edit tables with merged cells, borders, and alignment.</li>
+                    <li><strong>Images &amp; graphics.</strong> Insert images and vector objects; resize, crop, and wrap text around them.</li>
+                    <li><strong>Equations.</strong> Insert and edit mathematical formulas.</li>
+                    <li><strong>Footnotes &amp; endnotes.</strong> Insert, edit, and reference notes.</li>
+                    <li><strong>Cross-references &amp; bookmarks.</strong> Named bookmarks and automatic cross-references that update.</li>
+                    <li><strong>Mail merge.</strong> Merge a document with a data source for bulk generation.</li>
+                    <li><strong>Find &amp; replace.</strong> Including regular expressions and whole-word matching.</li>
+                    <li><strong>Spelling &amp; grammar.</strong> Spell check, thesaurus, and language settings.</li>
+                    <li><strong>Redlines &amp; comments.</strong> Track changes, accept/reject edits, and threaded comments &mdash; the whole review cycle is captured on the trail.</li>
+                    <li><strong>Page layout.</strong> Margins, headers/footers, page numbers, sections, columns, page breaks.</li>
+                    <li><strong>TOC &amp; indexes.</strong> Automatic table of contents, table of figures, and indexes.</li>
+                    <li><strong>Export.</strong> Save to DOCX, ODT, and PDF.</li>
+                </ul>
+            </section>
+
+            <!-- SHEETS / CALC -->
+            <section id="app-sheets">
+                <h2>Sheets <span class="h2-sub">A full spreadsheet in the browser (LibreOffice Calc).</span></h2>
+                <p>The spreadsheet editor is the complete Calc engine in the browser. Your results, analysis, and tables &mdash; versioned and verifiable. The complete feature set:</p>
+                <ul>
+                    <li><strong>Cells &amp; data.</strong> Enter and format numeric, text, date, and currency values; multiple sheets per workbook.</li>
+                    <li><strong>Functions.</strong> The full Calc function library &mdash; math, statistics, financial, text, date/time, and lookup.</li>
+                    <li><strong>Formulas &amp; references.</strong> Cell references, ranges, absolute/relative references, and cross-sheet references.</li>
+                    <li><strong>Tables &amp; sorting.</strong> Filterable data ranges; sort by one or more columns.</li>
+                    <li><strong>Charts.</strong> Bar, line, pie, scatter, and more, built from sheet data.</li>
+                    <li><strong>Conditional formatting.</strong> Highlight cells based on value or formula rules.</li>
+                    <li><strong>Data analysis.</strong> Pivot tables, subtotals, and data-series tools.</li>
+                    <li><strong>Cell styles &amp; number formats.</strong> Named cell styles and custom number/date formats.</li>
+                    <li><strong>Validation &amp; protection.</strong> Input validation and sheet protection.</li>
+                    <li><strong>Find &amp; replace.</strong> Across the workbook, with options.</li>
+                    <li><strong>Import / export.</strong> XLSX, CSV, ODS, and more.</li>
+                </ul>
+            </section>
+
+            <!-- SLIDES / IMPRESS -->
+            <section id="app-slides">
+                <h2>Slides <span class="h2-sub">Presentations in the browser (LibreOffice Impress).</span></h2>
+                <p>Assemble presentations and figures, ready to defend your work to reviewers. The complete Impress feature set:</p>
+                <ul>
+                    <li><strong>Slides &amp; masters.</strong> Multiple slides; slide masters and layouts for consistent design.</li>
+                    <li><strong>Placeholders &amp; text.</strong> Title/body placeholders; rich text and bullet formatting.</li>
+                    <li><strong>Shapes &amp; images.</strong> Draw shapes, insert images and charts from your sheets.</li>
+                    <li><strong>Transitions &amp; animations.</strong> Slide transitions and object animations for delivery.</li>
+                    <li><strong>Notes &amp; handouts.</strong> Speaker notes and handout layouts.</li>
+                    <li><strong>Presentation mode.</strong> Full-screen delivery with a presenter view.</li>
+                    <li><strong>Export.</strong> PPTX, ODP, and PDF.</li>
+                </ul>
+            </section>
+
+            <!-- CHAT -->
+            <section id="app-chat">
+                <h2>AI Chat</h2>
+                <p>Work alongside an AI research assistant in a dedicated chat. The assistant can help reason, draft, and analyze &mdash; and the entire conversation is on the record, so AI-assisted contributions are attributable, not a black box.</p>
+                <ul>
+                    <li>Streaming conversation with the configured LLM (dedicated, public, or private).</li>
+                    <li>Full transcript captured to the ledger &mdash; prompts and completions alike.</li>
+                    <li>Works across the project: the assistant can read the working set you give it.</li>
+                    <li>Model is your choice &mdash; including a fully local, on-hardware model.</li>
+                </ul>
+            </section>
+
+            <!-- FUNDING -->
+            <section id="app-funding">
+                <h2>Funding ledger</h2>
+                <p>Log spend against grants as you go. Every dollar lands on the same signed timeline as the work it produced, so what was done, by whom, and at what cost is one artifact.</p>
+                <ul>
+                    <li>Record line-item spend and tie each to a grant and a purpose.</li>
+                    <li>See total committed vs. spent per grant.</li>
+                    <li>Spend events are sealed like any other ledger entry &mdash; auditable and immutable.</li>
+                    <li>Answers grants and audits from the same trail as the research.</li>
+                </ul>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned &middot; An Equitable Corporation &middot;
+                <a href="https://equitablestandard.com" target="_blank">equitablestandard.com</a>
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy.
+    (function () {
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        function onScroll() {
+            var pos = window.scrollY + 120, current = sections[0];
+            for (var i = 0; i < sections.length; i++) {
+                if (sections[i].offsetTop <= pos) current = sections[i];
+            }
+            if (current) setActive(current.id);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+    </script>
+</body>
+</html>

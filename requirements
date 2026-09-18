@@ -1,0 +1,32 @@
+# System requirements
+x86 (wasm?)
+at least 8 core cpu
+16 gb RAM
+10 gb storage
+10 mbps internet connection
+
+
+# Desktop version
+MacOS Windows Linux
+
+
+# Web version
+Chrome ver> Firefox ver> Safari ver>
+
+
+Optional
+Local LLM Endpoint
+
+
+File server
+1. WorkSigned Private Cloud - fully accessible and auditable by the user.
+
+2. Custom Private Cloud - user connects their file server - backend proxy setup required
+
+3. Local machine - Desktop app install required
+
+4. No files - in browser light usage only (including Jupyter lite)
+
+
+
+

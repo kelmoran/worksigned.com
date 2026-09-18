@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="WorkSigned adds privacy, protection, and proof-of-work to the entire research process &mdash; shielding intent, securing the work, and attributing results to the people and institutions that produced them.">
     <title>WorkSigned — Privacy, protection &amp; proof for the research process</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         /* ===== Research-process flow (connected vertical diagram) ===== */
@@ -43,7 +40,7 @@
         }
         .te-lead {
             font-size: var(--fs-body); color: var(--text-muted); text-align: center;
-            max-width: 640px; margin: 0 auto 34px; line-height: 1.55;
+            max-width: 640px; margin: 0 auto 34px; line-height: 1.65;
         }
         .te-lead strong, .te-lead em { color: #7df0e0; font-weight: 700; }
         .te-label {
@@ -70,11 +67,11 @@
         .te-item.work .te-kind { color: var(--text-muted); }
         .te-item.mile .te-kind { color: #8ab0ff; }
         .te-item.fund .te-kind { color: #fbbf24; }
-        .te-desc { font-size: var(--fs-small); color: var(--text-muted); line-height: 1.45; }
+        .te-desc { font-size: var(--fs-small); color: var(--text-muted); line-height: 1.55; }
         .te-amt { color: #fde68a; font-weight: 700; }
         .te-who { display: block; margin-top: 5px; font-size: var(--fs-small); color: var(--text-faint); }
         .te-hash { display: block; margin-top: 6px; font-family: ui-monospace, Menlo, monospace; font-size: .68rem; color: var(--text-faint); opacity: .8; }
-        .te-foot { margin-top: 26px; text-align: center; font-size: var(--fs-small); color: var(--text-faint); }
+        .te-foot { margin-top: 26px; text-align: center; font-size: var(--fs-body); color: var(--text-muted); line-height: 1.6; max-width: 640px; margin-left: auto; margin-right: auto; }
         .te-foot strong { color: var(--text-muted); font-weight: 700; }
 
         /* ===== zoom / blow-up: fine-grained micro-keystroke ledger ===== */
@@ -85,23 +82,25 @@
             transform: scale(1.12);
         }
         .te-item.zoomed .te-kind { color: #7df0e0; }
-        /* the callout "lens" connector (a thin beam from the node down to the panel) */
-        .te-lens { position: relative; height: 58px; display: flex; justify-content: center; }
-        .te-lens::before {  /* left beam: top at node 5's left edge, bottom at panel left corner */
-            content: ""; position: absolute; top: 0;
-            left: calc(50% + 187px); height: 100%;
-            width: 2px; background: linear-gradient(180deg, rgba(94,234,212,.55), rgba(94,234,212,.12));
-            transform-origin: top center; transform: rotate(-27deg);
+        /* pulsing ring around the magnified node's dot */
+        .te-zoom-ring {
+            position: absolute; inset: -9px; border-radius: 50%; pointer-events: none;
+            border: 2px solid rgba(94,234,212,.8);
+            animation: teZoomPulse 1.9s ease-out infinite;
         }
-        .te-lens::after {   /* right beam: top at node 5's right edge, bottom at panel right corner */
-            content: ""; position: absolute; top: 0;
-            right: calc(50% + 187px); height: 100%;
-            width: 2px; background: linear-gradient(180deg, rgba(94,234,212,.55), rgba(94,234,212,.12));
-            transform-origin: top center; transform: rotate(27deg);
+        @keyframes teZoomPulse {
+            0%   { transform: scale(.7);  opacity: .95; }
+            70%  { transform: scale(1.7); opacity: 0; }
+            100% { transform: scale(1.7); opacity: 0; }
         }
+        /* the zoom connector: a measured SVG funnel from node 5 down to the panel.
+           Height + viewBox are set by JS to the exact gap, so the lines always
+           land on node 5 and the panel corners regardless of screen width. */
+        .te-lens { position: relative; height: 72px; display: flex; justify-content: center; }
+        .te-lens-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
         .te-lens-tag {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            font-size: var(--fs-small); letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
             color: #7df0e0; background: var(--bg); padding: 0 10px; white-space: nowrap;
         }
         /* the magnified panel */
@@ -138,8 +137,6 @@
         @media (max-width: 820px) {
             .mg-row { grid-template-columns: 60px 88px 1fr; }
             .mg-hash { display: none; }
-            .te-lens::before { left: calc(50% - 120px); transform: rotate(0deg); }
-            .te-lens::after { display: none; }
         }
         @media (max-width: 820px) {
             .te-track { flex-direction: column; gap: 20px; }
@@ -249,11 +246,13 @@
     <header class="nav">
         <a href="#top" class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</a>
         <nav class="nav-links">
+            <a href="docs.html">Docs</a>
             <a href="#process">The process</a>
             <a href="">Stealth</a>
             <a href="#institutions">For institutions</a>
             <a href="#tools">Tools</a>
             <a href="#trust">Our guarantee</a>
+            <a href="requirements.html">Requirements</a>
             <a href="#apply" class="nav-cta">Join</a>
         </nav>
     </header>
@@ -266,8 +265,7 @@
                 <strong>WorkSigned</strong> protects the entirety of the <strong>research
                 journey</strong>, from beginning to end. Our tool-rich research platform <strong>shields your intent</strong> while you
                 explore, <strong>secures the work</strong> as you build it, and produces a
-                tamper-evident record that <strong>attributes the result to the people who made it</strong>.
-                As the first ever <a href="#trust">Equitable Corporation</a>, Worksigned provides unique and lasting data safety guarantees that no other company can enforce.
+                tamper-evident record that <strong>attributes the result to the people who made it</strong>. As the first ever Equitable Corporation, Worksigned provides unique and lasting data safety guarantees that <strong>no other company<strong> can enforce.
             </p>
             <div class="hero-cta">
                 <a href="#apply" class="btn btn-primary">Request access</a>
@@ -304,7 +302,7 @@
                                 <a class="sl-link" href="#" onclick="return false;">stealth mode</a>
                                  shards your query into harmless parts,
                             disperses them across separate search engines, AI providers, and IP addresses, then synthesizes
-                            the result privately. Your intent never appears as a pattern.
+                            the result privately. Your intent is never leaked.
                         </p>
                         <div class="sl-outer">
                             <span class="sl-card" aria-hidden="true">
@@ -332,7 +330,7 @@
                     <div class="proc-body">
                         <h3>Collect from many sources, quietly</h3>
                         <p>
-                            WorkSigned aggregates across sources with <strong>query translation</strong>
+                            WorkSigned aggregates data across many sources with <strong>query translation</strong>
                             so no single request exposes the shape of your project. Because you
                             control the entire toolchain, you can choose <em>where data flows</em> &mdash; and
                             keep the destination and the intent hidden from third parties.
@@ -374,7 +372,7 @@
 
             <!-- ===== REALISTIC SIGNED-TRAIL EXAMPLE ===== -->
             <div class="trail-example">
-                <h2 class="te-heading">The Work Ledger acts as both the proof that the work was done, how it was done, and what it cost.</h2>
+                <h2 class="te-heading">The Work Ledger acts as both the proof that the work was done, how it was done, and at what cost.</h2>
                 <p class="te-lead">Every project keeps one signed ledger. Zoom out and it&rsquo;s the whole story; zoom in and it&rsquo;s <em>every keystroke, mouse move, and dollar</em> that built the work.</p>
                 <p class="te-label">A real trail looks like this &mdash; our <strong>immutable ledger</strong></p>
                 <div class="te-track">
@@ -411,7 +409,7 @@
                         <span class="te-hash">0x91f0…7d3c</span>
                     </div>
                     <div class="te-item fund zoomed">
-                        <div class="te-dot">5</div>
+                        <div class="te-dot"><span class="te-zoom-ring"></span>5</div>
                         <div class="te-time">Mar 7 &middot; 16:31</div>
                         <div class="te-kind">Funding spent</div>
                         <div class="te-desc">$6,150 &mdash; <em>sequencing run</em></div>
@@ -429,7 +427,10 @@
                 </div>
 
                 <!-- ===== ZOOM-IN: fine-grained micro-keystroke ledger ===== -->
-                <div class="te-lens"><span class="te-lens-tag">&darr; one node, magnified &times;1000</span></div>
+                <div class="te-lens">
+                    <svg class="te-lens-svg" aria-hidden="true" preserveAspectRatio="none"></svg>
+                    <span class="te-lens-tag">&darr; one node, magnified &times;1000</span>
+                </div>
                 <div class="mg-panel">
                     <div class="mg-head">
                         <span class="mg-zoom">&times;1000</span>
@@ -526,7 +527,7 @@
                 </div>
                 <div class="ic">
                     <h3>Answer to <span class="k">grants &amp; audits</span></h3>
-                    <p>Every deliverable &mdash; and every dollar &mdash; on the same signed timeline: what was done, by whom, and what it cost, tied to the grants that funded it. Funders and auditors pull one tamper-evident trail &mdash; <strong>and you stop paying for a separate grant-accounting tool to do it.</strong></p>
+                    <p>Every deliverable &mdash; and every dollar &mdash; on the same signed timeline: what was done, by whom, and at what cost, tied to the grants that funded it. Funders and auditors pull one tamper-evident trail &mdash; <strong>and you stop paying for a separate grant-accounting tool to do it.</strong></p>
                 </div>
             </div>
         </div>
@@ -538,7 +539,7 @@
             <div style="text-align:center;">
                 <h2 class="section-title">One platform. <span class="grad">Every tool</span> you work in.</h2>
                 <p class="section-lead">
-                    Code, documents, spreadsheets, presentations, LaTeX, and AI chat &mdash;
+                    Code, email, documents, spreadsheets, presentations, LaTeX, AI chat, many more scientific applications &mdash;
                     not bolted-on plugins, but native tools that <strong>all write to the same
                     signed record.</strong> And code you write in the editor
                     <strong>runs right in the platform.</strong>

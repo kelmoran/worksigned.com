@@ -1,0 +1,201 @@
+✓
+WorkSigned
+The process
+Stealth
+For institutions
+Tools
+Our guarantee
+Join
+Privacy, protection & proof for the entire research process.
+WorkSigned protects the entirety of the research journey, from beginning to end. Our tool-rich research platform shields your intent while you explore, secures the work as you build it, and produces a tamper-evident record that attributes the result to the people who made it. As the first ever Equitable Corporation, Worksigned provides unique and lasting data safety guarantees that no other company can enforce.
+
+Request access
+See how it works
+Platform tools
+Securing the entire research supply chain
+Every stage of research is where intent can leak, work can be exposed, and credit can be disputed. WorkSigned is built around the process — and because we control the toolchain, each stage gets privacy, protection, and proof. Proof of work spans the whole thing; the privacy and protection are tuned to what each stage actually risks.
+
+1
+Explore without revealing intent
+A single search like “CRISPR editing a gene linked to a rare genetic disease” tells a competitor exactly what you’re planning — before you’ve told anyone. WorkSigned’s stealth mode shards your query into harmless parts, disperses them across separate search engines, AI providers, and IP addresses, then synthesizes the result privately. Your intent is never leaked.
+
+
+2
+Collect from many sources, quietly
+WorkSigned aggregates data across many sources with query translation so no single request exposes the shape of your project. Because you control the entire toolchain, you can choose where data flows — and keep the destination and the intent hidden from third parties.
+
+3
+Process locally & privately
+Preliminary and sensitive results are processed on your or our private LLMs — never routed to frontier models that train on your data. Every agent and process runs sandboxed, every binary on the platform is analyzed for telemetry, and monitoring watches for exfiltration. What touches your data is known, contained, and audited.
+
+4
+The entire process, signed — and attributed
+Everything you did, in order, becomes a tamper-evident, hash-chained record — verifiable in seconds by a journal, funder, or tribunal. And it goes beyond “the work happened”: it names which person did which part, and when, so authorship and priority are provable down to the individual.
+
+The Work Ledger acts as both the proof that the work was done, how it was done, and at what cost.
+Every project keeps one signed ledger. Zoom out and it’s the whole story; zoom in and it’s every keystroke, mouse move, and dollar that built the work.
+
+A real trail looks like this — our immutable ledger
+
+1
+Mar 4 · 09:12
+Project created
+Project zinc-kinase initialized — 3 members, grant NIH-R35 attached
+Dr. Chen
+0x3f9a…c21b
+2
+Mar 4 · 11:47
+Funding spent
+$2,400 — reagents & consumables
+grant NIH-R35
+0x7c1d…88e0
+3
+Mar 5 · 15:20
+File sealed
+results_v1.csv saved & hashed
+Dr. Okafor
+0xb2e4…44aa
+4
+Mar 6 · 08:05
+Milestone commit
+“Baseline assay validated” — 14 files signed
+Dr. Chen
+0x91f0…7d3c
+5
+Mar 7 · 16:31
+Funding spent
+$6,150 — sequencing run
+grant NIH-R35
+0x5a88…b1f2
+6
+Mar 9 · 10:48
+Milestone commit
+“Draft complete” — 42 files, 3 authors signed
+Dr. Okafor, Dr. Chen
+0xde02…91cc
+↓ one node, magnified ×1000
+×1000
+Node 5 — results_v1.csv, 16:31:04.882 → 16:31:09.114
+The same one save, at full resolution. Every keystroke, mouse move, and click is captured — not just the file that ended up on disk.
+
+16:31:04.882
+type
+"0.042 → cell B7
+0x7a11…c02d
+16:31:05.114
+move
+cursor x:612 y:148 → x:614 y:152
+0x2f38…91ab
+16:31:05.630
+type
+"±0.003" → cell B7
+0x8c40…33e1
+16:31:06.020
+backspace ×2
+remove trailing comma & space
+0x1d07…b4f2
+16:31:06.470
+type
+"p<0.01" → cell C7
+0x99ee…08cd
+16:31:08.990
+click
+Save button · (x:1240, y:64)
+0x4410…6b77
+16:31:09.114
+sealed
+results_v1.csv · sha256 b2e4…44aa
+0xde02…91cc
+This is the actual proof of the work: not “a file exists,” but every single keystroke and mouse movement that produced it, timestamped to the millisecond and hash-chained. You can’t fake the process the way you can fake the product — and a back-dated file would leave no trail of how it was typed.
+
+Every entry is append-only & hash-chained — work, milestones, and spend in one signed record. Nothing can be edited, deleted, or back-dated. It’s your research timeline and your grant ledger — no separate accounting software.
+
+Built for the researcher — and the institution behind them
+The researcher owns their credit and priority; the institution owns its integrity and reputation. A leak or a disputed claim hurts both. WorkSigned protects both, as equals.
+
+Protect the intellectual property
+Whatever the ownership split, the work needs a tamper-evident chain of custody — provable provenance for the researcher’s contribution, a defensible asset for the institution.
+
+Defend attribution & priority
+The record shows who did what and when, down to the individual — provable authorship for the researcher, fewer conflicts for the institution.
+
+Guard reputation
+Stealth research and exfiltration countermeasures keep sensitive work confidential — no leak before you choose to announce it.
+
+Answer to grants & audits
+Every deliverable — and every dollar — on the same signed timeline: what was done, by whom, and at what cost, tied to the grants that funded it. Funders and auditors pull one tamper-evident trail — and you stop paying for a separate grant-accounting tool to do it.
+
+One platform. Every tool you work in.
+Code, email, documents, spreadsheets, presentations, LaTeX, AI chat, many more scientific applications — not bolted-on plugins, but native tools that all write to the same signed record. And code you write in the editor runs right in the platform.
+
+app.worksigned.com/funding
+sealed
+Funding ledger tool
+
+Funding ledgerLog spend against grants as you go — every dollar on the same signed timeline as the work it produced.
+
+
+Code
+Code
+
+
+LIVE
+Runs live
+
+LaTeX
+LaTeX
+
+Documents
+Documents
+
+Sheets
+Sheets
+
+Slides
+Slides
+
+AI Chat
+AI Chat
+
+Funding ledger
+Funding ledger
+
+All of it, in one place
+Service guarantees that can't be walked back
+Privacy and proof you can only trust if the company making them can’t be bought. WorkSigned is built as an Equitable Corporation — a structure we designed so its core guarantees are locked at inception, not a policy that can be quietly revised later. The platform is user-auditable: public logs and open financials mean you can check the commitments for yourself.
+
+Your data stays yours
+Today, the data a platform’s users generate becomes the company’s asset — sold, licensed, and traded behind terms no one reads.
+
+The fix: User data is never sold, mined, licensed, or read. What you produce is yours, full stop.
+
+It can never be bought away
+Companies are sold to private equity or large acquirers, and the terms that protected users are quietly rewritten.
+
+The fix: A hard prohibition on any sale to private equity or venture capital. No outside investor can gain controlling power.
+
+The rules can’t be walked back
+A company’s privacy promises are only as good as its next board meeting. Terms get revised, policies get walked back.
+
+The fix: The core commitments are locked at inception and written into the founding documents. A future board cannot reverse them.
+
+Auditable by you
+Corporate decisions are made behind closed doors. Reports are audited once a year by people who report to management.
+
+The fix: A user-auditable platform: public server logs and public financial reports, every API call and transaction open to audit.
+
+Learn about the structure →
+
+Be among the first
+We’re onboarding a small group of early users and pilot institutions. If you’d like in — or you’re building the kind of platform this is meant for — tell us who you are.
+
+Name
+Email
+What would you want to protect or verify?
+Research, IP, authorship, a whole lab or team, …
+
+Request access
+✓
+WorkSigned
+© 2026 WorkSigned · An Equitable Corporation · equitablestandard.com
+

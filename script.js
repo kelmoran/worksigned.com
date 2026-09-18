@@ -21,6 +21,91 @@ if (revealEls.length) {
     });
 }
 
+// Major sections: fade + rise in as the section's container enters the viewport.
+const sectionContainers = document.querySelectorAll(
+    '#process > .container, #institutions > .container, #tools > .container, #trust > .container'
+);
+if (sectionContainers.length) {
+    const sio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                sio.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+    sectionContainers.forEach(function (el) { sio.observe(el); });
+}
+
+// Work Ledger block: fade + rise in on its own, when it scrolls into view.
+const ledgerEl = document.querySelector('.trail-example');
+if (ledgerEl) {
+    const lio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                lio.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
+    lio.observe(ledgerEl);
+}
+
+/* Work Ledger — draw the "magnification" connector: a single straight beam from
+   the highlighted node (5) down to a bright bracket spanning the panel's top
+   edge (straight beam + bracket = clean "zoom of this node" cue). Measured with
+   getBoundingClientRect so it lands on node 5 and the panel corners at ANY
+   width; redrawn on resize/font-load. */
+(function drawLens() {
+    var lens = document.querySelector('.te-lens');
+    if (!lens) return;
+    var svg = lens.querySelector('.te-lens-svg');
+    var dot = document.querySelector('.te-item.zoomed .te-dot');
+    var panel = document.querySelector('.mg-panel');
+    if (!svg || !dot || !panel) return;
+
+    function draw() {
+        var r = lens.getBoundingClientRect();
+        var H = Math.max(r.height, 10);
+        var W = Math.max(r.width, 10);
+        svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+        var d = dot.getBoundingClientRect();
+        var p = panel.getBoundingClientRect();
+        // node 5 top-center (where the beam originates)
+        var cx = d.left + d.width / 2 - r.left;
+        var cy = 0; // dot sits just above the lens band
+        // panel top edge spans (relative to the lens band)
+        var pl = Math.max(4, p.left - r.left);
+        var pr = Math.min(W - 4, p.right - r.left);
+        var pad = 12;                       // bracket insets from panel corners
+        var lx = pl + pad, rx = pr - pad;
+        var by = H - 2;                     // bracket top (bottom of the band)
+
+        var glow = 'rgba(94,234,212,.95)';
+        var dim = 'rgba(94,234,212,.5)';
+        svg.innerHTML =
+            // single beam: node -> panel top-center
+            '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + by + '" stroke="' + glow + '" stroke-width="2.5" stroke-linecap="round"/>' +
+            // bright bracket along the panel top edge
+            '<path d="M ' + lx + ' ' + (by + 2) + ' L ' + lx + ' ' + by + ' L ' + rx + ' ' + by + ' L ' + rx + ' ' + (by + 2) + '" fill="none" stroke="' + glow + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+            // glow origin dot
+            '<circle cx="' + cx + '" cy="' + cy + '" r="3.5" fill="' + glow + '"/>' +
+            '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="none" stroke="' + dim + '" stroke-width="1.5"/>';
+    }
+
+    draw();
+    // redraw after fonts/imagery settle and on any resize / layout change
+    if (window.addEventListener) {
+        var t;
+        window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 80); });
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+        window.addEventListener('load', draw);
+    }
+    // keep it in sync if the ledger fade-in transform shifts it
+    if (ledgerEl) ledgerEl.addEventListener('transitionend', draw);
+})();
+
 // ==========================================================================
 // APPLICATION FORM — submits to FormZero (self-hosted on Cloudflare Workers).
 // We fetch() a JSON payload {name, email, message} to the form's endpoint and

@@ -671,9 +671,9 @@ body::before {
     display: block; font-size: 15px; font-weight: 400; color: var(--text-faint); margin-top: 6px;
 }
 .doc-content h3 { font-size: 19px; font-weight: 600; margin: 26px 0 10px; color: var(--text); }
-.doc-content p { margin: 0 0 16px; color: var(--text-muted); font-size: 18px; line-height: 1.7; }
+.doc-content p { margin: 0 0 16px; color: var(--text-muted); font-size: 20px; line-height: 1.7; }
 .doc-content p strong { color: var(--text); font-weight: 600; }
-.doc-content ul, .doc-content ol { margin: 0 0 18px 0; padding-left: 22px; color: var(--text-muted); font-size: 18px; line-height: 1.7; }
+.doc-content ul, .doc-content ol { margin: 0 0 18px 0; padding-left: 22px; color: var(--text-muted); font-size: 20px; line-height: 1.7; }
 .doc-content li { margin-bottom: 8px; }
 .doc-content li strong { color: var(--text); font-weight: 600; }
 .doc-content li code, .doc-content p code, .doc-content td code {

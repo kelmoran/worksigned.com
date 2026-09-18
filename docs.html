@@ -43,6 +43,18 @@
             <a href="#app-slides">Slides (Impress)</a>
             <a href="#app-chat">AI Chat</a>
             <a href="#app-funding">Funding ledger</a>
+            <div class="doc-group">Research &amp; collaboration</div>
+            <a href="#app-jupyter">Notebooks (Jupyter)</a>
+            <a href="#app-stealth">Stealth Search</a>
+            <a href="#app-pinta">Image editor</a>
+            <a href="#app-git">Git tree</a>
+            <a href="#app-email">Email</a>
+            <a href="#app-teamchat">Team chat</a>
+            <a href="#app-calendar">Calendar</a>
+            <a href="#app-proof">Proof replay</a>
+            <div class="doc-group">Coming soon</div>
+            <a href="#app-julia">Julia</a>
+            <a href="#app-r">R</a>
 
             <div class="doc-group">Related</div>
             <a href="requirements.html">System requirements</a>
@@ -51,7 +63,7 @@
         <main class="doc-content">
             <div class="doc-hero-eyebrow">Documentation</div>
             <h1>How WorkSigned works</h1>
-            <p class="doc-lede">WorkSigned is a research platform that captures, signs, and seals everything you do so that the work &mdash; and who did it &mdash; is provable, while also providing enhanced privacy and protection from idea and data leakage. This document explains the technical design in plain terms: how the platform is built, the modes it runs in, how the proof chain is constructed, and what every application on the platform can do.</p>
+            <p class="doc-lede">WorkSigned is a research platform and a signing authority that captures, signs, and seals everything you do so that the work &mdash; and who did it &mdash; is provable, while also providing enhanced privacy and protection from idea and data leakage. This document explains the technical design in plain terms: how the platform is built, the modes it runs in, how the proof chain is constructed, and what every application on the platform can do.</p>
 
             <!-- ========================================================= -->
             <section id="how">
@@ -79,7 +91,7 @@
                     </tbody>
                 </table>
                 <p>Every mode produces the same kind of ledger and the same verification. The mode changes only <em>where the bytes live and which model does the inference</em>; it never changes what is captured or how it is sealed.</p>
-                <div class="doc-callout"><strong>Local-first default.</strong> Nothing about the proof depends on the cloud. A researcher can run entirely on their own machine (local files + local LLM) and still produce a complete, verifiable trail &mdash; they are their own trust anchor.</div>
+                <div class="doc-callout"><strong>Local-first, with WorkSigned as the signing authority.</strong> Nothing about the <em>capture</em> depends on the cloud &mdash; a researcher can record everything on their own machine (local files + local LLM). What the cloud adds is the <strong>signature</strong>: WorkSigned acts as a trust-signing authority and signs the ledger, so it can be verified against a recognized platform key, not just a local one. Locally, the researcher is their own trust anchor; with WorkSigned signing, the trail carries a third-party-verifiable signature.</div>
             </section>
 
             <!-- ========================================================= -->
@@ -88,7 +100,7 @@
                 <p>WorkSigned supports both <strong>public</strong> and <strong>private</strong> LLMs, and it operates its own <strong>dedicated LLMs</strong> for the default cloud experience. The platform is agnostic to which model serves the request &mdash; it speaks the standard OpenAI-compatible chat-completions API, so any endpoint works.</p>
                 <ul>
                     <li><strong>WorkSigned-dedicated LLMs.</strong> The default for cloud usage. These are models operated by WorkSigned that do <em>not</em> train on your data. Your prompts, files, and completions are not used for model improvement.</li>
-                    <li><strong>Public LLMs.</strong> Bring a frontier or commercial model for maximum capability. Be aware of that provider's own data-handling terms.</li>
+                    <li><strong>Public LLMs.</strong> Bring a frontier or commercial model for maximum capability. We obfuscate your queries to these models to minimize the data attack surface &mdash; no single request exposes the shape of your project.</li>
                     <li><strong>Private / local LLMs.</strong> Point the platform at a model you control &mdash; a local inference server (<code>llama.cpp</code>, <code>vLLM</code>, <code>Ollama</code>) or an on-premises endpoint at your institution. This is the fully-private path: no prompt data ever leaves your hardware.</li>
                 </ul>
                 <p>Regardless of backend, the AI conversation itself is captured on the ledger (see <a href="#app-chat">AI Chat</a>), so an LLM-assisted contribution is attributable just like any human one.</p>
@@ -282,6 +294,121 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
                     <li>Spend events are sealed like any other ledger entry &mdash; auditable and immutable.</li>
                     <li>Answers grants and audits from the same trail as the research.</li>
                 </ul>
+            </section>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:40px 0;">
+            <div class="doc-hero-eyebrow">Research &amp; collaboration</div>
+
+            <!-- JUPYTER -->
+            <section id="app-jupyter">
+                <h2>Notebooks <span class="h2-sub">Jupyter, in the browser &mdash; no server required.</span></h2>
+                <p>Run Jupyter notebooks directly in the platform. Cells, code execution, plots, and file access all happen in the workspace &mdash; and every cell edit and execution is captured on the ledger, so the notebook you share is provably the one you ran.</p>
+                <ul>
+                    <li>Markdown + code cells with live in-browser execution.</li>
+                    <li>Python notebooks today; <strong>Julia and R kernels are coming soon.</strong></li>
+                    <li>Inline plots, tables, and output rendered in place.</li>
+                    <li>Cell history and file reads/writes recorded to the trail.</li>
+                </ul>
+            </section>
+
+            <!-- STEALTH -->
+            <section id="app-stealth">
+                <h2>Stealth Search</h2>
+                <p>The privacy front end of the platform. A single query is <strong>sharded into harmless parts</strong> and the parts are dispatched across separate search engines, AI providers, and IP addresses, then synthesized privately. No single request reveals the shape of your project, so your intent never leaks.</p>
+                <ul>
+                    <li>Query sharding &mdash; the full question is never sent as one pattern.</li>
+                    <li>Dispersal across multiple engines, providers, and exit IPs.</li>
+                    <li>Query translation so individual fragments don't expose the topic.</li>
+                    <li>Private synthesis of the result back in the workspace.</li>
+                    <li>Every search is itself a logged, attributable event.</li>
+                </ul>
+            </section>
+
+            <!-- PINTA -->
+            <section id="app-pinta">
+                <h2>Image editor</h2>
+                <p>Work on figures, screenshots, and data images in a full raster editor &mdash; the same environment a lab uses to prepare a panel for a manuscript, sealed to the trail when you save.</p>
+                <ul>
+                    <li>Drawing and editing tools: pencil, brush, eraser, and more.</li>
+                    <li>Layers &mdash; build complex figures in separable, editable layers.</li>
+                    <li>Selections and transformations (crop, resize, rotate).</li>
+                    <li>Colors, effects, and standard image operations.</li>
+                    <li>Open, edit, and export common formats; saves sealed to the ledger.</li>
+                </ul>
+            </section>
+
+            <!-- GIT -->
+            <section id="app-git">
+                <h2>Git tree</h2>
+                <p>See the version history of a project's files as a tree. WorkSigned tracks the repository so you can move through commits, inspect what changed between them, and tie each state to the signed ledger &mdash; provenance for every revision, not just the latest file.</p>
+                <ul>
+                    <li>Branch and commit tree for a project's files.</li>
+                    <li>Diffs between revisions to see exactly what changed.</li>
+                    <li>History per file &mdash; when and by whom a line or block changed.</li>
+                    <li>Complements the ledger: the ledger is the fine-grained trail, the tree is the revision history.</li>
+                </ul>
+            </section>
+
+            <!-- EMAIL -->
+            <section id="app-email">
+                <h2>Email</h2>
+                <p>Compose and send mail from inside the platform under your WorkSigned identity. Because it lives on the same record as everything else, an email you send about the work is part of the proof &mdash; a handoff, decision, or claim of collaboration is verifiable, not just asserted.</p>
+                <ul>
+                    <li>Compose and send as your WorkSigned identity.</li>
+                    <li>Attachments and standard message features.</li>
+                    <li>Outbound messages captured on the ledger, timestamped and attributable.</li>
+                    <li>Pairs with Team chat and AI Chat as the platform's on-record communication.</li>
+                </ul>
+            </section>
+
+            <!-- TEAM CHAT -->
+            <section id="app-teamchat">
+                <h2>Team chat</h2>
+                <p>Converse with your team about the work &mdash; in the same workspace where the work happens. Human conversations, like everything else, are on the record, so claims of who said what and when are provable.</p>
+                <ul>
+                    <li>Project-scoped conversations with your team.</li>
+                    <li>Threads and message history within the workspace.</li>
+                    <li>Messages captured to the ledger &mdash; attributable to the individual.</li>
+                    <li>Distinguishes human chat from AI Chat: both on-record, clearly separated.</li>
+                </ul>
+            </section>
+
+            <!-- CALENDAR -->
+            <section id="app-calendar">
+                <h2>Calendar</h2>
+                <p>Plan the work around the tools that produce it. Experiments, milestones, submission deadlines, and meetings live next to the research &mdash; and events you set are on the same record as the work they point to.</p>
+                <ul>
+                    <li>Events and schedules for experiments, milestones, and deadlines.</li>
+                    <li>Meetings and lab coordination alongside the work they reference.</li>
+                    <li>Created events are logged to the trail, tying the plan to the execution.</li>
+                </ul>
+            </section>
+
+            <!-- PROOF REPLAY -->
+            <section id="app-proof">
+                <h2>Proof replay</h2>
+                <p>Watch the work happen. Proof replay reconstructs the recorded timeline of a project and plays it back &mdash; every event, in order, on its original timestamps. This is the human-readable face of the ledger: the same data a verifier walks, shown as a play-through.</p>
+                <ul>
+                    <li>Reconstructs the project timeline from the signed ledger.</li>
+                    <li>Plays back events in order, on their original timestamps.</li>
+                    <li>Zooms from milestone-level to individual-keystroke detail.</li>
+                    <li>The verification story, visualized &mdash; not just a hash list.</li>
+                </ul>
+            </section>
+
+            <hr style="border:none;border-top:1px solid var(--border);margin:40px 0;">
+            <div class="doc-hero-eyebrow">Coming soon</div>
+
+            <!-- JULIA -->
+            <section id="app-julia">
+                <h2>Julia <span class="h2-sub">Coming soon.</span></h2>
+                <p>A Julia kernel is on the way for Jupyter and the live runner, so high-performance scientific computing joins the sealed record. Same capture, same proof &mdash; your Julia cells, runs, and outputs will all be attributable and verifiable.</p>
+            </section>
+
+            <!-- R -->
+            <section id="app-r">
+                <h2>R <span class="h2-sub">Coming soon.</span></h2>
+                <p>An R environment is in development, bringing the language most statistics and genomics work runs in to the platform &mdash; with the same capture, sealing, and proof-chain behavior as everything else once it ships.</p>
             </section>
 
         </main>

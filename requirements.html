@@ -1,238 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System requirements — WorkSigned</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>WorkSigned</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0d12;color:#e6e8ee;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;align-items:center;justify-content:center;}
+  .card{text-align:center;padding:48px 28px;max-width:440px;}
+  .brand{font-weight:700;font-size:22px;letter-spacing:.2px;margin-bottom:16px;}
+  .brand span{color:#38d39f;}
+  h1{font-size:22px;font-weight:600;margin:0 0 10px;}
+  p{color:#9aa0ad;font-size:16px;line-height:1.55;margin:0;}
+</style>
 </head>
-<body id="top">
-    <!-- Top navigation -->
-    <header class="nav">
-        <div class="nav-left">
-            <a href="index.html" class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</a>
-            <nav class="nav-links nav-links-left">
-                <a href="docs.html">Docs</a>
-                <a href="requirements.html">Requirements</a>
-                <a href="policy.html">Policy</a>
-            </nav>
-        </div>
-        <nav class="nav-links">
-            <a href="index.html#process">The process</a>
-            <a href="index.html#tools">Tools</a>
-            <a href="index.html#apply" class="nav-cta">Join</a>
-        </nav>
-    </header>
-
-    <div class="doc-shell">
-        <aside class="doc-sidebar">
-            <span class="doc-side-brand">System Requirements</span>
-            <div class="doc-group">Overview</div>
-            <a href="#min" class="active">Minimum hardware</a>
-            <a href="#os">Desktop platforms</a>
-            <a href="#browser">Web browser</a>
-            <a href="#network">Network</a>
-            <div class="doc-group">LLM endpoint</div>
-            <a href="#llm">Local LLM</a>
-            <a href="#llm-cloud">Private cloud LLM</a>
-            <div class="doc-group">File storage</div>
-            <a href="#storage">Storage options</a>
-            <a href="#storage-matrix">Comparison</a>
-            <div class="doc-group">Related</div>
-            <a href="docs.html">Platform documentation</a>
-        </aside>
-
-        <main class="doc-content">
-            <div class="doc-hero-eyebrow">Deployment</div>
-            <h1>System requirements</h1>
-            <p class="doc-lede">WorkSigned runs as a client that captures, signs, and seals your research trail. The client is lightweight; the heavy work (large LLM inference, file storage) is offloaded to your chosen backend. The figures below cover a comfortable research workstation. Higher values improve headroom for local LLMs and large data sets.</p>
-            <div class="doc-callout"><strong>Alpha stage.</strong> WorkSigned is in alpha: exact requirements and configuration details may shift as the platform matures. The core of what it provides &mdash; the proof chain, the sealing and signing of your work, and the data &amp; security policy &mdash; does <strong>not</strong> change.</div>
-
-            <section id="min">
-                <h2>Minimum hardware <span class="h2-sub">Recommended for a comfortable desktop or web experience.</span></h2>
-                <div class="doc-reqgrid">
-                    <div class="doc-reqcard">
-                        <div class="rc-label">CPU</div>
-                        <div class="rc-val">8 cores</div>
-                        <div class="rc-note">x86-64 or ARM. 8 physical cores recommended for the WASM-based office suite and multi-window work. 4 cores is the bare minimum for web-only use.</div>
-                    </div>
-                    <div class="doc-reqcard">
-                        <div class="rc-label">Memory</div>
-                        <div class="rc-val">16 GB RAM</div>
-                        <div class="rc-note">32 GB recommended if you run large data sets in the same session. 16 GB works for browser-only usage.</div>
-                    </div>
-                    <div class="doc-reqcard">
-                        <div class="rc-label">Storage</div>
-                        <div class="rc-val">10 GB free</div>
-                        <div class="rc-note">For the client, WASM runtimes, cached project files, and the local ledger. NVMe SSD strongly recommended for large file sets.</div>
-                    </div>
-                    <div class="doc-reqcard">
-                        <div class="rc-label">Network</div>
-                        <div class="rc-val">10 Mbps</div>
-                        <div class="rc-note">Sustained. Required for cloud storage and cloud LLM modes. Local modes run with little or no connectivity.</div>
-                    </div>
-                </div>
-                <table>
-                    <thead><tr><th>Component</th><th>Minimum</th><th>Recommended</th><th>Notes</th></tr></thead>
-                    <tbody>
-                        <tr><td>CPU</td><td>4 cores</td><td><strong>8+ cores</strong></td><td>x86-64 or ARM. The WASM office suite and multi-window work are CPU-bound.</td></tr>
-                        <tr><td>Memory (RAM)</td><td>8 GB</td><td><strong>16&ndash;32 GB</strong></td><td>32 GB for large data sets and multi-window research sessions.</td></tr>
-                        <tr><td>Storage</td><td>10 GB</td><td>10 GB+ SSD</td><td>NVMe preferred. The ledger itself is small; file sets drive the total.</td></tr>
-                        <tr><td>GPU</td><td>&mdash;</td><td>Optional</td><td>Not required. Useful for browser/web rendering acceleration (hardware acceleration).</td></tr>
-                        <tr><td>Display</td><td>1280&times;800</td><td>1920&times;1080</td><td>The IDE is a multi-pane workspace; more real estate helps.</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="os">
-                <h2>Desktop platforms <span class="h2-sub">The full desktop client, including local-file storage mode.</span></h2>
-                <p>WorkSigned ships a native desktop app on all three major operating systems. The desktop client is required only if you use <strong>local-machine file storage</strong>; the web version works in a browser on any of these platforms.</p>
-                <table>
-                    <thead><tr><th>Platform</th><th>Architecture</th><th>Notes</th></tr></thead>
-                    <tbody>
-                        <tr><td>macOS</td><td>Apple Silicon (ARM) &amp; Intel</td><td>Native. Full local-storage support.</td></tr>
-                        <tr><td>Windows</td><td>x86-64</td><td>Native. Full local-storage support.</td></tr>
-                        <tr><td>Linux</td><td>x86-64</td><td>Native. Full local-storage support. Any recent desktop distribution.</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="browser">
-                <h2>Web browser <span class="h2-sub">Ranked by feature support for the built-in office suite and code editor.</span></h2>
-                <p>The platform runs entirely in the browser. The document, spreadsheet, and presentation editors are compiled to WebAssembly and rely on shared-memory features that are enabled in all modern browsers.</p>
-                <table>
-                    <thead><tr><th>Browser</th><th>Minimum version</th><th>Support</th><th>Notes</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>Chrome / Edge</strong></td><td>Latest stable</td><td>Full</td><td>Best performance. All WASM features enabled by default.</td></tr>
-                        <tr><td><strong>Firefox</strong></td><td>Latest stable</td><td>Full</td><td>Complete feature parity.</td></tr>
-                        <tr><td><strong>Safari</strong></td><td>Latest stable</td><td>Full</td><td>Full support on recent versions; occasional WASM timing differences.</td></tr>
-                    </tbody>
-                </table>
-                <div class="doc-callout">Enable <strong>hardware acceleration</strong> and keep the browser up to date. Cross-origin isolation is required for the office suite and is served automatically by WorkSigned &mdash; nothing to configure.</div>
-            </section>
-
-            <section id="network">
-                <h2>Network <span class="h2-sub">Connectivity requirements by mode.</span></h2>
-                <p>At a minimum, a <strong>10 Mbps</strong> sustained connection is recommended for cloud storage and cloud LLM modes. Fully local operation (local LLM + local files) can run with little or no network access.</p>
-                <table>
-                    <thead><tr><th>Mode</th><th>Network requirement</th></tr></thead>
-                    <tbody>
-                        <tr><td>Web, cloud LLM + cloud storage</td><td>10 Mbps sustained, low latency preferred.</td></tr>
-                        <tr><td>Web, local LLM + local files</td><td>Minimal. Initial app load only.</td></tr>
-                        <tr><td>Desktop, local LLM + local files</td><td>Optional. Runs offline after install.</td></tr>
-                        <tr><td>Custom private cloud</td><td>Depends on your infrastructure. A backend proxy must be configured so the browser can reach your storage (your storage won't send the CORS headers the platform needs, so requests are routed through a server-side proxy).</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="llm">
-                <h2>Local LLM endpoint <span class="h2-sub">Optional. Run your own model for fully private inference.</span></h2>
-                <p>You may point WorkSigned at a local model endpoint instead of a cloud LLM. WorkSigned speaks the OpenAI-compatible chat-completions API, so any server that implements it works. If you do choose to bring your own model, the recommended specification is in the table below.</p>
-                <table>
-                    <thead><tr><th>Setting</th><th>Value</th></tr></thead>
-                    <tbody>
-                        <tr><td>API</td><td>OpenAI-compatible <code>/v1/chat/completions</code></td></tr>
-                        <tr><td>Streaming</td><td>SSE streaming (recommended)</td></tr>
-                        <tr><td>Example base URL</td><td><code>http://127.0.0.1:8080/v1</code></td></tr>
-                        <tr><td>Inference server</td><td>If you bring your own model, <strong>vLLM is highly recommended for production</strong> &mdash; best throughput and concurrency of the standard OpenAI-compatible servers.</td></tr>
-                        <tr><td>Model &mdash; parameters</td><td>At least a <strong>25B-parameter</strong> model with highly-rated <strong>instruct and tool-call</strong> capability.</td></tr>
-                        <tr><td>Model &mdash; precision</td><td>Weights at <strong>FP8</strong>; KV cache at <strong>FP16</strong>.</td></tr>
-                        <tr><td>Model &mdash; context</td><td>At least <strong>128K</strong> context window.</td></tr>
-                        <tr><td>Hardware</td><td>Depends on model size &amp; precision. A 25B model at FP8 with a 128K context needs substantial VRAM (plan on multi-GPU, ~48 GB+ combined); CPU-only is not recommended at this size.</td></tr>
-                    </tbody>
-                </table>
-                <h3>Example configuration</h3>
-                <p>Point WorkSigned at an OpenAI-compatible endpoint. A representative config (a single provider block) looks like this:</p>
-                <div class="doc-ledger">{
-  <span class="l-h">"providers"</span>: {
-    <span class="l-h">"my-local-model"</span>: {
-      <span class="l-h">"baseUrl"</span>: <span class="l-ok">"http://127.0.0.1:8080/v1"</span>,
-      <span class="l-h">"api"</span>: <span class="l-ok">"openai-completions"</span>,
-      <span class="l-h">"apiKey"</span>: <span class="l-ok">"ollama"</span>,
-      <span class="l-h">"models"</span>: [
-        {
-          <span class="l-h">"id"</span>: <span class="l-ok">"my-model"</span>,
-          <span class="l-h">"input"</span>: [<span class="l-ok">"text"</span>, <span class="l-ok">"image"</span>],
-          <span class="l-h">"reasoning"</span>: true,
-          <span class="l-h">"contextWindow"</span>: 128000
-        }
-      ]
-    }
-  }
-}</div>
-                <p><code>reasoning</code> is optional &mdash; if your model is robust without a reasoning (chain-of-thought) pass, set it to <code>false</code> or omit it.</p>
-                <div class="doc-callout ok">Local LLM mode keeps all prompt and completion data on your hardware. Nothing is sent to an external provider.</div>
-            </section>
-
-            <section id="llm-cloud">
-                <h2>Private cloud LLM <span class="h2-sub">WorkSigned-dedicated models, or your own.</span></h2>
-                <p>By default WorkSigned routes AI-assisted work to <strong>dedicated LLMs operated by WorkSigned</strong> &mdash; not frontier models that train on your data. Institutions that require on-premises inference can direct the platform to their own private LLM endpoint (see the local-endpoint section); the same toolchain, prompts, and sealed-record behavior apply either way.</p>
-            </section>
-
-            <section id="storage">
-                <h2>File storage <span class="h2-sub">Choose where project files live. Each mode has a different setup footprint.</span></h2>
-                <p>WorkSigned signs and seals whatever it writes, regardless of where files are stored. The four options differ in setup and access:</p>
-                <table>
-                    <thead><tr><th>Option</th><th>Setup</th><th>Description</th></tr></thead>
-                    <tbody>
-                        <tr><td><strong>1. WorkSigned Private Cloud</strong></td><td>None</td><td>Files stored on WorkSigned infrastructure. Fully accessible and auditable by the user. Default cloud mode.</td></tr>
-                        <tr><td><strong>2. Custom Private Cloud</strong></td><td>Backend proxy required</td><td>Connect WorkSigned to your own file server (S3-compatible or NFS). A backend proxy must be configured to bridge the platform to your storage &mdash; your server won't send the CORS headers the browser needs, so requests are routed through a server-side proxy.</td></tr>
-                        <tr><td><strong>3. Local machine</strong></td><td>Desktop app install required</td><td>Files stay on your workstation, captured by the desktop client. Maximum privacy; requires the desktop app.</td></tr>
-                        <tr><td><strong>4. No files (browser only)</strong></td><td>None</td><td>Light usage entirely in the browser, including JupyterLite for notebooks. No external storage required.</td></tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="storage-matrix">
-                <h2>Storage comparison <span class="h2-sub">Quick reference across the four modes.</span></h2>
-                <table>
-                    <thead><tr><th>Mode</th><th>Desktop client</th><th>Network</th><th>Who hosts files</th><th>Typical for</th></tr></thead>
-                    <tbody>
-                        <tr><td>WorkSigned Private Cloud</td><td>Optional</td><td>10 Mbps</td><td>WorkSigned</td><td>Default research teams, journals, funders.</td></tr>
-                        <tr><td>Custom Private Cloud</td><td>Optional</td><td>Variable</td><td>Your institution</td><td>Institutions with existing storage + compliance needs.</td></tr>
-                        <tr><td>Local machine</td><td><strong>Required</strong></td><td>Optional</td><td>Your workstation</td><td>Maximum privacy, air-gapped or offline work.</td></tr>
-                        <tr><td>No files (browser)</td><td>Not needed</td><td>10 Mbps</td><td>WorkSigned (transient)</td><td>Light tasks, JupyterLite, quick documents.</td></tr>
-                    </tbody>
-                </table>
-            </section>
-        </main>
-    </div>
-
-    <footer class="footer">
-        <div class="container footer-inner">
-            <span class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</span>
-            <span class="footer-copy">
-                &copy; 2026 WorkSigned &middot; An Equitable Corporation &middot;
-                <a href="https://equitablestandard.com" target="_blank">equitablestandard.com</a>
-            </span>
-        </div>
-    </footer>
-
-    <script>
-    // Sidebar scroll-spy: highlight the section currently in view.
-    (function () {
-        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
-        if (!links.length) return;
-        var map = {};
-        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
-        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
-            .filter(Boolean);
-        function setActive(id) {
-            links.forEach(function (a) { a.classList.remove('active'); });
-            if (map[id]) map[id].classList.add('active');
-        }
-        function onScroll() {
-            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 60);
-            var pos = window.scrollY + 120, current = sections[0];
-            for (var i = 0; i < sections.length; i++) {
-                if (sections[i].offsetTop <= pos) current = sections[i];
-            }
-            if (atBottom && sections.length) current = sections[sections.length - 1];
-            if (current) setActive(current.id);
-        }
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-    })();
-    </script>
+<body>
+  <div class="card">
+    <div class="brand">Work<span>Signed</span></div>
+    <h1>Coming soon</h1>
+    <p>Provable research, in preparation.</p>
+  </div>
 </body>
 </html>

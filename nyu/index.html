@@ -1,175 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="WorkSigned, prepared for NYU &mdash; a verified, tamper-evident record of collaborative research, built for attribution, priority, and grant proof.">
-    <title>WorkSigned — Prepared for NYU</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        /* Portal-only additions (reuses the site's base theme from style.css) */
-        .portal-badge {
-            display: inline-block; margin-bottom: 18px;
-            font-size: .8rem; letter-spacing: .08em; text-transform: uppercase;
-            color: #7dd3fc; background: rgba(125,211,252,.1);
-            border: 1px solid rgba(125,211,252,.25);
-            padding: 6px 14px; border-radius: 999px;
-        }
-        .portal-hero { padding: 120px 0 60px; }
-        .portal-hero h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: 1.05; margin: 0 0 22px; }
-        .portal-hero .sub { font-size: 1.2rem; max-width: 640px; }
-        .portal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin: 64px 0; }
-        .portal-card {
-            background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.09);
-            border-radius: 16px; padding: 28px 26px;
-        }
-        .portal-card h3 { margin: 0 0 10px; font-size: 1.15rem; }
-        .portal-card p { margin: 0; color: #9aa4b2; font-size: .98rem; line-height: 1.6; }
-        .portal-card .k { color: #5eead4; font-weight: 700; }
-        @media (max-width: 820px) { .portal-grid { grid-template-columns: 1fr; } }
-        .portal-note { color: #6b7280; font-size: .9rem; text-align: center; margin-top: 40px; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>WorkSigned</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0d12;color:#e6e8ee;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;align-items:center;justify-content:center;}
+  .card{text-align:center;padding:48px 28px;max-width:440px;}
+  .brand{font-weight:700;font-size:22px;letter-spacing:.2px;margin-bottom:16px;}
+  .brand span{color:#38d39f;}
+  h1{font-size:22px;font-weight:600;margin:0 0 10px;}
+  p{color:#9aa0ad;font-size:16px;line-height:1.55;margin:0;}
+</style>
 </head>
 <body>
-
-    <!-- Slim header: brand only, links to the main site (not the reverse) -->
-    <header class="nav">
-        <a href="../" class="brand"><span class="brand-mark">&#10003;</span> WorkSigned</a>
-        <nav class="nav-links">
-            <a href="../">Main site</a>
-        </nav>
-    </header>
-
-    <!-- ============================ HERO ============================ -->
-    <section class="portal-hero">
-        <div class="container center">
-            <span class="portal-badge">Prepared for New York University</span>
-            <h1>Your research, <span class="grad">signed</span> and sealed.</h1>
-            <p class="sub">
-                A <strong>verified, tamper-evident record</strong> of collaborative work &mdash;
-                built for the realities of academic research: multiple authors, shared
-                lab environments, grant deliverables, and the disputes that come with priority.
-            </p>
-            <div class="hero-cta">
-                <a href="#apply" class="btn btn-primary">Request a demo</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================ WHY NYU ============================ -->
-    <section class="section" id="why">
-        <div class="container">
-            <div class="portal-grid">
-                <div class="portal-card">
-                    <h3>Attribution, on the record</h3>
-                    <p>Multi-author work is where disputes start. WorkSigned logs
-                    <span class="k">who changed what, and when</span>, in a hash-chained record
-                    that can't be quietly edited after the fact.</p>
-                </div>
-                <div class="portal-card">
-                    <h3>Priority &mdash; checkable, not claimed</h3>
-                    <p>&ldquo;We saw it first&rdquo; is only a statement. A
-                    <span class="k">timestamped, verifiable record</span> turns that claim
-                    into something a journal, funder, or tribunal can check in seconds.</p>
-                </div>
-                <div class="portal-card">
-                    <h3>Local-first &mdash; IRB-friendly</h3>
-                    <p>Your data stays on your machines. WorkSigned is
-                    <span class="k">structured to be private by design</span>, so the promise
-                    to protect your work can never be bought away &mdash; or handed to a third party.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================ CTA / APPLY ============================ -->
-    <section class="section cta-band" id="apply">
-        <div class="container narrow center">
-            <h2 class="section-title light">Let&rsquo;s talk</h2>
-            <p class="section-lead light">
-                Tell us a little about your group and what you&rsquo;d want to protect &mdash;
-                we&rsquo;ll follow up.
-            </p>
-            <form class="apply-form" id="apply-form" onsubmit="return submitApply(event)">
-                <input type="hidden" name="source" value="nyu">
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required autocomplete="name">
-                    </div>
-                    <div class="form-field">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required autocomplete="email">
-                    </div>
-                </div>
-                <div class="form-field">
-                    <label for="message">What would you want to protect or verify?</label>
-                    <textarea id="message" name="message" rows="3" placeholder="Research projects, authorship, grant deliverables, &hellip;"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-wide" id="apply-submit">Request a demo</button>
-                <p class="apply-success" id="apply-success"></p>
-            </form>
-        </div>
-    </section>
-
-    <footer class="site-footer">
-        <div class="container center">
-            <p class="portal-note">Prepared for New York University &middot; <a href="../">worksigned.com</a></p>
-        </div>
-    </footer>
-
-    <script>
-        // FormZero submit (self-hosted). The hidden `source=nyu` field tags
-        // every inquiry so we know it came from the NYU portal.
-        const FORMZERO_ENDPOINT = 'https://formzero.ethanweimd.workers.dev/api/forms/worksigned/submissions';
-
-        function submitApply(e) {
-            const form = e.target;
-            const name = form.querySelector('#name');
-            const email = form.querySelector('#email');
-            const message = form.querySelector('#message');
-            if (!name.value.trim() || !email.value.trim() || !email.checkValidity()) {
-                e.preventDefault();
-                return false;
-            }
-            e.preventDefault();
-            const btn = form.querySelector('#apply-submit');
-            const success = form.querySelector('#apply-success');
-            if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
-
-            fetch(FORMZERO_ENDPOINT, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: name.value.trim(),
-                    email: email.value.trim(),
-                    message: (message ? message.value.trim() : '') + '\n\n[source: nyu portal]'
-                })
-            })
-            .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
-            .then(function (res) {
-                if (res.ok) {
-                    form.reset();
-                    success.textContent = 'Thanks — we\'ll be in touch soon.';
-                    success.classList.add('show');
-                } else {
-                    success.textContent = 'Sorry, something went wrong. Please try again.';
-                    success.classList.add('show', 'error');
-                }
-            })
-            .catch(function () {
-                success.textContent = 'Network error — please try again.';
-                success.classList.add('show', 'error');
-            })
-            .finally(function () {
-                if (btn) { btn.disabled = false; btn.textContent = 'Request a demo'; }
-            });
-            return false;
-        }
-    </script>
+  <div class="card">
+    <div class="brand">Work<span>Signed</span></div>
+    <h1>Coming soon</h1>
+    <p>Provable research, in preparation.</p>
+  </div>
 </body>
 </html>

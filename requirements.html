@@ -133,7 +133,7 @@
                         <tr><td>Streaming</td><td>SSE streaming (recommended)</td></tr>
                         <tr><td>Example base URL</td><td><code>http://127.0.0.1:8080/v1</code></td></tr>
                         <tr><td>Inference server</td><td>If you bring your own model, <strong>vLLM is highly recommended for production</strong> &mdash; best throughput and concurrency of the standard OpenAI-compatible servers.</td></tr>
-                        <tr><td>Model &mdash; parameters</td><td>At least a <strong>25B-parameter</strong> model with highly-rated instruct (chat) capability.</td></tr>
+                        <tr><td>Model &mdash; parameters</td><td>At least a <strong>25B-parameter</strong> model with highly-rated <strong>instruct and tool-call</strong> capability.</td></tr>
                         <tr><td>Model &mdash; precision</td><td>Weights at <strong>FP8</strong>; KV cache at <strong>FP16</strong>.</td></tr>
                         <tr><td>Model &mdash; context</td><td>At least <strong>128K</strong> context window.</td></tr>
                         <tr><td>Hardware</td><td>Depends on model size &amp; precision. A 25B model at FP8 with a 128K context needs substantial VRAM (plan on multi-GPU, ~48 GB+ combined); CPU-only is not recommended at this size.</td></tr>
@@ -158,6 +158,7 @@
     }
   }
 }</div>
+                <p><code>reasoning</code> is optional &mdash; if your model is robust without a reasoning (chain-of-thought) pass, set it to <code>false</code> or omit it.</p>
                 <div class="doc-callout ok">Local LLM mode keeps all prompt and completion data on your hardware. Nothing is sent to an external provider.</div>
             </section>
 

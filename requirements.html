@@ -139,6 +139,25 @@
                         <tr><td>Hardware</td><td>Depends on model size &amp; precision. A 25B model at FP8 with a 128K context needs substantial VRAM (plan on multi-GPU, ~48 GB+ combined); CPU-only is not recommended at this size.</td></tr>
                     </tbody>
                 </table>
+                <h3>Example configuration</h3>
+                <p>Point WorkSigned at an OpenAI-compatible endpoint. A representative config (a single provider block) looks like this:</p>
+                <div class="doc-ledger">{
+  <span class="l-h">"providers"</span>: {
+    <span class="l-h">"my-local-model"</span>: {
+      <span class="l-h">"baseUrl"</span>: <span class="l-ok">"http://127.0.0.1:8080/v1"</span>,
+      <span class="l-h">"api"</span>: <span class="l-ok">"openai-completions"</span>,
+      <span class="l-h">"apiKey"</span>: <span class="l-ok">"ollama"</span>,
+      <span class="l-h">"models"</span>: [
+        {
+          <span class="l-h">"id"</span>: <span class="l-ok">"my-model"</span>,
+          <span class="l-h">"input"</span>: [<span class="l-ok">"text"</span>, <span class="l-ok">"image"</span>],
+          <span class="l-h">"reasoning"</span>: true,
+          <span class="l-h">"contextWindow"</span>: 130000
+        }
+      ]
+    }
+  }
+}</div>
                 <div class="doc-callout ok">Local LLM mode keeps all prompt and completion data on your hardware. Nothing is sent to an external provider.</div>
             </section>
 

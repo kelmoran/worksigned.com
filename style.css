@@ -140,6 +140,8 @@ body::before {
     background: var(--grad); color: #0b0d12; font-size: 15px; font-weight: 900;
 }
 .nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-left { display: flex; align-items: center; gap: 28px; }
+.nav-links-left { gap: 22px; }
 .nav-links a { font-size: var(--fs-small); font-weight: 500; color: var(--text-muted); transition: color 0.2s; }
 .nav-links a:hover { color: var(--text); }
 .nav-cta {
@@ -746,6 +748,7 @@ body::before {
 @media (max-width: 640px) {
     .nav { padding: 14px 18px; }
     .nav-links a:not(.nav-cta) { display: none; }
+    .nav-links-left { display: none; }
     .hero { padding: 78px 0 56px; }
     .section { padding: 60px 0; }
     .container { padding: 0 18px; }

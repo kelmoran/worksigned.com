@@ -30,6 +30,7 @@
             <div class="doc-group">Platform</div>
             <a href="#how" class="active">How it works</a>
             <a href="#modes">Operating modes</a>
+            <a href="#web">Website usage</a>
             <a href="#llm">LLM backends</a>
             <a href="#proof">The proof chain</a>
             <a href="#ledger">Ledger &amp; events</a>
@@ -104,6 +105,27 @@
                     <li><strong>Private / local LLMs.</strong> Point the platform at a model you control &mdash; a local inference server (<code>llama.cpp</code>, <code>vLLM</code>, <code>Ollama</code>) or an on-premises endpoint at your institution. This is the fully-private path: no prompt data ever leaves your hardware.</li>
                 </ul>
                 <p>Regardless of backend, the AI conversation itself is captured on the ledger (see <a href="#app-chat">AI Chat</a>), so an LLM-assisted contribution is attributable just like any human one.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="web">
+                <h2>Website usage <span class="h2-sub">Tracking and ledgering your on-site activity.</span></h2>
+                <p>WorkSigned can track and ledger your activity on <em>any</em> website you work in &mdash; not just the built-in tools. This is how off-site research (papers, databases, dashboards, references you consult) lands on the same signed record as the work it informed.</p>
+                <ul>
+                    <li><strong>Desktop version.</strong> Supports website URL tracking and ledgering directly &mdash; the desktop client captures which pages you visit and when, and appends them to the ledger. No extra setup.</li>
+                    <li><strong>Web version.</strong> Requires the WorkSigned open-source browser extension, which performs the same URL tracking and ledgering from within your browser.</li>
+                    <li><strong>Both are open source.</strong> The desktop client and the browser extension are both open source &mdash; you can inspect exactly what is captured and how it is sealed.</li>
+                </ul>
+                <div class="doc-callout">Captured website activity is a logged, attributable event like any other: which URL, when, and by whom &mdash; sealed to the same tamper-evident chain as files, edits, and spend.</div>
+                <h3>Supported browsers (web version)</h3>
+                <p>Tested on the current stable builds of the two main browsers:</p>
+                <table>
+                    <thead><tr><th>Browser</th><th>Tested build</th></tr></thead>
+                    <tbody>
+                        <tr><td>Firefox</td><td>140.12.0esr (64-bit)</td></tr>
+                        <tr><td>Chrome</td><td>151.0.7922.34 (Official Build) (x86_64)</td></tr>
+                    </tbody>
+                </table>
             </section>
 
             <!-- ========================================================= -->

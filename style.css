@@ -688,6 +688,16 @@ body::before {
 }
 .doc-content .doc-callout strong { color: var(--text); }
 .doc-content .doc-callout.ok { border-left-color: var(--accent-2); }
+.doc-content .doc-figure { margin: 24px 0 8px; }
+.doc-content .doc-figure img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--border-strong); border-radius: 12px;
+    background: var(--bg-elev); box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+}
+.doc-content .doc-figure figcaption {
+    margin-top: 12px; font-size: 15px; line-height: 1.6;
+    color: var(--text-muted); font-style: italic;
+}
 
 /* tables */
 .doc-content table {

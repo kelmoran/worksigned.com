@@ -125,14 +125,18 @@
 
             <section id="llm">
                 <h2>Local LLM endpoint <span class="h2-sub">Optional. Run your own model for fully private inference.</span></h2>
-                <p>You may point WorkSigned at a local model endpoint instead of a cloud LLM. WorkSigned speaks the OpenAI-compatible chat-completions API, so any server that implements it works &mdash; including <code>llama.cpp</code>, <code>vLLM</code>, <code>Ollama</code>, or another self-hosted inference server. If you do choose to bring your own model, <strong>vLLM is highly recommended for production</strong> &mdash; it delivers the best throughput and concurrency of the standard OpenAI-compatible servers.</p>
+                <p>You may point WorkSigned at a local model endpoint instead of a cloud LLM. WorkSigned speaks the OpenAI-compatible chat-completions API, so any server that implements it works. If you do choose to bring your own model, the recommended specification is in the table below.</p>
                 <table>
                     <thead><tr><th>Setting</th><th>Value</th></tr></thead>
                     <tbody>
                         <tr><td>API</td><td>OpenAI-compatible <code>/v1/chat/completions</code></td></tr>
                         <tr><td>Streaming</td><td>SSE streaming (recommended)</td></tr>
                         <tr><td>Example base URL</td><td><code>http://127.0.0.1:8080/v1</code></td></tr>
-                        <tr><td>Hardware</td><td>Depends on model size. A GPU with 16&ndash;24 GB VRAM comfortably serves 7B&ndash;13B models; CPU-only works for smaller models.</td></tr>
+                        <tr><td>Inference server</td><td>If you bring your own model, <strong>vLLM is highly recommended for production</strong> &mdash; best throughput and concurrency of the standard OpenAI-compatible servers.</td></tr>
+                        <tr><td>Model &mdash; parameters</td><td>At least a <strong>25B-parameter</strong> model with highly-rated instruct (chat) capability.</td></tr>
+                        <tr><td>Model &mdash; precision</td><td>Weights at <strong>FP8</strong>; KV cache at <strong>FP16</strong>.</td></tr>
+                        <tr><td>Model &mdash; context</td><td>At least <strong>128K</strong> context window.</td></tr>
+                        <tr><td>Hardware</td><td>Depends on model size &amp; precision. A 25B model at FP8 with a 128K context needs substantial VRAM (plan on multi-GPU, ~48 GB+ combined); CPU-only is not recommended at this size.</td></tr>
                     </tbody>
                 </table>
                 <div class="doc-callout ok">Local LLM mode keeps all prompt and completion data on your hardware. Nothing is sent to an external provider.</div>

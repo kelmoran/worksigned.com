@@ -210,9 +210,6 @@ function submitApply(e) {
         { id: "chat",   icon: "chat",   cap: "AI Chat",   url: "app.worksigned.com/chat",
           img: "assets/chat.png",
           desc: "Work alongside an AI research assistant — the whole conversation is on the record too." },
-        { id: "funding",icon: "sheets", cap: "Funding ledger", url: "app.worksigned.com/funding",
-          img: "assets/sheets.png",
-          desc: "Log spend against grants as you go — every dollar on the same signed timeline as the work it produced." },
         { id: "all",    icon: "run",    cap: "All of it, in one place", url: "app.worksigned.com",
           montage: true,
           desc: "Math, engineering, content creation, and scientific tools — every discipline, one signed record."

@@ -94,7 +94,7 @@
                     </tbody>
                 </table>
                 <p>Every mode produces the same kind of ledger and the same verification. The mode changes only <em>where the bytes live and which model does the inference</em>; it never changes what is captured or how it is sealed.</p>
-                <div class="doc-callout"><strong>Local-first, with WorkSigned as the signing authority.</strong> Nothing about the <em>capture</em> depends on the cloud &mdash; a researcher can record everything on their own machine (local files + local LLM). What the cloud adds is the <strong>signature</strong>: WorkSigned acts as a trust-signing authority and signs the ledger, so it can be verified against a recognized platform key, not just a local one. Locally, the researcher is their own trust anchor; with WorkSigned signing, the trail carries a third-party-verifiable signature.</div>
+                <div class="doc-callout"><strong>Local-first, with WorkSigned as the signer.</strong> Nothing about the <em>capture</em> depends on the cloud &mdash; a researcher can record everything on their own machine (local files + local LLM). What the cloud adds is the <strong>signature</strong>: WorkSigned signs the ledger with a platform key, so the trail carries a signature that any third party can verify against that key &mdash; not just a local one. Locally, the researcher is their own trust anchor; with WorkSigned signing, the trail carries a signature you can hand to a verifier.</div>
             </section>
 
             <!-- ========================================================= -->
@@ -116,7 +116,7 @@
                 <ul>
                     <li><strong>Desktop version.</strong> Supports website URL tracking and ledgering directly &mdash; the desktop client captures which pages you visit and when, and appends them to the ledger. No extra setup.</li>
                     <li><strong>Web version.</strong> Requires the WorkSigned open-source browser extension, which performs the same URL tracking and ledgering from within your browser.</li>
-                    <li><strong>Both are open source.</strong> The desktop client and the browser extension are both open source &mdash; you can inspect exactly what is captured and how it is sealed.</li>
+                    <li><strong>Both are open source.</strong> The desktop client and the browser extension are open source &mdash; you can inspect exactly what is captured and how it is sealed.</li>
                 </ul>
                 <div class="doc-callout">Captured website activity is a logged, attributable event like any other: which URL, when, and by whom &mdash; sealed to the same tamper-evident chain as files, edits, and spend.</div>
                 <h3>Supported browsers (web version)</h3>
@@ -242,7 +242,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- DOCS -->
             <section id="app-docs">
                 <h2>Documents <span class="h2-sub">A full word processor in the browser.</span></h2>
-                <p>The document editor is a complete word processor compiled to run in the browser. It is not a reduced web form &mdash; it is the full writing environment. The complete feature set:</p>
+                <p>The document editor is a full-featured word processor compiled to run in the browser. It is not a reduced web form &mdash; it is the full writing environment. The feature set:</p>
                 <ul>
                     <li><strong>Text &amp; formatting.</strong> Rich text; fonts, sizes, weights, styles; character and paragraph formatting; inline styles.</li>
                     <li><strong>Styles &amp; templates.</strong> Built-in and custom styles; apply/define template documents.</li>
@@ -260,17 +260,17 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
                     <li><strong>Page layout.</strong> Margins, headers/footers, page numbers, sections, columns, page breaks.</li>
                     <li><strong>TOC &amp; indexes.</strong> Automatic table of contents, table of figures, and indexes.</li>
                     <li><strong>Export.</strong> Save to DOCX, ODT, and PDF.</li>
-                    <li><strong>Production-grade office tool.</strong> A full, production-grade document editor &mdash; native files, full feature set, ready for real work.</li>
+                    <li><strong>Production-grade office tool.</strong> A full-featured, native document editor &mdash; the everyday writing and formatting features researchers actually use.</li>
                 </ul>
             </section>
 
             <!-- SHEETS -->
             <section id="app-sheets">
                 <h2>Sheets <span class="h2-sub">A full spreadsheet in the browser.</span></h2>
-                <p>The spreadsheet editor is a complete spreadsheet engine in the browser. Your results, analysis, and tables &mdash; versioned and verifiable. The complete feature set:</p>
+                <p>The spreadsheet editor is a full-featured spreadsheet engine in the browser. Your results, analysis, and tables &mdash; versioned and verifiable. The feature set:</p>
                 <ul>
                     <li><strong>Cells &amp; data.</strong> Enter and format numeric, text, date, and currency values; multiple sheets per workbook.</li>
-                    <li><strong>Functions.</strong> The full function library &mdash; math, statistics, financial, text, date/time, and lookup.</li>
+                    <li><strong>Functions.</strong> The standard function library &mdash; math, statistics, financial, text, date/time, and lookup.</li>
                     <li><strong>Formulas &amp; references.</strong> Cell references, ranges, absolute/relative references, and cross-sheet references.</li>
                     <li><strong>Tables &amp; sorting.</strong> Filterable data ranges; sort by one or more columns.</li>
                     <li><strong>Charts.</strong> Bar, line, pie, scatter, and more, built from sheet data.</li>
@@ -280,14 +280,14 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
                     <li><strong>Validation &amp; protection.</strong> Input validation and sheet protection.</li>
                     <li><strong>Find &amp; replace.</strong> Across the workbook, with options.</li>
                     <li><strong>Import / export.</strong> XLSX, CSV, ODS, and more.</li>
-                    <li><strong>Production-grade office tool.</strong> A full, production-grade spreadsheet &mdash; native files, full feature set, ready for real work.</li>
+                    <li><strong>Production-grade office tool.</strong> A full-featured, native spreadsheet &mdash; the everyday data and analysis features researchers actually use.</li>
                 </ul>
             </section>
 
             <!-- SLIDES -->
             <section id="app-slides">
                 <h2>Slides <span class="h2-sub">Presentations in the browser.</span></h2>
-                <p>Assemble presentations and figures, ready to defend your work to reviewers. The complete feature set:</p>
+                <p>Assemble presentations and figures, ready to defend your work to reviewers. The feature set:</p>
                 <ul>
                     <li><strong>Slides &amp; masters.</strong> Multiple slides; slide masters and layouts for consistent design.</li>
                     <li><strong>Placeholders &amp; text.</strong> Title/body placeholders; rich text and bullet formatting.</li>
@@ -296,7 +296,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
                     <li><strong>Notes &amp; handouts.</strong> Speaker notes and handout layouts.</li>
                     <li><strong>Presentation mode.</strong> Full-screen delivery with a presenter view.</li>
                     <li><strong>Export.</strong> PPTX, ODP, and PDF.</li>
-                    <li><strong>Production-grade office tool.</strong> A full, production-grade presentation tool &mdash; native files, full feature set, ready for real work.</li>
+                    <li><strong>Production-grade office tool.</strong> A full-featured, native presentation tool &mdash; the everyday slide and layout features researchers actually use.</li>
                 </ul>
             </section>
 

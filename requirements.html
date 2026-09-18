@@ -125,7 +125,7 @@
 
             <section id="llm">
                 <h2>Local LLM endpoint <span class="h2-sub">Optional. Run your own model for fully private inference.</span></h2>
-                <p>You may point WorkSigned at a local model endpoint instead of a cloud LLM. WorkSigned speaks the OpenAI-compatible chat-completions API, so any server that implements it works &mdash; including <code>llama.cpp</code>, <code>vLLM</code>, <code>Ollama</code>, or another self-hosted inference server.</p>
+                <p>You may point WorkSigned at a local model endpoint instead of a cloud LLM. WorkSigned speaks the OpenAI-compatible chat-completions API, so any server that implements it works &mdash; including <code>llama.cpp</code>, <code>vLLM</code>, <code>Ollama</code>, or another self-hosted inference server. If you do choose to bring your own model, <strong>vLLM is highly recommended for production</strong> &mdash; it delivers the best throughput and concurrency of the standard OpenAI-compatible servers.</p>
                 <table>
                     <thead><tr><th>Setting</th><th>Value</th></tr></thead>
                     <tbody>

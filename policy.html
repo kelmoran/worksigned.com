@@ -78,13 +78,17 @@
             <!-- ========================================================= -->
             <section id="workspace">
                 <h2>Encrypted cloud workspace <span class="h2-sub">An optional, maximum-security mode.</span></h2>
-                <p>For the most sensitive work, you can run an <strong>encrypted cloud workspace</strong>. In this mode your project files live inside an <strong>encrypted volume</strong> &mdash; a full-disk-encrypted image &mdash; and the keys to decrypt it are <strong>supplied by you at runtime</strong>. The platform mounts and works with the volume while you're logged in, but at rest it is ciphertext we cannot open.</p>
+                <p>For the most sensitive work you have two paths &mdash; either <strong>bring your own private backend cloud</strong>, or use <strong>WorkSigned's encrypted cloud workspace</strong>. Both keep your files encrypted at rest with keys that come from you, not from us.</p>
+                <h3>Option A &mdash; Your own private backend cloud</h3>
+                <p>Point WorkSigned at infrastructure you operate. Files live on your storage, under your keys and your access control, so you hold the keys yourself. WorkSigned still seals, signs, and records the proof trail, but the data sits on hardware you control. This is the most direct form of data custody &mdash; the platform and the data never share a storage layer.</p>
+                <h3>Option B &mdash; WorkSigned encrypted cloud workspace</h3>
+                <p>Run your project in a WorkSigned-hosted <strong>encrypted cloud workspace</strong>. In this mode your project files live inside an <strong>encrypted volume</strong> &mdash; a full-disk-encrypted image &mdash; and the keys to decrypt it are <strong>supplied by you at runtime</strong>. The platform mounts and works with the volume while you're logged in, but at rest it is ciphertext we cannot open.</p>
                 <ul>
                     <li>Files live in an encrypted image (block-level encryption), not as plaintext on our storage.</li>
                     <li>The decryption key comes from you at runtime &mdash; not from us, not from a database row we control.</li>
                     <li>Even an operator of the storage cannot read the files without your key.</li>
                 </ul>
-                <div class="doc-callout">This is the difference between "we promise not to read your files" and "we <em>can't</em> read your files." Encrypted-workspace mode gives you the second one.</div>
+                <div class="doc-callout">Either way, this is the difference between "we promise not to read your files" and "we <em>can't</em> read your files." Option A puts the storage in your hands entirely; Option B keeps it with us but makes it unreadable to us.</div>
             </section>
 
             <!-- ========================================================= -->

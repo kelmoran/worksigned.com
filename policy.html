@@ -96,6 +96,7 @@
                     <li>Your key is <strong>asymmetrically sealed</strong> (encrypted/appended with a public key) into the vault. Only the matching private key can unseal it.</li>
                     <li>The private key is <strong>not on any of our online servers.</strong> It exists on a dedicated <strong>air-gapped machine</strong> that is not reachable from the network.</li>
                     <li>At runtime, the key comes from <em>you</em>. We never hold a usable copy of the plaintext key in our systems.</li>
+                    <li><strong>We don't even index the key to your identity.</strong> The vault holds sealed key entries with <strong>no username, account id, or lookup key attached</strong> &mdash; there is no "which entry belongs to which person" mapping anywhere we could see it.</li>
                 </ul>
                 <div class="doc-callout"><strong>The vault is never read on a live server &mdash; it is append-only, and the system cannot open what it writes.</strong> The online system can <em>append</em> sealed entries to the vault, but it <strong>cannot open, decrypt, or even read the contents</strong> of what it appends. To the live infrastructure the vault is opaque ciphertext: it stores bytes it has no key to interpret. So there is no server-side read path, no debug endpoint, and no admin action that exposes your key &mdash; because the code that touches the vault is, by construction, unable to.</div>
                 <p>The design goal is that no single point &mdash; not our database, not our servers, not an inside operator, <strong>not even the live code path that writes to the vault</strong> &mdash; can produce your plaintext key or your plaintext files on its own.</p>
@@ -111,6 +112,7 @@
                     <li>Access to your workspace is restored.</li>
                 </ol>
                 <p>Because the private key only exists on a machine that is physically offline, recovery is something that can be done <em>deliberately, at the machine</em> &mdash; not something an attacker can trigger remotely against our live infrastructure.</p>
+                <p>Because the vault is <strong>unindexed &mdash; no entry is labelled with a username or account</strong> &mdash; recovery can't look your key up by name. It has to <strong>iterate through the sealed entries, testing each one, until yours is found</strong>. That can take a while as the vault grows, and we accept that trade on purpose: the same property that makes recovery slower is exactly what stops anyone &mdash; an attacker, a data breach, or even a full server dump &mdash; from matching a specific key to a specific person. <strong>Slower recovery in exchange for a vault that can't be turned into a person-to-key list.</strong></p>
             </section>
 
             <!-- ========================================================= -->
@@ -121,6 +123,7 @@
                     <li><strong>Files</strong> are encrypted at rest; the key is supplied by you at runtime.</li>
                     <li><strong>Keys</strong> are asymmetrically sealed into a vault &mdash; not a plain database, and <strong>never read on a live server; only ever appended to</strong>.</li>
                     <li><strong>The private key</strong> lives only on an air-gapped machine, unreachable from the network.</li>
+                    <li><strong>The vault is unindexed</strong> &mdash; no key is labelled with a username or account, so a dump can't be turned into a person-to-key list.</li>
                 </ul>
                 <p>So a hacker who compromises our servers gets encrypted files and an unsealable vault, but not the key that opens either. A bulk exfiltration of "the data and its keys" is structurally impossible, because the key and the ciphertext are separated by a network boundary that an attacker can cross on only one side at a time.</p>
             </section>

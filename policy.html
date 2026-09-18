@@ -36,6 +36,7 @@
             <a href="#keys">How your keys are stored</a>
             <a href="#recovery">Key recovery</a>
             <a href="#why">Why it works</a>
+            <a href="#enforcement">How it's enforced</a>
             <div class="doc-group">Related</div>
             <a href="docs.html">Platform documentation</a>
             <a href="requirements.html">System requirements</a>
@@ -131,6 +132,18 @@
                     <li><strong>The vault is unindexed</strong> &mdash; no key is labelled with a username or account, so a dump can't be turned into a person-to-key list.</li>
                 </ul>
                 <p>So a hacker who compromises our servers gets encrypted files and an unsealable vault, but not the key that opens either. A bulk exfiltration of "the data and its keys" is structurally impossible, because the key and the ciphertext are separated by a network boundary that an attacker can cross on only one side at a time.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="enforcement">
+                <h2>How it's enforced <span class="h2-sub">Three layers, locked so no one can quietly walk them back.</span></h2>
+                <p>These commitments aren't a marketing statement &mdash; they're <strong>enforced at three levels</strong>, each one stronger and less reversible than the last.</p>
+                <ol>
+                    <li><strong>A Service Level Agreement (SLA) in every WorkSigned contract.</strong> The customer-facing, enforceable term. If we fall short, the remedy is against the <em>company</em> under the contract &mdash; bounded and handled per the agreement, not an open-ended personal liability.</li>
+                    <li><strong>Internal bylaws.</strong> The data &amp; security commitments are written into the company's own governing documents and bind the company and its officers. They're enforced <em>internally</em> &mdash; by the company and a designated enforcer, with pre-committed, automatic consequences &mdash; not by outside litigation, and they do <strong>not</strong> grant any individual user a personal right to sue.</li>
+                    <li><strong>A permanent mission &amp; company statement.</strong> The core commitments are written into the founding charter at inception and <strong>immutable after incorporation</strong> &mdash; a future board cannot reverse them.</li>
+                </ol>
+                <div class="doc-callout">The point of the design: the guarantees are <strong>contractually, bylaw, and chartered</strong> &mdash; and enforcement is <strong>internal and mechanical</strong>. A customer's remedy is a contract claim against the company (capped, per the SLA), never a personal suit against the founder, and the core commitments are locked so they can't be quietly revised later.</div>
             </section>
 
         </main>

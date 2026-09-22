@@ -1,26 +1,702 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>WorkSigned</title>
-<style>
-  html,body{margin:0;height:100%;background:#0b0d12;color:#e6e8ee;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    display:flex;align-items:center;justify-content:center;}
-  .card{text-align:center;padding:48px 28px;max-width:440px;}
-  .brand{font-weight:700;font-size:22px;letter-spacing:.2px;margin-bottom:16px;}
-  .brand span{color:#38d39f;}
-  h1{font-size:22px;font-weight:600;margin:0 0 10px;}
-  p{color:#9aa0ad;font-size:16px;line-height:1.55;margin:0;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WorkSigned adds privacy, protection, and proof-of-work to the entire research process &mdash; shielding intent, securing the work, and attributing results to the people and institutions that produced them.">
+    <title>WorkSigned — Privacy, protection &amp; proof for the research process</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== Research-process flow (connected vertical diagram) ===== */
+        .proc-wrap { position: relative; max-width: 820px; margin: 56px auto 0; }
+        .proc-stage {
+            position: relative;
+            display: grid; grid-template-columns: 64px 1fr; gap: 26px;
+            padding: 30px 0;
+        }
+        .proc-stage::after { /* connector line down to next stage */
+            content: ""; position: absolute; left: 31px; top: 64px; bottom: -30px;
+            width: 2px; background: linear-gradient(var(--border-strong), var(--border));
+        }
+        .proc-stage:last-child::after { display: none; }
+        .proc-node {
+            width: 64px; height: 64px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-elev); border: 1px solid var(--border-strong);
+            font-weight: 800; font-size: 1.4rem; color: var(--accent);
+            position: relative; z-index: 2;
+            box-shadow: 0 6px 18px rgba(0,0,0,.35);
+        }
+        .proc-body { padding-top: 8px; }
+        .proc-body h3 { font-size: 1.5rem; margin: 0 0 10px; letter-spacing: -.3px; }
+        .proc-body p { color: var(--text-muted); margin: 0; line-height: 1.65; font-size: var(--fs-body); }
+        .proc-body p strong { color: #7df0e0; font-weight: 700; }
+
+        /* ===== realistic signed-WorkSigned Record example (horizontal connected timeline) ===== */
+        .WorkSigned Record-example { margin: 104px auto 0; max-width: 900px; }
+        .te-heading {
+            font-size: clamp(32px, 4.2vw, 52px); font-weight: 800; text-align: center;
+            color: var(--text); margin: 0 0 16px; letter-spacing: -1px;
+        }
+        .te-lead {
+            font-size: var(--fs-body); color: var(--text-muted); text-align: center;
+            max-width: 640px; margin: 0 auto 34px; line-height: 1.65;
+        }
+        .te-lead strong, .te-lead em { color: #7df0e0; font-weight: 700; }
+        .te-label {
+            font-size: .74rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 700;
+            color: var(--text-faint); text-align: center; margin-bottom: 22px;
+        }
+        .te-track { display: flex; align-items: flex-start; }
+        .te-item { flex: 1 1 0; min-width: 0; position: relative; text-align: center; padding: 0 8px; }
+        .te-item:not(:last-child)::after {
+            content: ""; position: absolute; top: 13px;
+            left: calc(50% + 16px); right: calc(-50% + 16px); height: 2px;
+            background: linear-gradient(90deg, var(--border-strong), rgba(94,234,212,.4));
+        }
+        .te-dot {
+            width: 28px; height: 28px; margin: 0 auto 12px; border-radius: 50%; position: relative; z-index: 1;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .78rem; font-weight: 800; color: #05271f; background: #5eead4;
+            box-shadow: 0 0 0 4px rgba(94,234,212,.14);
+        }
+        .te-item.fund .te-dot { background: #fbbf24; color: #2a1c02; box-shadow: 0 0 0 4px rgba(251,191,36,.16); }
+        .te-item.mile .te-dot { background: #8ab0ff; color: #0a1428; box-shadow: 0 0 0 4px rgba(91,140,255,.16); }
+        .te-time { font-size: var(--fs-small); color: var(--text-faint); font-variant-numeric: tabular-nums; margin-bottom: 4px; }
+        .te-kind { font-size: var(--fs-small); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 5px; }
+        .te-item.work .te-kind { color: var(--text-muted); }
+        .te-item.mile .te-kind { color: #8ab0ff; }
+        .te-item.fund .te-kind { color: #fbbf24; }
+        .te-desc { font-size: var(--fs-small); color: var(--text-muted); line-height: 1.55; }
+        .te-amt { color: #fde68a; font-weight: 700; }
+        .te-who { display: block; margin-top: 5px; font-size: var(--fs-small); color: var(--text-faint); }
+        .te-hash { display: block; margin-top: 6px; font-family: ui-monospace, Menlo, monospace; font-size: .68rem; color: var(--text-faint); opacity: .8; }
+        .te-foot { margin-top: 26px; text-align: center; font-size: var(--fs-body); color: var(--text-muted); line-height: 1.6; max-width: 640px; margin-left: auto; margin-right: auto; }
+        .te-foot strong { color: var(--text-muted); font-weight: 700; }
+
+        /* ===== zoom / blow-up: fine-grained micro-keystroke WorkSigned Record ===== */
+        /* highlight the node that is being magnified */
+        .te-item.zoomed .te-dot {
+            background: #fff; color: #0a1a17;
+            box-shadow: 0 0 0 4px rgba(94,234,212,.55), 0 0 24px rgba(94,234,212,.6);
+            transform: scale(1.12);
+        }
+        .te-item.zoomed .te-kind { color: #7df0e0; }
+        /* pulsing ring around the magnified node's dot */
+        .te-zoom-ring {
+            position: absolute; inset: -9px; border-radius: 50%; pointer-events: none;
+            border: 2px solid rgba(94,234,212,.8);
+            animation: teZoomPulse 1.9s ease-out infinite;
+        }
+        @keyframes teZoomPulse {
+            0%   { transform: scale(.7);  opacity: .95; }
+            70%  { transform: scale(1.7); opacity: 0; }
+            100% { transform: scale(1.7); opacity: 0; }
+        }
+        /* Respect reduced-motion: stop the pulsing ring (keep a static outline). */
+        @media (prefers-reduced-motion: reduce) {
+            .te-zoom-ring { animation: none; border-color: rgba(94,234,212,.5); }
+        }
+        /* the zoom connector: a measured SVG funnel from node 5 down to the panel.
+           Height + viewBox are set by JS to the exact gap, so the lines always
+           land on node 5 and the panel corners regardless of screen width. */
+        .te-lens { position: relative; height: 72px; display: flex; justify-content: center; }
+        .te-lens-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+                .te-lens-tag {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            font-size: var(--fs-small); letter-spacing: .1em; text-transform: uppercase; font-weight: 700;
+            color: #7df0e0; background: var(--bg); padding: 0 10px; white-space: nowrap;
+        }
+        /* the magnified panel */
+        .mg-panel {
+            margin: 0 auto; max-width: 760px;
+            background: linear-gradient(180deg, rgba(94,234,212,.06), rgba(94,234,212,.02));
+            border: 1px solid rgba(94,234,212,.3); border-radius: 16px;
+            padding: 20px 22px 22px; box-shadow: 0 24px 60px -30px rgba(94,234,212,.5);
+            position: relative;
+        }
+        .mg-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+        .mg-zoom { font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #7df0e0; }
+        .mg-title { font-size: var(--fs-body); font-weight: 700; color: var(--text); }
+        .mg-sub { font-size: var(--fs-small); color: var(--text-faint); margin-bottom: 14px; }
+        .mg-sub code, .mg-row code { font-family: ui-monospace, Menlo, monospace; color: #cfe9ff; background: rgba(255,255,255,.05); padding: 0 5px; border-radius: 4px; }
+        .mg-rows { border-top: 1px solid rgba(94,234,212,.18); }
+        .mg-row {
+            display: grid; grid-template-columns: 74px 118px 1fr auto;
+            gap: 14px; align-items: center; padding: 8px 0;
+            border-bottom: 1px solid rgba(94,234,212,.1);
+            font-size: var(--fs-small); font-variant-numeric: tabular-nums;
+        }
+        .mg-row:last-child { border-bottom: none; }
+        .mg-t { color: var(--text-faint); }
+        .mg-kind { font-weight: 700; letter-spacing: .03em; }
+        .mg-kind.k-type { color: #7df0e0; }
+        .mg-kind.k-del  { color: #ff9b9b; }
+        .mg-kind.k-move { color: #8ab0ff; }
+        .mg-kind.k-save { color: #fbbf24; }
+        .mg-detail { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .mg-hash { font-family: ui-monospace, Menlo, monospace; font-size: .7rem; color: var(--text-faint); }
+        .mg-foot { margin-top: 16px; font-size: var(--fs-small); color: var(--text-muted); line-height: 1.5; }
+        .mg-foot strong { color: #7df0e0; font-weight: 700; }
+        @media (max-width: 820px) {
+            .mg-row { grid-template-columns: 60px 88px 1fr; }
+            .mg-hash { display: none; }
+        }
+        @media (max-width: 820px) {
+            .te-track { flex-direction: column; gap: 20px; }
+            .te-item { text-align: left; display: grid; grid-template-columns: 28px 1fr; gap: 0 12px; }
+            .te-item::after { display: none; }
+            .te-dot { grid-row: 1 / span 4; margin: 0; }
+        }
+
+
+        /* ===== "why we can do it" strip ===== */
+        .whybar {
+            display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 44px;
+        }
+        .whybar .w {
+            background: var(--bg-elev); border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px 22px;
+        }
+        .whybar .w h4 { margin: 0 0 8px; font-size: 1.05rem; color: var(--accent-2); }
+        .whybar .w p { margin: 0; color: var(--text-muted); font-size: var(--fs-body); line-height: 1.6; }
+
+        /* ===== Institutions section ===== */
+        .inst-hero { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 8px; }
+        .inst-cards { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; margin-top: 44px; }
+        .inst-cards .ic {
+            background: var(--bg-elev); border: 1px solid var(--border);
+            border-radius: 16px; padding: 26px 22px;
+        }
+        .inst-cards .ic h3 { font-size: 1.1rem; margin: 0 0 10px; }
+        .inst-cards .ic p { margin: 0; color: var(--text-muted); font-size: var(--fs-body); line-height: 1.6; }
+        .inst-cards .ic .k { color: var(--accent-2); font-weight: 700; }
+
+        /* ===== Stealth mode spotlight / hover card ===== */
+        .stealth {
+            border: 1px solid rgba(94,234,212,.3); border-radius: 20px;
+            background:
+              radial-gradient(120% 140% at 12% 0%, rgba(94,234,212,.10), transparent 55%),
+              var(--bg-elev);
+            padding: 40px clamp(22px,5vw,56px);
+        }
+        .stealth .st-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 700;
+            color: #5eead4; background: rgba(94,234,212,.1); border: 1px solid rgba(94,234,212,.3);
+            padding: 7px 14px; border-radius: 999px; margin-bottom: 16px;
+        }
+        .stealth h3 { font-size: clamp(1.5rem,3.4vw,2rem); margin: 0 0 12px; letter-spacing: -.4px; }
+        .stealth .st-sub { color: var(--text-muted); max-width: 640px; line-height: 1.6; margin: 0 0 22px; font-size: var(--fs-body); }
+        .stealth .st-sub strong { color: #7df0e0; font-weight: 700; }
+        .stealth .st-points { margin: 0; padding-left: 20px; color: var(--text-muted); line-height: 1.6; }
+        .stealth .st-points li { margin-bottom: 8px; }
+        .stealth .st-points strong { color: #7df0e0; font-weight: 700; }
+
+        /* ===== stealth inline link -> hover card (card is OUTSIDE the <a>) ===== */
+        .sl-outer { position: relative; margin-top: 4px; }
+        .sl-wrap { position: relative; display: inline; }
+        .sl-link { color: #7df0e0; font-weight: 700; text-decoration: none; cursor: pointer; border-bottom: 1px dotted #5eead4; }
+        .sl-link::after { content: "\2195"; font-size: .7em; margin-left: 3px; opacity: .7; }
+        .sl-card {
+            position: absolute; top: 0; left: 0; z-index: 40;
+            width: min(500px, 88vw);
+            background: linear-gradient(180deg, var(--bg-elev), #0b1626);
+            border: 1px solid rgba(94,234,212,.45);
+            border-radius: 18px; padding: 22px 24px 20px;
+            box-shadow: 0 24px 70px rgba(0,0,0,.7), 0 0 0 1px rgba(94,234,212,.06), 0 8px 40px rgba(94,234,212,.10);
+            opacity: 0; visibility: hidden; transform: translateY(8px);
+            transition: opacity .18s ease, transform .18s ease, visibility .18s;
+            pointer-events: none; text-align: left;
+        }
+        .sl-outer.sl-open .sl-card, .sl-outer:hover .sl-card { opacity: 1; visibility: visible; transform: translateY(0); }
+        .sl-card .st-badge {
+            font-size: .68rem; padding: 6px 13px; margin-bottom: 14px;
+            color: #7df0e0; background: rgba(94,234,212,.12); border: 1px solid rgba(94,234,212,.4);
+        }
+        .sl-card h4 { margin: 0 0 14px; font-size: 1.45rem; letter-spacing: -.3px; line-height: 1.3; }
+        .sl-card p { margin: 0 0 18px; color: var(--text-muted); font-size: var(--fs-body); line-height: 1.6; }
+        .sl-card ul { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 36px; }
+        .sl-card li {
+            position: relative; padding-left: 22px; margin-bottom: 14px; break-inside: avoid;
+            color: var(--text-muted); font-size: var(--fs-body); line-height: 1.55;
+        }
+        .sl-card li:last-child { margin-bottom: 0; }
+        .sl-card li::before {
+            content: ""; position: absolute; left: 0; top: .55em;
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #5eead4; box-shadow: 0 0 0 3px rgba(94,234,212,.15);
+        }
+        .sl-card strong { color: #d6feff; font-weight: 700; }
+        @media (max-width: 760px) {
+            .sl-card { width: 100%; }
+            .sl-card ul { columns: 1; }
+        }
+        @media (max-width: 760px) { .stealth-steps { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 900px) {
+            .whybar, .inst-cards { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 560px) {
+            .proc-stage { grid-template-columns: 48px 1fr; gap: 16px; }
+            .proc-node { width: 48px; height: 48px; font-size: 1.1rem; }
+            .proc-stage::after { left: 23px; }
+            .whybar, .inst-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
 </head>
 <body>
-  <div class="card">
-    <div class="brand">Work<span>Signed</span></div>
-    <h1>Coming soon</h1>
-    <p>Provable research, in preparation.</p>
-  </div>
+<!-- shared brand gradient (referenced by the logo mark in nav + footer) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="wsg" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#5b8cff"/><stop offset="1" stop-color="#34d3a6"/></linearGradient></defs></svg>
+
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="#top" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+            <nav class="nav-links nav-links-left">
+                <a href="usage.html">Usage</a>
+                <a href="deploy.html">Deployment</a>
+                <a href="proof.html">Proof</a>
+                <a href="policy.html">Policy</a>
+            </nav>
+        </div>
+        <nav class="nav-links">
+            <a href="#process">The process</a>
+            <a href="#process">Protected Search</a>
+            <a href="#institutions">For institutions</a>
+            <a href="#tools">Tools</a>
+            <a href="#trust">Our guarantee</a>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <!-- ============================== HERO ============================== -->
+    <section class="hero" id="top">
+        <div class="container">
+            <h1>Privacy, protection &amp; <span class="grad">proof</span> for the entire research process.</h1>
+            <p class="sub">
+                <strong>WorkSigned</strong> protects the entirety of the <strong>research
+                journey</strong>, from beginning to end. Our tool-rich research platform <strong>shields your intent</strong> while you
+                explore, <strong>secures the work</strong> as you build it, and produces a
+                tamper-evident record that <strong>attributes the result to the people who made it</strong>. WorkSigned operates as an <strong>Equitable Corporation</strong> &mdash; its record verifies independently of who owns the company, and a charter-level bar plus a per-signee remedy make capture of the company, its IP, or its terms expensive and public.
+            </p>
+            <!-- the living signed chain sits here: a band between the copy and the buttons -->
+            <div class="hero-chain-band" aria-hidden="true">
+                <canvas id="hero-chain"></canvas>
+            </div>
+            <div class="hero-cta">
+                <a href="#apply" class="btn btn-primary">Request access</a>
+                <a href="#process" class="btn btn-ghost">See how it works</a>
+                <a href="#tools" class="btn btn-ghost">Platform tools</a>
+            </div>
+            <p style="margin-top:18px;font-size:14px;color:var(--text-dim);opacity:.75;">WorkSigned is in alpha &mdash; individual application features may change. The core &mdash; the proof chain, the sealing and signing of your work, and the data &amp; security policy &mdash; does not.</p>
+        </div>
+    </section>
+
+    <!-- Light content body: the 1Password/Cloudflare pattern — dark hero stays dark, everything
+         below flips to a light/near-white "institutional" register. Scoped token overrides in CSS. -->
+    <div class="lightbody">
+    <!-- ======================= RESEARCH PROCESS (connected flow) ======================= -->
+    <section class="section" id="process">
+        <div class="container">
+            <h2 class="section-title">Securing the entire research supply chain</h2>
+            <p class="section-lead">
+                Every stage of research is where intent can leak, work can be exposed, and credit
+                can be disputed. WorkSigned is built <strong>around the process</strong> &mdash;
+                and because we <strong>control the toolchain</strong>, each stage gets privacy,
+                protection, and proof. Proof of work spans the whole thing; the privacy and
+                protection are tuned to what each stage actually risks.
+            </p>
+
+            <div class="proc-wrap">
+
+                <!-- Stage 1: Scouting -->
+                <div class="proc-stage">
+                    <div class="proc-node">1</div>
+                    <div class="proc-body">
+                        <h3>Explore without revealing intent</h3>
+                        <p>
+                            A single search like <em>&ldquo;CRISPR editing a gene linked to
+                            a rare genetic disease&rdquo;</em> tells a competitor exactly what you&rsquo;re
+                            planning &mdash; before you&rsquo;ve told anyone. WorkSigned&rsquo;s
+                            <span class="sl-wrap">
+                                <a class="sl-link" href="#" onclick="return false;">protected search</a>
+                                 shards your query into harmless parts,
+                            disperses them across separate search engines, AI providers, and IP addresses, then synthesizes
+                            the result privately. Your intent is never leaked.
+                        </p>
+                        <div class="sl-outer">
+                            <span class="sl-card" aria-hidden="true">
+                                    <span class="st-badge">Protected search</span>
+                                    <h4>Search the web without revealing intent</h4>
+                                    <p>
+                                        Even the act of searching is a leak. Protected search gets you
+                                        <strong>real results from the open web</strong> while your
+                                        <strong>intent never surfaces as a pattern</strong>.
+                                    </p>
+                                    <ul>
+                                        <li>Queries are <strong>sharded</strong> into harmless parts.</li>
+                                        <li>Dispersed across engines, providers &amp; IPs &mdash; <strong>no single trace</strong>.</li>
+                                        <li>Privately <strong>synthesized</strong> into a full result.</li>
+                                        <li>Logged in your signed record &mdash; <strong>without exposing intent</strong>.</li>
+                                    </ul>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 2: Gathering -->
+                <div class="proc-stage">
+                    <div class="proc-node">2</div>
+                    <div class="proc-body">
+                        <h3>Collect from many sources, quietly</h3>
+                        <p>
+                            WorkSigned aggregates data across many sources with <strong>query translation</strong>
+                            so no single request exposes the shape of your project. Because you
+                            control the entire toolchain, you can choose <em>where data flows</em> &mdash; and
+                            keep the destination and the intent hidden from third parties.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stage 3: Analysis & Synthesis -->
+                <div class="proc-stage">
+                    <div class="proc-node">3</div>
+                    <div class="proc-body">
+                        <h3>Process locally &amp; privately</h3>
+                        <p>
+                            Preliminary and sensitive results are processed <strong>on your
+                            hosted LLMs by default</strong> &mdash; and optionally on WorkSigned&rsquo;s
+                            private LLMs &mdash; on models that do not
+                            train on your data. Every agent and process runs
+                            <strong>sandboxed</strong>, every binary on the platform is
+                            <strong>analyzed for telemetry</strong>, and monitoring watches for
+                            exfiltration. What touches your data is known, contained, and audited.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stage 4: Publish & Credit -->
+                <div class="proc-stage">
+                    <div class="proc-node">4</div>
+                    <div class="proc-body">
+                        <h3>The entire process, signed &mdash; and attributed</h3>
+                        <p>
+                            Everything you did, in order, becomes a <strong>tamper-evident,
+                            hash-chained record</strong> &mdash; independently verifiable by a journal,
+                            funder, or institution. And it goes beyond &ldquo;the work happened&rdquo;:
+                            it names <strong>which person did which part, and when</strong>, so
+                            authorship and priority are provable down to the individual.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== REALISTIC SIGNED-TRAIL EXAMPLE ===== -->
+            <div class="trail-example">
+                <h2 class="te-heading">The WorkSigned Record acts as the proof that the work was done &mdash; how and at what cost.</h2>
+                <p class="te-lead">Every project keeps one WorkSigned Record. Zoom out and it&rsquo;s the whole story; zoom in and it&rsquo;s <em>every keystroke, mouse move, and dollar</em> that built the work.</p>
+                <p class="te-label">A real WorkSigned Record looks like this &mdash; our <strong>tamper-evident WorkSigned Record</strong></p>
+                <div class="te-track">
+                    <div class="te-item work">
+                        <div class="te-dot">1</div>
+                        <div class="te-time">Mar 4 &middot; 09:12</div>
+                        <div class="te-kind">Project created</div>
+                        <div class="te-desc">Project <em>zinc-kinase</em> initialized &mdash; 3 members, grant <strong>NIH-R35</strong> attached</div>
+                        <span class="te-who">Dr. Chen</span>
+                        <span class="te-hash">0x3f9a…c21b</span>
+                    </div>
+                    <div class="te-item fund">
+                        <div class="te-dot">2</div>
+                        <div class="te-time">Mar 4 &middot; 11:47</div>
+                        <div class="te-kind">Funding spent</div>
+                        <div class="te-desc">$2,400 &mdash; <em>reagents &amp; consumables</em></div>
+                        <span class="te-who">grant NIH-R35</span>
+                        <span class="te-hash">0x7c1d…88e0</span>
+                    </div>
+                    <div class="te-item work">
+                        <div class="te-dot">3</div>
+                        <div class="te-time">Mar 5 &middot; 15:20</div>
+                        <div class="te-kind">File sealed</div>
+                        <div class="te-desc"><em>results_v1.csv</em> saved &amp; hashed</div>
+                        <span class="te-who">Dr. Okafor</span>
+                        <span class="te-hash">0xb2e4…44aa</span>
+                    </div>
+                    <div class="te-item mile">
+                        <div class="te-dot">4</div>
+                        <div class="te-time">Mar 6 &middot; 08:05</div>
+                        <div class="te-kind">Milestone commit</div>
+                        <div class="te-desc">&ldquo;Baseline assay validated&rdquo; &mdash; 14 files signed</div>
+                        <span class="te-who">Dr. Chen</span>
+                        <span class="te-hash">0x91f0…7d3c</span>
+                    </div>
+                    <div class="te-item fund zoomed">
+                        <div class="te-dot"><span class="te-zoom-ring"></span>5</div>
+                        <div class="te-time">Mar 7 &middot; 16:31</div>
+                        <div class="te-kind">Funding spent</div>
+                        <div class="te-desc">$6,150 &mdash; <em>sequencing run</em></div>
+                        <span class="te-who">grant NIH-R35</span>
+                        <span class="te-hash">0x5a88…b1f2</span>
+                    </div>
+                    <div class="te-item mile">
+                        <div class="te-dot">6</div>
+                        <div class="te-time">Mar 9 &middot; 10:48</div>
+                        <div class="te-kind">Milestone commit</div>
+                        <div class="te-desc">&ldquo;Draft complete&rdquo; &mdash; 42 files, 3 authors signed</div>
+                        <span class="te-who">Dr. Okafor, Dr. Chen</span>
+                        <span class="te-hash">0xde02…91cc</span>
+                    </div>
+                </div>
+
+                <!-- ===== ZOOM-IN: fine-grained micro-keystroke WorkSigned Record ===== -->
+                <div class="te-lens">
+                    <svg class="te-lens-svg" aria-hidden="true" preserveAspectRatio="none"></svg>
+                    <span class="te-lens-tag">&darr; one node, magnified &times;1000</span>
+                </div>
+                <div class="mg-panel">
+                    <div class="mg-head">
+                        <span class="mg-zoom">&times;1000</span>
+                        <span class="mg-title">Node 5 &mdash; <em>results_v1.csv</em>, 16:31:04.882 &rarr; 16:31:09.114</span>
+                    </div>
+                    <p class="mg-sub">The same one save, at full resolution. Every keystroke, mouse move, and click is captured &mdash; not just the file that ended up on disk.</p>
+                    <div class="mg-rows">
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:04.882</span>
+                            <span class="mg-kind k-type">type</span>
+                            <span class="mg-detail"><code>"0.042</code> &rarr; cell <em>B7</em></span>
+                            <span class="mg-hash">0x7a11…c02d</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:05.114</span>
+                            <span class="mg-kind k-move">move</span>
+                            <span class="mg-detail">cursor <em>x:612&thinsp;y:148</em> &rarr; <em>x:614&thinsp;y:152</em></span>
+                            <span class="mg-hash">0x2f38…91ab</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:05.630</span>
+                            <span class="mg-kind k-type">type</span>
+                            <span class="mg-detail"><code>"±0.003"</code> &rarr; cell <em>B7</em></span>
+                            <span class="mg-hash">0x8c40…33e1</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:06.020</span>
+                            <span class="mg-kind k-del">backspace &times;2</span>
+                            <span class="mg-detail">remove WorkSigned Recording comma &amp; space</span>
+                            <span class="mg-hash">0x1d07…b4f2</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:06.470</span>
+                            <span class="mg-kind k-type">type</span>
+                            <span class="mg-detail"><code>"p&lt;0.01"</code> &rarr; cell <em>C7</em></span>
+                            <span class="mg-hash">0x99ee…08cd</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:08.990</span>
+                            <span class="mg-kind k-move">click</span>
+                            <span class="mg-detail"><em>Save</em> button &middot; (x:1240, y:64)</span>
+                            <span class="mg-hash">0x4410…6b77</span>
+                        </div>
+                        <div class="mg-row">
+                            <span class="mg-t">16:31:09.114</span>
+                            <span class="mg-kind k-save">sealed</span>
+                            <span class="mg-detail"><em>results_v1.csv</em> &middot; sha256 <code>b2e4…44aa</code></span>
+                            <span class="mg-hash">0xde02…91cc</span>
+                        </div>
+                    </div>
+                    <p class="mg-foot">
+                        This is the <strong>actual proof</strong> of the work: not &ldquo;a file exists,&rdquo; but
+                        <strong>every single keystroke and mouse movement that produced it</strong>, timestamped
+                        to the millisecond and hash-chained. You can&rsquo;t fake the <em>process</em> the way you
+                        can fake the <em>product</em> &mdash; and a back-dated file would leave no WorkSigned Record of how it was typed.
+                    </p>
+                </div>
+
+                <p class="te-foot">
+                    Every entry is <strong>append-only &amp; hash-chained</strong> &mdash; work, milestones,
+                    and spend in one signed record. <strong>Nothing can be silently altered &mdash; any change breaks the chain and is detectable.</strong>
+                    It&rsquo;s your research timeline <em>and</em> your grant ledger &mdash; no separate accounting software.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= FOR INSTITUTIONS ======================= -->
+    <section class="section section-alt" id="institutions">
+        <div class="container">
+            <h2 class="section-title">Built for the researcher &mdash; and the institution behind them</h2>
+            <p class="section-lead">
+                The researcher owns their <strong>credit and priority</strong>; the institution owns its
+                <strong>integrity and reputation</strong>. A leak or a disputed claim hurts <em>both</em>.
+                WorkSigned protects both, as equals.
+            </p>
+            <div class="inst-cards">
+                <div class="ic">
+                    <h3>Protect the <span class="k">intellectual property</span></h3>
+                    <p>Whatever the ownership split, the work needs a tamper-evident chain of custody &mdash; provable provenance for the researcher&rsquo;s contribution, a defensible asset for the institution.</p>
+                </div>
+                <div class="ic">
+                    <h3>Defend <span class="k">attribution &amp; priority</span></h3>
+                    <p>The record shows who did what and when, down to the individual &mdash; provable authorship for the researcher, fewer conflicts for the institution.</p>
+                </div>
+                <div class="ic">
+                    <h3>Guard <span class="k">reputation</span></h3>
+                    <p>Protected search and exfiltration countermeasures keep sensitive work confidential &mdash; no leak before <em>you</em> choose to announce it.</p>
+                </div>
+                <div class="ic">
+                    <h3>Answer to <span class="k">grants &amp; audits</span></h3>
+                    <p>Every deliverable &mdash; and every dollar &mdash; on the same signed timeline: what was done, by whom, and at what cost, tied to the grants that funded it. Funders and auditors pull one tamper-evident WorkSigned Record &mdash; <strong>and you stop paying for a separate grant-accounting tool to do it.</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= SHOWCASE — THE FULL TOOL SUITE ======================= -->
+    <section class="showcase" id="tools">
+        <div class="container">
+            <div style="text-align:center;">
+                <h2 class="section-title">One platform. <span class="grad">Every tool</span> you work in.</h2>
+                <p class="section-lead">
+                    Code, email, documents, spreadsheets, presentations, LaTeX, AI chat, many more scientific applications &mdash;
+                    not bolted-on plugins, but native tools that <strong>all write to the same
+                    signed record.</strong> And code you write in the editor
+                    <strong>runs right in the platform.</strong>
+                </p>
+            </div>
+
+            <!-- The framed product window -->
+            <div class="window">
+                <div class="window-bar">
+                    <div class="window-dots"><i></i><i></i><i></i></div>
+                    <div class="window-url">
+                        <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        <span id="showcase-url">app.worksigned.com/&#8203;code</span>
+                    </div>
+                    <span class="window-live"><span class="pulse"></span> sealed</span>
+                </div>
+                <div class="stage" id="showcase-stage">
+                    <!-- Slides are filled by script.js from the TOOLS data set -->
+                </div>
+                <button class="showcase-nav prev" id="showcase-prev" aria-label="Previous tool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button class="showcase-nav next" id="showcase-next" aria-label="Next tool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+
+            <!-- live caption describing the current tool -->
+            <p class="showcase-caption" id="showcase-caption"></p>
+
+            <!-- Segmented tab rail: one tab per tool -->
+            <div class="showcase-tabs" id="showcase-tabs"></div>
+        </div>
+    </section>
+
+    <!-- ==================== TRUST NOTE (links out) ==================== -->
+    <section class="section" id="trust">
+        <div class="container">
+            <h2 class="section-title">Guarantees that outlive a change of ownership</h2>
+            <p class="section-lead">
+                Proof you can only trust if the signed record survives whatever happens to the
+                company. WorkSigned operates as an <strong>Equitable Corporation</strong>: the
+                WorkSigned Record is a hash chain that verifies against the public chain (or your
+                own key), so a sale, a change of ownership, or even our failure does not
+                invalidate, re-price, or re-purpose what you have already signed. On top of that,
+                a charter-level bar and a per-signee remedy make capture costly and public. The
+                platform is <em>user-auditable</em>: every line of deployed code is auditable by
+                your IT security team, and the financials and cap table are published.
+            </p>
+            <div class="trust-cards">
+                <div class="trust-card reveal">
+                    <h3>Your record outlives us</h3>
+                    <p class="tc-problem">A signed record is only durable if it can be checked after the fact &mdash; long after the company that made it has changed hands or ceased to exist.</p>
+                    <p class="tc-fix"><strong>The fix:</strong> The WorkSigned Record is a hash chain signed against a public chain (and, in the institution-hosted model, against your own key). It verifies independently of the issuer &mdash; a capture, a sale, or our failure cannot invalidate or re-price it. This is the layer no acquirer can touch.</p>
+                </div>
+                <div class="trust-card reveal">
+                    <h3>It can&rsquo;t be quietly bought away</h3>
+                    <p class="tc-problem">Companies are sold to private equity or large acquirers, and the terms that protected users are quietly rewritten.</p>
+                    <p class="tc-fix"><strong>The fix:</strong> The charter requires a supermajority and a right of first refusal for any sale of control, the core IP, or the brand to a private equity firm, a venture capital fund, or any acquirer that would control the board. A capture is <em>priced and public</em> &mdash; not possible to do quietly.</p>
+                </div>
+                <div class="trust-card reveal">
+                    <h3>The terms can only get stronger</h3>
+                    <p class="tc-problem">A company&rsquo;s privacy promises are only as good as its next board meeting. Terms get revised, policies get walked back.</p>
+                    <p class="tc-fix"><strong>The fix:</strong> The Equitable Terms can only be strengthened, never weakened &mdash; a material adverse change to data ownership, auditability, or the no-extraction rule requires the same supermajority and triggers the per-signee remedy (termination, data return, escrow release, and your record remains valid). So no future board, owner, or terms update can quietly walk the rules back.</p>
+                </div>
+                <div class="trust-card reveal">
+                    <h3>Auditable by you</h3>
+                    <p class="tc-problem">Corporate decisions are made behind closed doors. Reports are audited once a year by people who report to management.</p>
+                    <p class="tc-fix"><strong>The fix:</strong> A user-auditable platform: every line of deployed code is auditable by your IT security team, and the company&rsquo;s financials and cap table are published so you can check the commitments yourself.</p>
+                </div>
+            </div>
+            <p class="trust-cta">
+                <a href="https://equitablecorporation.com" target="_blank" class="btn btn-ghost">
+                    Learn about the structure &rarr;
+                </a>
+                <a href="https://equitablestandard.com/enforcement" target="_blank">How it&rsquo;s enforced &rarr;</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================ CTA / APPLY ============================ -->
+    <section class="section cta-band" id="apply">
+        <div class="container narrow center">
+            <h2 class="section-title light">Be among the first</h2>
+            <p class="section-lead light">
+                We&rsquo;re onboarding a small group of early users and pilot institutions. If
+                you&rsquo;d like in &mdash; tell us who you are.
+            </p>
+            <form class="apply-form" id="apply-form" onsubmit="return submitApply(event)">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required autocomplete="name">
+                    </div>
+                    <div class="form-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label for="message">What would you want to protect or verify?</label>
+                    <textarea id="message" name="message" rows="3" placeholder="Research, IP, authorship, a whole lab or team, &hellip;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-wide" id="apply-submit">Request access</button>
+                <p class="apply-success" id="apply-success"></p>
+            </form>
+        </div>
+    </section>
+
+    </div><!-- /.lightbody -->
+
+    <!-- ============================== FOOTER ============================== -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned &middot; An Equitable Corporation &middot;
+                <a href="https://equitablestandard.com" target="_blank">equitablestandard.com</a>
+            </span>
+        </div>
+    </footer>
+
+    <script src="hero-chain.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

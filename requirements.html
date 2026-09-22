@@ -1,26 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>WorkSigned</title>
-<style>
-  html,body{margin:0;height:100%;background:#0b0d12;color:#e6e8ee;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    display:flex;align-items:center;justify-content:center;}
-  .card{text-align:center;padding:48px 28px;max-width:440px;}
-  .brand{font-weight:700;font-size:22px;letter-spacing:.2px;margin-bottom:16px;}
-  .brand span{color:#38d39f;}
-  h1{font-size:22px;font-weight:600;margin:0 0 10px;}
-  p{color:#9aa0ad;font-size:16px;line-height:1.55;margin:0;}
-</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=usage.html#req-client">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>System requirements — WorkSigned (moved)</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="card">
-    <div class="brand">Work<span>Signed</span></div>
-    <h1>Coming soon</h1>
-    <p>Provable research, in preparation.</p>
-  </div>
+<body id="top">
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+            <nav class="nav-links nav-links-left">
+                <a href="usage.html">Usage</a>
+                <a href="deploy.html">Deployment</a>
+                <a href="proof.html">Proof</a>
+                <a href="policy.html">Policy</a>
+            </nav>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html#process">The process</a>
+            <a href="index.html#tools">Tools</a>
+            <a href="index.html#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+    <div class="container" style="padding:80px 24px; max-width:720px;">
+        <h1 style="font-size:26px;">System requirements have moved</h1>
+        <p style="color:var(--text-muted); font-size:18px; line-height:1.6;">
+            The requirements are now split across the two pages that use them:
+            <a href="usage.html#req-client"><strong>Usage &rarr; What you need</strong></a> covers your own machine, browser, network, and storage (the user/client side), and
+            <a href="deploy.html#it-overview"><strong>Deployment &rarr; What IT needs to provide</strong></a> covers the servers, network, identity, and backends your infrastructure team provisions.
+            It has moved automatically &mdash; if you are not redirected, pick the link above.
+        </p>
+    </div>
 </body>
 </html>

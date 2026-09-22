@@ -223,7 +223,8 @@ function submitApply(e) {
     var windowEl = stage.closest(".window");
     if (!stage || !tabs) return;
 
-    var AUTO_MS = 3000;          // auto-advance interval
+    var AUTO_MS = 0;             // auto-advance disabled: manual-only (user picks the tool they care about)
+    var AUTO_ADVANCE = false;    // master switch — flip to true to restore auto-rotation
     var current = 0;
 
     // Build slides
@@ -331,6 +332,7 @@ function submitApply(e) {
 
     function restartTimer() {
         clearTimer();
+        if (!AUTO_ADVANCE) return;          // manual-only: never auto-advance
         if (isPaused() || !inView) return;  // don't schedule while paused / off-screen
         timer = setTimeout(function () {
             timer = null;
@@ -469,7 +471,8 @@ function submitApply(e) {
     var dotsEl  = document.getElementById("cases-dots");
     if (!grid) return;
 
-    var AUTO_MS = 7000;
+    var AUTO_MS = 0;           // auto-advance disabled: manual-only
+    var AUTO_ADVANCE = false;  // master switch — flip to true to restore auto-rotation
     var current = 0;
 
     // Build dot rail (one per slide)
@@ -517,6 +520,7 @@ function submitApply(e) {
     function clearTimer() { if (timer) { clearTimeout(timer); timer = null; } }
     function restartTimer() {
         clearTimer();
+        if (!AUTO_ADVANCE) return;          // manual-only: never auto-advance
         if (isPaused() || !inView) return;
         timer = setTimeout(function () {
             timer = null;
@@ -590,4 +594,56 @@ function submitApply(e) {
             if (open) place();
         }
     });
+})();
+/* ==========================================================================
+   THEME TOGGLE (Auto -> Light -> Dark)
+   - 'auto' (default) follows the OS via prefers-color-scheme.
+   - 'light' / 'dark' are explicit, persisted in localStorage('ws-theme').
+   - The <head> anti-flash script sets the initial [data-theme]; this wires the
+     button, persists the choice, syncs the label/icon, and reacts to live
+     OS changes while in auto mode.
+   ========================================================================== */
+(function () {
+    var root = document.documentElement;
+    var btn = document.getElementById("theme-toggle");
+    var STORAGE = "ws-theme";
+    var mq = (window.matchMedia) ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+    function stored() { var v = null; try { v = localStorage.getItem(STORAGE); } catch(e){} return (v==='light'||v==='dark'||v==='auto') ? v : 'auto'; }
+    function systemDark() { return mq ? mq.matches : false; }
+    function effective() { var s = stored(); return s === 'auto' ? (systemDark() ? 'dark' : 'light') : s; }
+
+    function render() {
+        var s = stored();
+        var eff = effective();
+        if (eff === 'dark') root.setAttribute("data-theme", "dark");
+        else root.removeAttribute("data-theme");
+        if (btn) {
+            var label = s === 'auto' ? "Auto" : (eff === "dark" ? "Dark" : "Light");
+            var icon  = s === 'auto' ? "\u2699\uFE0F" : (eff === "dark" ? "\u263E" : "\u2600");
+            btn.textContent = icon + " " + label;
+            btn.setAttribute("title", "Theme: " + label + (s === 'auto' ? " (follows system)" : ""));
+        }
+    }
+
+    function persist(v) { try { localStorage.setItem(STORAGE, v); } catch(e){} }
+
+    if (btn) {
+        btn.addEventListener("click", function () {
+            // Auto -> Light -> Dark -> Auto ... (cycle). Enters light/dark based on current eff.
+            var s = stored();
+            var next = s === 'auto' ? 'light' : (s === 'light' ? 'dark' : 'auto');
+            persist(next);
+            render();
+        });
+    }
+
+    // Live reaction to OS theme changes, but only while in auto mode.
+    if (mq && typeof mq.addEventListener === "function") {
+        mq.addEventListener("change", function () { if (stored() === 'auto') render(); });
+    }
+
+    function init() { render(); }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+    else init();
 })();

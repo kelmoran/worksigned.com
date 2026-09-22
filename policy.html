@@ -1,26 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>WorkSigned</title>
-<style>
-  html,body{margin:0;height:100%;background:#0b0d12;color:#e6e8ee;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    display:flex;align-items:center;justify-content:center;}
-  .card{text-align:center;padding:48px 28px;max-width:440px;}
-  .brand{font-weight:700;font-size:22px;letter-spacing:.2px;margin-bottom:16px;}
-  .brand span{color:#38d39f;}
-  h1{font-size:22px;font-weight:600;margin:0 0 10px;}
-  p{color:#9aa0ad;font-size:16px;line-height:1.55;margin:0;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>Data &amp; security policy — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Legacy/Current tabs (self-contained to this page) */
+        .pol-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--surface-3, rgba(255,255,255,.1)); margin: 8px 0 26px; }
+        .pol-tab { appearance: none; background: none; border: none; cursor: pointer; color: var(--text-muted);
+                    font: inherit; font-weight: 600; padding: 10px 18px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+                    transition: color .15s, border-color .15s; }
+        .pol-tab:hover { color: var(--text); }
+        .pol-tab.active { color: var(--text); border-bottom-color: #7df0e0; }
+        .pol-tab .tag { font-size: .72em; font-weight: 600; opacity: .7; margin-left: 8px; letter-spacing: .04em; text-transform: uppercase; }
+        .pol-panel { display: none; }
+        .pol-panel.active { display: block; }
+        .legacy-banner { border: 1px solid var(--surface-3, rgba(255,255,255,.1)); background: var(--surface-2, rgba(255,255,255,.03));
+                         border-left: 3px solid #c9a24a; border-radius: 8px; padding: 14px 18px; margin: 0 0 22px;
+                         font-size: var(--fs-body, 20px); line-height: 1.6; color: var(--text-muted); }
+        .legacy-banner strong { color: var(--text); }
+    </style>
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark') {
+                t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            if (t === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
 </head>
-<body>
-  <div class="card">
-    <div class="brand">Work<span>Signed</span></div>
-    <h1>Coming soon</h1>
-    <p>Provable research, in preparation.</p>
-  </div>
+<body id="top">
+    <!-- Top navigation (uniform: brand + Docs + Requirements left, anchors + Join right) -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+            <nav class="nav-links nav-links-left">
+                <a href="usage.html">Usage</a>
+                <a href="deploy.html">Deployment</a>
+                <a href="proof.html">Proof</a>
+                <a href="policy.html">Policy</a>
+            </nav>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Data &amp; Security Policy</span>
+            <div class="doc-group">Overview</div>
+            <a href="#data" class="active">What data we keep</a>
+            <a href="#logging">No user-data logging</a>
+            <a href="#billing">Billing &amp; login data</a>
+            <div class="doc-group">Encryption</div>
+            <a href="#workspace" class="active">The encrypted workspace</a>
+            <a href="#enforcement">How it's enforced</a>
+            <div class="doc-group">Related</div>
+            <a href="usage.html">Usage (for users)</a>
+            <a href="deploy.html">Deployment &amp; architecture</a>
+            <a href="proof.html">Proof &amp; signing</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Trust</div>
+            <h1>Data &amp; security policy</h1>
+            <p class="doc-lede">WorkSigned is a signing authority, and its value depends on you trusting it to keep your data yours. This policy states, plainly, what we store, what we don't, and how the highest-security workspaces are encrypted so that <em>we cannot read your files</em> &mdash; and so a compromise of our servers can't hand your data and keys to an attacker.</p>
+            <div class="doc-callout ok"><strong>Alpha stage &mdash; the core is already permanent.</strong> WorkSigned is in alpha: individual application features may change as we build toward a stable release. This policy &mdash; and the data &amp; security commitments it describes &mdash; does <strong>not</strong> change; they are the permanent core of the platform.</div>
+
+            <!-- ========================================================= -->
+            <section id="data">
+                <h2>What data we keep</h2>
+                <p>The short version: <strong>we do not log user data.</strong> The only data we retain about you is what's strictly required to bill your account and let you log in. Your research, your files, your activity, your conversations, and your WorkSigned Record are yours &mdash; not a data set we mine, sell, or read.</p>
+                <div class="doc-callout">Rule of thumb: if it isn't needed to run your account (billing) or prove you're you (login), we don't keep a copy of it on the platform as a logged record.</div>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="logging">
+                <h2>No user-data logging</h2>
+                <p>WorkSigned does not log the content of your work. We do not record your research to a searchable or analyzable store, we do not train on it, and we do not use it to build profiles or products. The WorkSigned Record the platform produces is <em>yours</em> &mdash; it belongs to you and to your project, and it is the artifact that is sealed and signed, not a backend log we keep for ourselves.</p>
+                <ul>
+                    <li>No logging of research content, file contents, or conversation content.</li>
+                    <li>No training on your data. No mining, no licensing, no resale.</li>
+                    <li>Server logs (for operations) are user-auditable &mdash; you can see what they are.</li>
+                </ul>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="billing">
+                <h2>Billing &amp; login data</h2>
+                <p>The only user data we retain is the minimum needed to operate your account:</p>
+                <ul>
+                    <li><strong>Login.</strong> Your identity (email, credentials / auth tokens) so you can sign in.</li>
+                    <li><strong>Billing.</strong> Account and payment details required to bill you &mdash; held under standard PCI-style handling, not on the research data path.</li>
+                </ul>
+                <p>That's it. It is functionally separated from your research data, and it is never combined into an analyzable profile.</p>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="workspace">
+                <h2>The encrypted workspace </h2>
+                <p>How your files are protected depends on the deployment mode. This page keeps the honest current state in the <strong>Current</strong> tab, and preserves &mdash; clearly marked as a former design &mdash; the maximum-security encrypted-workspace model in the <strong>Legacy</strong> tab.</p>
+
+                <div class="pol-tabs" role="tablist">
+                    <button class="pol-tab active" data-panel="current" role="tab" aria-selected="true">Current</button>
+                    <button class="pol-tab" data-panel="legacy" role="tab" aria-selected="false">Legacy<span class="tag">retired design</span></button>
+                </div>
+
+                <!-- CURRENT (what is actually true today) -->
+                <div class="pol-panel active" id="ws-current" role="tabpanel">
+                    <p><strong>Your data stays where you put it, under your control, in every deployment mode.</strong> The honest current picture:</p>
+                    <ul>
+                        <li><strong>Local mode:</strong> everything &mdash; files, WorkSigned Record, and the signing key &mdash; lives on your machine. Nothing is stored on any WorkSigned server. You are your own trust anchor.</li>
+                        <li><strong>On-prem / enterprise:</strong> your files and the WorkSigned Record live on <em>your</em> infrastructure (S3/SFTP/NFS), under your keys and access control. The platform and your data never have to share a storage layer.</li>
+                        <li><strong>WorkSigned cloud:</strong> WorkSigned hosts the platform and the sealed WorkSigned Records; your data remains accessible and auditable by you, with your credentials.</li>
+                    </ul>
+                    <div class="doc-callout"><strong>The commitments that hold today.</strong> We do not log your research content. We do not train on it or resell it. The only user data we retain is what's strictly required to run your account (login) and bill you &mdash; and it is functionally separated from your research data. In local and on-prem modes, your files never touch a WorkSigned server at all.</div>
+                    <p>The maximum-security "encrypted volume + sealed key vault" model below is <strong>not an active product promise</strong>. It is preserved for the record as the design that informed these commitments. See the <strong>Legacy</strong> tab.</p>
+                </div>
+
+                <!-- LEGACY (the retired maximum-security model) -->
+                <div class="pol-panel" id="ws-legacy" role="tabpanel">
+                    <div class="legacy-banner"><strong>This is a legacy design, preserved for the record.</strong> The "encrypted cloud workspace" was a proposed maximum-security mode. It is <strong>not offered as a product today</strong>; it is kept here so the reasoning behind our data commitments is visible. Read it as a design artifact, not a current feature.</div>
+
+                    <h3>Encrypted cloud workspace (legacy)</h3>
+                    <p>The model: your project files live inside a <strong>full-disk-encrypted volume</strong>, and the keys to decrypt it are <strong>supplied by you at runtime</strong>. The platform mounts and works with the volume while you&rsquo;re logged in, but at rest it is ciphertext the operator cannot open.</p>
+                    <ul>
+                        <li>Files live in an encrypted image (block-level encryption), not as plaintext on the storage.</li>
+                        <li>The decryption key comes from you at runtime &mdash; not from the operator, not from a database row.</li>
+                        <li>Even an operator of the storage cannot read the files without your key.</li>
+                    </ul>
+
+                    <h3>Sealed key vault (legacy)</h3>
+                    <p>Key material was protected <strong>asymmetrically</strong> and written into a <strong>sealed key vault</strong> that is <strong>append-only and never read on a live server</strong>: the online system can append sealed entries but cannot open, decrypt, or read what it appends. The private key lived only on a dedicated <strong>air-gapped machine</strong>, and the vault was <strong>unindexed</strong> &mdash; no entry labelled with a username or account &mdash; so a dump could not be turned into a person-to-key list.</p>
+
+                    <h3>Key recovery (legacy)</h3>
+                    <p>Recovery was designed to happen <em>only</em> at the air-gapped machine: the sealed vault is transferred to that machine, which unseals it and recovers the key. Because the vault is unindexed, recovery has to iterate the sealed entries testing each one &mdash; deliberately slower in exchange for a vault that can&rsquo;t be turned into a person-to-key list.</p>
+
+                    <div class="doc-callout"><strong>Why it matters even though it&rsquo;s retired.</strong> The property these commitments rest on &mdash; <strong>we do not log your work, and in local/on-prem modes your files never touch our servers</strong> &mdash; is live and current. The legacy model is the maximum-security form of that same principle, kept here for transparency.</div>
+                </div>
+            </section>
+
+            <!-- ========================================================= -->
+            <section id="enforcement">
+                <h2>How it's enforced </h2>
+                <p>These commitments aren't a marketing statement &mdash; they're <strong>backed at three levels</strong>, each one harder to walk back than the one before it.</p>
+                <ol>
+                    <li><strong>A Service Level Agreement (SLA) in every WorkSigned contract.</strong> The customer-facing, enforceable term. If we fall short, the remedy is against the <em>company</em> under the contract &mdash; bounded and handled per the agreement, not an open-ended personal liability.</li>
+                    <li><strong>Internal bylaws.</strong> The data &amp; security commitments are written into the company's own governing documents and bind the company and its officers. They're enforced <em>internally</em>, by the company, and they do <strong>not</strong> grant any individual user a personal right to sue.</li>
+                    <li><strong>A permanent mission &amp; company statement.</strong> The core commitments are written into the founding charter at inception and are governed to be as permanent as the company allows &mdash; structured to be the hardest thing to change, not quietly reversible.</li>
+                </ol>
+                <div class="doc-callout">The point of the design: the guarantees are <strong>contracted, bylaw-backed, and chartered</strong> &mdash; and enforcement is <strong>internal</strong>. A customer's remedy is a contract claim against the company (capped, per the SLA), never a personal suit against the founder, and the core commitments are locked so they can't be quietly revised later.</div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned &middot; An Equitable Corporation &middot;
+                <a href="https://equitablestandard.com" target="_blank">equitablestandard.com</a>
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Current / Legacy tabs (at the top of the encryption section).
+    (function () {
+        var tabs = Array.prototype.slice.call(document.querySelectorAll('.pol-tab'));
+        tabs.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                tabs.forEach(function (b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+                btn.classList.add('active'); btn.setAttribute('aria-selected', 'true');
+                var panels = Array.prototype.slice.call(document.querySelectorAll('.pol-panel'));
+                panels.forEach(function (pn) { pn.classList.toggle('active', pn.id === 'ws-' + btn.getAttribute('data-panel')); });
+            });
+        });
+    })();
+    // Sidebar scroll-spy.
+    (function () {
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        function onScroll() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 60);
+            var pos = window.scrollY + 120, current = sections[0];
+            for (var i = 0; i < sections.length; i++) {
+                if (sections[i].offsetTop <= pos) current = sections[i];
+            }
+            if (atBottom && sections.length) current = sections[sections.length - 1];
+            if (current) setActive(current.id);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
 </body>
 </html>

@@ -2,27 +2,37 @@
    WorkSigned — Landing page (worksigned_landing)
    Modern, clean design system.
 
-   FONT: Inter is SELF-HOSTED (assets/fonts/) — no CDN dependency, no swap.
+   FONT: IBM Plex Sans (UI/body/headings) + IBM Plex Mono (ledger hashes/terminal),
+   SELF-HOSTED (assets/fonts/) — no CDN dependency, no swap.
+   License: SIL OFL / IBM Plex (free for commercial use).
    ========================================================================== */
 @font-face {
-    font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap;
-    src: url("assets/fonts/inter-latin-400-normal.woff2") format("woff2");
+    font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("assets/fonts/ibm-plex-sans-latin-400-normal.woff2") format("woff2");
 }
 @font-face {
-    font-family: "Inter"; font-style: normal; font-weight: 500; font-display: swap;
-    src: url("assets/fonts/inter-latin-500-normal.woff2") format("woff2");
+    font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("assets/fonts/ibm-plex-sans-latin-500-normal.woff2") format("woff2");
 }
 @font-face {
-    font-family: "Inter"; font-style: normal; font-weight: 600; font-display: swap;
-    src: url("assets/fonts/inter-latin-600-normal.woff2") format("woff2");
+    font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap;
+    src: url("assets/fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2");
 }
 @font-face {
-    font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap;
-    src: url("assets/fonts/inter-latin-700-normal.woff2") format("woff2");
+    font-family: "IBM Plex Sans"; font-style: normal; font-weight: 700; font-display: swap;
+    src: url("assets/fonts/ibm-plex-sans-latin-700-normal.woff2") format("woff2");
 }
 @font-face {
-    font-family: "Inter"; font-style: normal; font-weight: 800; font-display: swap;
-    src: url("assets/fonts/inter-latin-800-normal.woff2") format("woff2");
+    font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url("assets/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap;
+    src: url("assets/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "IBM Plex Mono"; font-style: normal; font-weight: 600; font-display: swap;
+    src: url("assets/fonts/ibm-plex-mono-latin-600-normal.woff2") format("woff2");
 }
 
 /* ==========================================================================
@@ -72,6 +82,113 @@
 }
 
 /* ==========================================================================
+   LIGHT CONTENT BODY  (1Password / Cloudflare pattern)
+   The hero + nav stay dark (the signature engineering-credibility moment).
+   Everything in .lightbody flips to a light/near-white "institutional"
+   register — trusted, bright, readable. Only tokens are overridden here, so
+   every var(--*) consumer (borders, cards, text) flips automatically.
+   ========================================================================== */
+.lightbody {
+    /* CRITICAL: the sections are transparent and show BODY's background (which is
+       dark, painted OUTSIDE .lightbody). So .lightbody must paint its own light bg,
+       or the token override has nothing to show behind the transparent sections. */
+    background: var(--bg);
+    --bg: #f6f8fc;            /* near-white page */
+    --bg-elev: #ffffff;       /* cards / elevated surfaces */
+    --bg-elev-2: #eef2f9;     /* deeper wells (window chrome) */
+    --border: #dde3ee;        /* light hairlines */
+    --border-strong: #c6cfdd; /* stronger light hairlines */
+
+    --text: #0d1420;          /* near-black headings/body */
+    --text-muted: #47506a;    /* secondary text (AA on white) */
+    --text-faint: #7a8299;    /* fine print */
+
+    --accent: #2f6bff;        /* deepened for contrast on white */
+    --accent-2: #0fa983;      /* deepened teal */
+    --accent-soft: rgba(47,107,255,0.10);
+    --grad: linear-gradient(100deg, #2f6bff 0%, #0fbf91 100%);
+
+    --shadow-sm: 0 6px 20px rgba(20, 40, 90, 0.10);
+    /* light-on-light needs a top divider so sections separate */
+}
+/* Section dividers read as soft shadows on light, not dark borders */
+.lightbody .section,
+.lightbody .showcase { border-top-color: #e4e9f2; }
+/* The dark radial hero glow must not bleed into the light body */
+.lightbody { position: relative; z-index: 1; }
+.lightbody .section-title, .lightbody .section-lead { color: var(--text-muted); }
+.lightbody .section-title { color: var(--text); }
+.lightbody .section-lead strong, .lightbody .step p strong, .lightbody .trust-card p strong { color: var(--text); }
+/* Primary button: keep dark text (gradient bg), but deepen shadow for light bg */
+.lightbody .btn-primary { color: #ffffff; box-shadow: 0 8px 24px rgba(47,107,255,0.30); }
+/* Ghost button on light: dark text + light border */
+.lightbody .btn-ghost { color: var(--text); border-color: var(--border-strong); }
+.lightbody .btn-ghost:hover { border-color: var(--accent); background: var(--accent-soft); }
+/* Step / trust cards: white surface, soft shadow, light border */
+.lightbody .step,
+.lightbody .trust-card { background: var(--bg-elev); border-color: var(--border); box-shadow: 0 2px 10px rgba(20,40,90,0.05); }
+.lightbody .step-num { color: var(--accent); }
+/* The framed product window: keep its dark chrome (it's a literal app window) */
+.lightbody .window { box-shadow: 0 30px 80px rgba(20,40,90,0.22); }
+/* The .section-alt (institutions) used --bg-elev; on light that's white — give it a tint */
+.lightbody .section-alt { background: #eef2f9; }
+/* cta-band stays a dark accent moment (contrast anchor near the bottom) */
+.lightbody .cta-band { background: #0d1420; }
+.lightbody .cta-band .section-title { color: #ffffff; }
+.lightbody .cta-band .section-lead { color: rgba(244,246,251,0.82); }
+.lightbody .cta-band .section-lead strong { color: #ffffff; }
+/* The signed-trail "ledger" stays a DARK terminal-style block (it's a product mock —
+   a cryptographic ledger should look like a dark terminal). On the light body it reads
+   as a deliberate dark card, exactly like 1Password's terminal mockups on a light page.
+   The inline .te-*/.mg-* colors are dark-tuned, so wrap them in a dark surface. */
+.lightbody .trail-example {
+    background: #0b1420;
+    border: 1px solid rgba(94,234,212,0.18);
+    border-radius: 20px;
+    padding: 44px 40px;
+    box-shadow: 0 30px 80px -40px rgba(10,20,40,0.6);
+}
+/* The .te-heading / .te-lead / .te-label sit on the LIGHT body (above the dark
+   terminal card), so they need DARK text — not light. */
+.lightbody .trail-example .te-heading { color: #141824; }
+.lightbody .trail-example .te-lead { color: #4a5568; }
+.lightbody .trail-example .te-label { color: #6b7280; }
+/* The .mg-panel is the actual visible magnified ledger card and is semi-transparent,
+   so the light body bleeds through and the light-tuned row text becomes illegible.
+   Give it its own SOLID dark surface so it's a self-contained dark "terminal" card
+   (the cryptographic ledger reads best as a dark terminal on the light page). */
+.lightbody .mg-panel {
+    background: #0b1420;
+    border-color: rgba(94,234,212,0.30);
+    box-shadow: 0 30px 80px -30px rgba(10,20,40,0.6);
+}
+/* Re-tune the light-tuned row text so it's legible on the dark card */
+.lightbody .mg-panel .mg-title { color: #f4f6fb; }
+.lightbody .mg-panel .mg-sub, .lightbody .mg-panel .mg-t, .lightbody .mg-panel .mg-detail {
+    color: #cfd5e2;
+}
+.lightbody .mg-panel .mg-hash { color: #8b93a7; }
+.lightbody .mg-panel .mg-row code { color: #cfe9ff; background: rgba(255,255,255,0.06); }
+.lightbody .mg-panel .mg-foot { color: #cfd5e2; }
+.lightbody .mg-panel .mg-rows { border-top-color: rgba(94,234,212,0.22); }
+.lightbody .mg-panel .mg-row { border-bottom-color: rgba(94,234,212,0.12); }
+/* The stealth hover cards (.sl-card) use var(--bg-elev) -> now white. Make the
+   hover card a white card with light borders so it's legible on the light body. */
+.lightbody .sl-card { background: #ffffff; }
+/* The process stage connector line + node numbers: re-tune for light bg */
+.lightbody .proc-node {
+    background: #ffffff; border-color: var(--border-strong);
+    color: var(--accent); box-shadow: 0 2px 8px rgba(20,40,90,0.08);
+}
+.lightbody .proc-body h3 { color: var(--text); }
+.lightbody .proc-body p { color: var(--text-muted); }
+.lightbody .proc-body p strong { color: var(--text); }
+/* The "institutions" case carousel: ensure light text flips */
+.lightbody .case-big .case-headline { color: var(--text); }
+.lightbody .case-big .case-detail { color: var(--text-muted); }
+.lightbody .case-big .case-detail b { color: var(--accent); }
+
+/* ==========================================================================
    RESET + BASE
    ========================================================================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -79,7 +196,7 @@
 html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 
 body {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
@@ -113,7 +230,7 @@ body::before {
    ========================================================================== */
 .container {
     width: 100%;
-    max-width: var(--maxw);
+    max-width: 95%;
     margin: 0 auto;          /* centered */
     padding: 0 24px;
 }
@@ -126,31 +243,49 @@ body::before {
     position: sticky; top: 0; z-index: 50;
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 28px;
-    background: rgba(11,13,18,0.72);
+    /* light token scope so var(--text)/var(--text-muted) inside the bar are DARK
+       (the nav is above .lightbody, so without this it'd use the dark :root = white text) */
+    --text: #141824;
+    --text-muted: #4a5568;
+    --text-faint: #6b7280;
+    --accent: #0e6fb8;
+    color: #141824;
+    /* light frosted bar to match the light hero (was dark) */
+    background: rgba(255,255,255,0.80);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(15,23,42,0.10);
+    box-shadow: 0 1px 24px rgba(15,23,42,0.06);
 }
+/* nav link + brand colors on the light bar */
+.nav .brand { color: #141824; }
+.nav .nav-toggle { background: rgba(255,255,255,0.7); border-color: rgba(15,23,42,0.12); }
 .brand {
-    font-size: 19px; font-weight: 800; letter-spacing: -0.4px;
-    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 19px; font-weight: 800; letter-spacing: -0.4px; line-height: 1;
+    display: inline-flex; align-items: center; gap: 9px;
 }
 .brand-mark {
     display: inline-grid; place-items: center;
-    width: 26px; height: 26px; border-radius: 8px;
-    background: var(--grad); color: #0b0d12; font-size: 15px; font-weight: 900;
+    flex: 0 0 auto;
 }
+.brand-mark .brand-logo, .brand-mark .brand-logo-dark { display: block; width: 34px; height: auto; position: relative; top: -2px; }
+.brand-mark .brand-logo-dark { display: none; }
+.nav .brand-mark .brand-logo, .nav .brand-mark .brand-logo-dark { width: 38px; }
+/* dark mode: show the reversed (white) mark instead of the navy one */
+[data-theme="dark"] .brand-mark .brand-logo { display: none; }
+[data-theme="dark"] .brand-mark .brand-logo-dark { display: block; }
 .nav-links { display: flex; align-items: center; gap: 28px; }
 .nav-left { display: flex; align-items: center; gap: 28px; }
 .nav-links-left { gap: 22px; }
 .nav-links a { font-size: var(--fs-small); font-weight: 500; color: var(--text-muted); transition: color 0.2s; }
 .nav-links a:hover { color: var(--text); }
 .nav-cta {
-    color: var(--text) !important;
-    background: var(--accent-soft); border: 1px solid var(--border-strong);
+    /* light nav bar -> light CTA chip */
+    color: #0e6fb8;
+    background: rgba(59,130,246,0.10); border: 1px solid rgba(14,111,184,0.4);
     padding: 8px 18px; border-radius: 999px;
     transition: background 0.2s, border-color 0.2s;
 }
-.nav-cta:hover { background: rgba(91,140,255,0.24); border-color: var(--accent); }
+.nav-cta:hover { background: rgba(59,130,246,0.20); border-color: #0e6fb8; }
 
 /* ==========================================================================
    HERO
@@ -158,7 +293,24 @@ body::before {
 .hero {
     position: relative; z-index: 1;
     text-align: center;
-    padding: 124px 0 96px;
+    padding: 44px 0 72px;
+    overflow: hidden;
+}
+/* the living signed chain is its own band, between the hero copy and the buttons.
+   Full-bleed, fixed height, so the order reads: headline -> copy -> chain -> buttons. */
+.hero-chain-band {
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 210px;
+    margin: 30px 0 40px;
+    pointer-events: none;
+}
+#hero-chain {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 .eyebrow {
     display: inline-block;
@@ -168,7 +320,9 @@ body::before {
     padding: 6px 14px; border-radius: 999px; margin-bottom: 26px;
 }
 .hero h1 {
-    font-size: clamp(40px, 7vw, 84px);
+    /* Floor held at 44px + slope tuned so a small desktop window (560px) still
+       gets a ~56px commanding headline instead of collapsing to a small size. */
+    font-size: clamp(44px, 3.2vw + 38px, 84px);
     font-weight: 800; line-height: 1.02; letter-spacing: -2px; margin-bottom: 38px;
 }
 .grad {
@@ -177,7 +331,7 @@ body::before {
     -webkit-text-fill-color: transparent; color: transparent;
 }
 .hero .sub {
-    font-size: clamp(17px, 2.2vw, 21px);
+    font-size: clamp(16px, 1.4vw + 6px, 21px);
     color: var(--text-muted);
     max-width: 720px; margin: 0 auto 44px; line-height: 1.65;
 }
@@ -188,6 +342,44 @@ body::before {
 .hero-cta { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
 .hero-cta .btn { padding: 19px 40px; font-size: var(--fs-body); font-weight: 700; border-radius: 999px; }
 .hero-note { font-size: var(--fs-small); color: var(--text-faint); }
+
+/* ===== LIGHT HERO (option 1b) =====
+   The hero was dark; the body is light. A dark-hero/light-body split reads as
+   disjoint, so the hero is now LIGHT too — a cohesive light site. The dark accents
+   (the signed-trail terminal card + the CTA band) remain as deliberate contrast.
+   The gradient "proof" headline keeps its blue->teal gradient; it reads on light.
+   Soft shadow/glow is carried through so the light page has depth. */
+.hero {
+    /* light token scope — same palette as .lightbody so hero and body match */
+    --bg: #ffffff;
+    --bg-alt: #eef2f9;
+    --bg-elev: #f6f8fc;
+    --line: rgba(15,23,42,0.10);
+    --line-2: rgba(15,23,42,0.16);
+    --text: #141824;
+    --text-muted: #4a5568;
+    --text-faint: #6b7280;
+    --accent: #0e6fb8;
+    --accent-2: #0a7f6f;
+    background: #ffffff;
+    /* CRITICAL: set the actual color (not just the --text token) so the h1/sub
+       inherit DARK text on the light hero. Custom props don't cascade as color. */
+    color: #141824;
+    position: relative;
+}
+/* soft radial glow behind the hero so the light hero isn't flat (the shadows you liked) */
+.hero::before {
+    content: "";
+    position: absolute; inset: -40% 0 auto 0; height: 120%;
+    background:
+        radial-gradient(620px 320px at 50% 8%, rgba(52,211,166,.16), transparent 60%),
+        radial-gradient(520px 300px at 30% 14%, rgba(59,130,246,.14), transparent 60%),
+        radial-gradient(520px 300px at 72% 16%, rgba(129,140,248,.10), transparent 60%);
+    z-index: -1; pointer-events: none;
+}
+.hero h1 { color: #141824; text-shadow: 0 2px 30px rgba(15,23,42,0.06); }
+.hero .sub a { color: #0a7f6f; border-color: rgba(10,127,111,.5); }
+.hero .sub a:hover { color: #086e60; border-color: #086e60; }
 
 /* ==========================================================================
    BUTTONS
@@ -573,6 +765,7 @@ body::before {
     flex-wrap: wrap; gap: 12px;
 }
 .footer .brand { font-size: 16px; }
+.footer .brand-mark .brand-logo, .footer .brand-mark .brand-logo-dark { width: 26px; }
 .footer-copy { font-size: var(--fs-small); color: var(--text-faint); }
 .footer-copy a { color: var(--text-muted); }
 .footer-copy a:hover { color: var(--text); }
@@ -604,7 +797,7 @@ body::before {
    the viewport (it sits below the #process title, so the whole-section fade
    completes before it's in view). */
 .trail-example { opacity: 0; transform: translateY(34px);
-    transition: opacity 0.8s ease, transform 0.8s ease; }
+    transition: opacity 0.8s ease, transform 0.8s ease; margin-top: 84px; }
 .trail-example.in { opacity: 1; transform: translateY(0); }
 .steps .reveal:nth-child(2) { transition-delay: 0.12s; }
 .steps .reveal:nth-child(3) { transition-delay: 0.24s; }
@@ -632,15 +825,16 @@ body::before {
 }
 .doc-sidebar .doc-side-brand {
     display: block; margin-bottom: 22px; font-weight: 700; font-size: 15px;
-    color: var(--text-faint); letter-spacing: .02em;
+    color: var(--text-muted); letter-spacing: .02em;
 }
 .doc-sidebar .doc-group {
-    font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--text-faint); margin: 20px 0 8px;
+    font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-muted); margin: 20px 0 8px;
 }
 .doc-sidebar a {
-    display: block; padding: 6px 10px; margin: 0 -10px;
-    border-radius: 8px; color: var(--text-muted); line-height: 1.4;
+    display: block; padding: 7px 10px; margin: 0 -10px;
+    border-radius: 8px; color: var(--text-muted); line-height: 1.45;
+    font-size: 18px;
     border-left: 2px solid transparent; transition: color .15s, background .15s;
 }
 .doc-sidebar a:hover { color: var(--text); background: rgba(255,255,255,0.03); }
@@ -668,23 +862,23 @@ body::before {
     margin-bottom: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
 }
 .doc-content section > h2 .h2-sub {
-    display: block; font-size: 15px; font-weight: 400; color: var(--text-faint); margin-top: 6px;
+    display: block; font-size: 15px; font-weight: 400; color: var(--text-muted); margin-top: 6px;
 }
-.doc-content h3 { font-size: 19px; font-weight: 600; margin: 26px 0 10px; color: var(--text); }
+.doc-content h3 { font-size: 21px; font-weight: 600; margin: 26px 0 10px; color: var(--text); }
 .doc-content p { margin: 0 0 16px; color: var(--text-muted); font-size: 20px; line-height: 1.7; }
 .doc-content p strong { color: var(--text); font-weight: 600; }
 .doc-content ul, .doc-content ol { margin: 0 0 18px 0; padding-left: 22px; color: var(--text-muted); font-size: 20px; line-height: 1.7; }
 .doc-content li { margin-bottom: 8px; }
 .doc-content li strong { color: var(--text); font-weight: 600; }
 .doc-content li code, .doc-content p code, .doc-content td code {
-    font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-family: "IBM Plex Mono", "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
     font-size: 14px; background: var(--bg-elev-2); border: 1px solid var(--border);
     border-radius: 6px; padding: 1px 6px; color: #cdd6ff;
 }
 .doc-content .doc-callout {
     background: var(--bg-elev); border: 1px solid var(--border-strong);
     border-left: 3px solid var(--accent); border-radius: 10px;
-    padding: 18px 20px; margin: 20px 0; font-size: 17px; color: var(--text-muted);
+    padding: 18px 20px; margin: 20px 0; font-size: 19px; color: var(--text-muted);
 }
 .doc-content .doc-callout strong { color: var(--text); }
 .doc-content .doc-callout.ok { border-left-color: var(--accent-2); }
@@ -695,14 +889,14 @@ body::before {
     background: var(--bg-elev); box-shadow: 0 12px 40px rgba(0,0,0,0.28);
 }
 .doc-content .doc-figure figcaption {
-    margin-top: 12px; font-size: 15px; line-height: 1.6;
+    margin-top: 12px; font-size: 17px; line-height: 1.6;
     color: var(--text-muted); font-style: italic;
 }
 
 /* tables */
 .doc-content table {
     width: 100%; border-collapse: collapse; margin: 18px 0 24px;
-    font-size: 16px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    font-size: 18px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
 }
 .doc-content th, .doc-content td {
     text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border);
@@ -719,10 +913,11 @@ body::before {
 
 /* ledger example block */
 .doc-ledger {
-    background: #080a0f; border: 1px solid var(--border-strong); border-radius: 12px;
+    background: #080a0f; border: 1px solid #000; border-radius: 12px;
     padding: 18px 20px; margin: 18px 0; overflow-x: auto;
-    font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
-    font-size: 13px; line-height: 1.7; color: #c3cbe6; white-space: pre;
+    font-family: "IBM Plex Mono", "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-size: 15px; line-height: 1.75; color: #c3cbe6; white-space: pre;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
 }
 .doc-ledger .l-h { color: #6f7789; }
 .doc-ledger .l-ok { color: var(--accent-2); }
@@ -731,12 +926,16 @@ body::before {
 /* requirement cards */
 .doc-reqgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
 .doc-reqcard {
-    background: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px;
-    padding: 20px;
+    background: var(--bg-elev); border: 1px solid var(--border-strong); border-radius: 14px;
+    padding: 20px; box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 6px 18px rgba(0,0,0,0.14);
 }
-.doc-reqcard .rc-label { font-size: 13px; color: var(--text-faint); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
-.doc-reqcard .rc-val { font-size: 22px; font-weight: 700; color: var(--text); margin: 6px 0 4px; }
-.doc-reqcard .rc-note { font-size: 15px; color: var(--text-muted); }
+.doc-reqcard .rc-label { font-size: 14px; color: var(--text-faint); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.doc-reqcard .rc-val { font-size: 24px; font-weight: 700; color: var(--text); margin: 6px 0 6px; }
+.doc-reqcard .rc-note { font-size: 18px; color: var(--text-muted); }
+
+/* dark mode: make the step cards + example blocks clearly separated from the page */
+:root[data-theme="dark"] .doc-reqcard { border-color: #3a4256; background: #171b26; }
+:root[data-theme="dark"] .doc-ledger { border-color: #1c212d; }
 
 /* responsive: sidebar collapses on mobile */
 @media (max-width: 860px) {
@@ -776,9 +975,150 @@ body::before {
 }
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .reveal { opacity: 1; transform: none; transition: none; }
+    /* Every scroll-reveal / fade-rise must settle to fully visible — otherwise
+       reduced-motion users (JS-driven .visible/.in never fire the transition) can
+       see content stuck at opacity:0. Cover them all. */
+    .reveal,
+    .reveal.visible,
+    .trail-example,
+    .trail-example.in,
     #process > .container,
     #institutions > .container,
     #tools > .container,
-    #trust > .container { opacity: 1; transform: none; transition: none; }
+    #trust > .container,
+    #process > .container.in,
+    #institutions > .container.in,
+    #tools > .container.in,
+    #trust > .container.in { opacity: 1; transform: none; transition: none; }
+    /* Infinite/looping decorative motion: stop it (the counters/dots keep their
+       final value, they just stop pulsing/zooming). */
+    .window-live .pulse { animation: none; box-shadow: 0 0 0 2px rgba(52,211,166,0.4); }
+    .showcase-caption, .cases-grid .case-em { animation: none; }
 }
+
+/* ==========================================================================
+   DARK MODE  (toggle: [data-theme="dark"] on <html>)
+   Inverts the light design back to the original dark look. The default (no
+   data-theme) is the LIGHT design. This block re-applies the original dark
+   tokens and reverts the .hero / .nav / .lightbody light-scope blocks.
+   The .mg-panel terminal card and .cta-band are already dark — they stay.
+   ========================================================================== */
+
+/* Re-apply the ORIGINAL dark root tokens for the whole document. */
+[data-theme="dark"] {
+    --bg: #0b0d12;
+    --bg-alt: #0e1119;
+    --bg-elev: #12151d;
+    --bg-elev-2: #171b25;
+    --line: #232838;
+    --line-2: #2f3648;
+    --text: #f4f6fb;
+    --text-muted: #cfd5e2;
+    --text-faint: #6f7789;
+    --accent: #5b8cff;
+    --accent-2: #34d3a6;
+}
+
+/* body: dark page background (light design uses the light .lightbody, body itself
+   is neutral; in dark mode make the body dark too so any gap is dark). */
+[data-theme="dark"] body { background: #0b0d12; }
+
+/* --- NAV: back to the original dark frosted bar --- */
+[data-theme="dark"] .nav {
+    --text: #f4f6fb; --text-muted: #cfd5e2; --text-faint: #6f7789; --accent: #5b8cff;
+    color: #f4f6fb;
+    background: rgba(11,13,18,0.72);
+    border-bottom: 1px solid #232838;
+    box-shadow: 0 1px 24px rgba(0,0,0,0.4);
+}
+[data-theme="dark"] .nav .brand { color: #f4f6fb; }
+[data-theme="dark"] .nav .nav-toggle { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+[data-theme="dark"] .nav-cta {
+    color: #f4f6fb;
+    background: rgba(91,140,255,0.16); border: 1px solid rgba(91,140,255,0.5);
+}
+[data-theme="dark"] .nav-cta:hover { background: rgba(91,140,255,0.28); border-color: #5b8cff; }
+
+/* --- HERO: back to the original dark hero --- */
+[data-theme="dark"] .hero {
+    --bg: #0b0d12; --bg-alt: #0e1119; --bg-elev: #12151d;
+    --text: #f4f6fb; --text-muted: #cfd5e2; --text-faint: #6f7789;
+    --accent: #5b8cff; --accent-2: #34d3a6;
+    background: #0b0d12; color: #f4f6fb;
+}
+[data-theme="dark"] .hero::before { display: none; }
+[data-theme="dark"] .hero h1 { color: #f4f6fb; text-shadow: none; }
+[data-theme="dark"] .hero .sub a { color: #7df0e0; border-color: rgba(94,234,212,0.5); }
+[data-theme="dark"] .hero .sub a:hover { color: #a8fff2; border-color: #a8fff2; }
+
+/* --- LIGHTBODY: re-apply the ORIGINAL dark tokens so all var() consumers
+   (section titles, cards, borders, text) flip back to dark automatically. --- */
+[data-theme="dark"] .lightbody {
+    background: #0b0d12;
+    --bg: #0b0d12; --bg-elev: #12151d; --bg-elev-2: #171b25;
+    --border: #232838; --border-strong: #2f3648;
+    --text: #f4f6fb; --text-muted: #cfd5e2; --text-faint: #6f7789;
+    --accent: #5b8cff; --accent-2: #34d3a6;
+    --accent-soft: rgba(91,140,255,0.14);
+    --grad: linear-gradient(100deg, #5b8cff 0%, #34d3a6 100%);
+}
+[data-theme="dark"] .lightbody .section,
+[data-theme="dark"] .lightbody .showcase { border-top-color: #1a1f2b; }
+[data-theme="dark"] .lightbody .btn-primary { color: #0b0d12; box-shadow: 0 8px 24px rgba(91,140,255,0.35); }
+[data-theme="dark"] .lightbody .btn-ghost { color: #f4f6fb; border-color: #2f3648; }
+[data-theme="dark"] .lightbody .btn-ghost:hover { border-color: #5b8cff; background: rgba(91,140,255,0.16); }
+[data-theme="dark"] .lightbody .step,
+[data-theme="dark"] .lightbody .trust-card { background: #12151d; border-color: #232838; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+[data-theme="dark"] .lightbody .window { box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
+[data-theme="dark"] .lightbody .section-alt { background: #0e1119; }
+[data-theme="dark"] .lightbody .sl-card { background: #171b25; }
+[data-theme="dark"] .lightbody .proc-node {
+    background: #12151d; color: #5b8cff; border-color: #2f3648; box-shadow: 0 0 0 4px rgba(91,140,255,0.12);
+}
+
+/* The trail-example heading/lead/label were flipped DARK for the light body.
+   In dark mode they sit on the dark page again -> back to LIGHT text. */
+[data-theme="dark"] .lightbody .trail-example .te-heading { color: #f4f6fb; }
+[data-theme="dark"] .lightbody .trail-example .te-lead { color: #cfd5e2; }
+[data-theme="dark"] .lightbody .trail-example .te-label { color: #6f7789; }
+
+/* --- DOC PAGES (usage/deploy/proof/policy): make them follow the theme too.
+   They are token-driven, so in LIGHT mode (no [data-theme="dark"]) we re-set the
+   light tokens on the doc shell and paint its own light background (the doc
+   sections are transparent and would otherwise show the dark body). In DARK mode
+   the base :root dark tokens already apply, so no dark override is needed. --- */
+:root:not([data-theme="dark"]):has(.doc-shell) body {
+    background: #f6f8fc;
+}
+:root:not([data-theme="dark"]) .doc-shell {
+    background: #f6f8fc; color: var(--text);
+    --bg: #f6f8fc; --bg-elev: #ffffff; --bg-elev-2: #eef2f9;
+    --border: #dde3ee; --border-strong: #c6cfdd;
+    --text: #0d1420; --text-muted: #47506a; --text-faint: #7a8299;
+    --accent: #2f6bff; --accent-2: #0fa983; --accent-soft: rgba(47,107,255,0.10);
+}
+:root:not([data-theme="dark"]) .doc-sidebar a:hover { background: rgba(15,23,42,0.04); }
+:root:not([data-theme="dark"]) .doc-sidebar a.active { background: rgba(47,107,255,0.10); }
+:root:not([data-theme="dark"]) .doc-content p code,
+:root:not([data-theme="dark"]) .doc-content li code,
+:root:not([data-theme="dark"]) .doc-content td code { color: #2749b8; background: #eef2f9; border-color: #dde3ee; }
+:root:not([data-theme="dark"]) .doc-content .doc-figure img { box-shadow: 0 12px 40px rgba(20,40,90,0.12); }
+:root:not([data-theme="dark"]) .doc-content th { background: #eef2f9; }
+:root:not([data-theme="dark"]) .doc-callout { box-shadow: 0 2px 10px rgba(20,40,90,0.05); }
+
+/* --- Theme toggle button (nav) --- */
+.theme-toggle {
+    display: inline-grid; place-items: center;
+    min-width: 56px; height: 38px; padding: 0 14px; border-radius: 999px;
+    border: 1px solid rgba(15,23,42,0.16);
+    background: rgba(255,255,255,0.7);
+    color: #141824; font-size: 13px; font-weight: 600; line-height: 1; cursor: pointer;
+    letter-spacing: .02em;
+    transition: background .18s, border-color .18s, transform .18s;
+    margin-right: 4px;
+}
+.theme-toggle:hover { background: #ffffff; border-color: #0e6fb8; transform: translateY(-1px); }
+[data-theme="dark"] .theme-toggle {
+    background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #f4f6fb;
+}
+[data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.12); border-color: #5b8cff; }

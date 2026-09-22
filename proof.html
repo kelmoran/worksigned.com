@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>How the proof works — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark') {
+                t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+            }
+            if (t === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+            <nav class="nav-links nav-links-left">
+                <a href="usage.html">Usage</a>
+                <a href="deploy.html">Deployment</a>
+                <a href="proof.html">Proof</a>
+                <a href="policy.html">Policy</a>
+            </nav>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">The Proof</span>
+            <div class="doc-group">The model</div>
+            <a href="#how" class="active">How it works, end to end</a>
+            <a href="#commitment">Hash-commitment signing</a>
+            <a href="#guarantees">Three guarantees</a>
+            <a href="#time">Independent time anchoring</a>
+            <div class="doc-group">Verification</div>
+            <a href="#prove">What the seal proves</a>
+            <a href="#multi">Multi-authority</a>
+            <div class="doc-group">Standards</div>
+            <a href="#standards">Built on open standards</a>
+            <a href="#verify">The verification experience</a>
+            <div class="doc-group">Trust infrastructure</div>
+            <a href="#infra">Auditable signing</a>
+            <a href="#cost">Lightweight by design</a>
+            <div class="doc-group">Related</div>
+            <a href="usage.html">Usage (for users)</a>
+            <a href="deploy.html">Deployment &amp; architecture</a>
+            <a href="policy.html">Data &amp; security policy</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Trust &amp; Verification</div>
+            <h1>How the proof works</h1>
+            <p class="doc-lede">A WorkSigned Record is a record of your work that anyone can <strong>check for themselves</strong> &mdash; with only a public key, the record, and the timestamps &mdash; without relying on our servers or our word.</p>
+            <div class="doc-callout"><strong>The one idea.</strong> We do not read or upload your files. We sign a <strong>32-byte fingerprint</strong> of your WorkSigned Record. Because the fingerprint changes completely when even one byte changes, &ldquo;the authority signed fingerprint&nbsp;H&rdquo; is the same as &ldquo;the authority signed this exact record.&rdquo;</div>
+
+            <section id="how">
+                <h2>How it works, end to end</h2>
+                <p>Here is the whole thing, in order. Each step shows what happens and a concrete example of what that piece looks like. The only technical word used is <strong>hash</strong> &mdash; a fixed-length fingerprint of a file that changes completely when even one byte of the file changes.</p>
+
+                <div class="doc-reqgrid">
+                    <div class="doc-reqcard"><div class="rc-label">1</div><div class="rc-val">You work</div><div class="rc-note">You edit and save files in your project, the normal way.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">2</div><div class="rc-val">The platform records</div><div class="rc-note">It captures what you do, down to the keystroke &mdash; edits, saves, terminal commands, search queries, and chat messages. Your files and logs are never sent to us.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">3</div><div class="rc-val">A record forms</div><div class="rc-note">Those events build your WorkSigned Record &mdash; a running, time-stamped list of your work, fine-grained, not just a snapshot.</div></div>
+                </div>
+
+                <div class="doc-ledger"><span class="l-h"># Step 1-3 &middot; your activity, as the platform records it (fine-grained)</span>
+<span class="l-id">Wed 09:14:02</span>  methods.tex    key      <span class="l-h">typed \frac{a}{b}</span>
+<span class="l-id">Wed 09:14:09</span>  methods.tex    key      <span class="l-h">backspace, typed \frac{a+1}{b}</span>
+<span class="l-id">Wed 09:14:41</span>  methods.tex    save     <span class="l-h">file saved</span>
+<span class="l-id">Wed 11:02:33</span>  terminal       cmd      <span class="l-h">python analysis.py</span>
+<span class="l-id">Wed 13:20:10</span>  search         query    <span class="l-h">\"tamper-evident logging\"</span>
+<span class="l-id">Wed 15:40:55</span>  chat           msg      <span class="l-h">\"baseline confirmed\"</span>
+<span class="l-id">Thu 08:22:19</span>  results.csv    save     <span class="l-h">file saved</span>
+<span class="l-h">&rarr; every event, in order, is your WorkSigned Record &mdash; not a single snapshot</span></div>
+
+                <div class="doc-reqgrid">
+                    <div class="doc-reqcard"><div class="rc-label">4</div><div class="rc-val">One hash of everything</div><div class="rc-note">On each seal (daily, or when you choose), we hash <em>every file in the project</em> and fold all those hashes into a single hash.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">5</div><div class="rc-val">Only the hash travels</div><div class="rc-note">This is the <em>only</em> thing that leaves your servers: one hash. No files, no record, no logs &mdash; nothing readable about your work.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">6</div><div class="rc-val">An independent clock</div><div class="rc-note">A trusted third party (a TSA) stamps the time the hash was seen.</div></div>
+                </div>
+
+                <div class="doc-ledger"><span class="l-h"># Step 4 &middot; one hash that covers the whole project</span>
+hash( methods.tex )      = 9f2c...a1
+hash( fig1.pdf )         = 4d7e...b8
+hash( analysis.ipynb )   = c3aa...02
+hash( results.csv )      = 7719...e4
+        fold all together &rarr;
+<span class="l-id">one hash of the whole project  =  3b9f4a&hellip;77c2</span>
+<span class="l-h">change any byte in any file &rarr; this single hash changes completely</span></div>
+
+                <div class="doc-callout"><strong>What actually leaves your servers.</strong> At sealing time, exactly one value is sent to the signing authority: the single hash above. <strong>Nothing else crosses the boundary</strong> &mdash; no file content, no file names, no keystrokes, no chat, no record. The hash is a fixed-length number with no way to read back from it. If a verifier or an auditor ever wants to know what left your machine, the answer is: <em>one hash, and only that one hash.</em></div>
+
+                <div class="doc-reqgrid">
+                    <div class="doc-reqcard"><div class="rc-label">7</div><div class="rc-val">It is signed</div><div class="rc-note">The authority writes the hash <em>and the time</em> together into one line, then signs that whole line with its private key. Because the time is <em>inside</em> the signed line, you cannot change the time (or the hash) without breaking the signature.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">8</div><div class="rc-val">A signature comes back</div><div class="rc-note">You get the hash + the time + the signature + the authority&rsquo;s public key. Together these are the seal.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">9</div><div class="rc-val">You keep it</div><div class="rc-note">You (or your university) store the seal. It is yours; it does not live on our servers.</div></div>
+                </div>
+
+                <div class="doc-ledger"><span class="l-h"># Step 7 &middot; how the time gets bound into the signature</span>
+<span class="l-h">the line that is actually signed (hash + time written together):</span>
+<span class="l-id">worksigned | gene-editing | user-42 |</span>
+<span class="l-id">ts = 2026-09-22T00:00Z |</span>
+<span class="l-id">hash = 3b9f4a&hellip;77c2</span>
+        &darr;
+<span class="l-id">private key applied to that whole line &rarr; signature 487d&hellip;9c1e</span>
+<span class="l-h">change the time OR the hash &rarr; the line changes &rarr; the signature breaks</span></div>
+
+                <div class="doc-ledger"><span class="l-h"># Step 8 &middot; what the authority returns (the seal)</span>
+<span class="l-id">hash     </span> 3b9f4a&hellip;77c2        <span class="l-h">what was signed</span>
+<span class="l-id">time     </span> Wed 2026-09-22 00:00  <span class="l-h">bound into the signature; also TSA-stamped</span>
+<span class="l-id">signature</span> 487d&hellip;9c1e        <span class="l-h">made by the authority&rsquo;s private key</span>
+<span class="l-id">public key</span> -----BEGIN PUBLIC KEY----- <span class="l-h">so anyone can check it</span></div>
+
+                <div class="doc-callout"><strong>Step 10 &middot; Verification &amp; a dispute.</strong> In a dispute, you hand the seal (and your files) to a journal, funder, or court. On their own machine they re-hash your files and compare to the seal&rsquo;s hash, check the signature against the included public key, and confirm the time stamp against the TSA. The result is decided by the checks &mdash; <span class="l-ok">valid</span> or not &mdash; and does not depend on us saying anything.</div>
+
+                <div class="doc-ledger"><span class="l-h"># Step 10 &middot; what a verifier does, and sees</span>
+$ verify project-2026-09-22.seal
+  re-hash your files ...        <span class="l-ok">matches the seal&rsquo;s hash</span>
+  check signature ...           <span class="l-ok">valid (public key)</span>
+  check time stamp ...          <span class="l-ok">Wed 2026-09-22, TSA-confirmed</span>
+  <span class="l-ok">RESULT: VALID</span>  <span class="l-h">this body of work existed at this time</span></div>
+            </section>
+
+            <section id="commitment">
+                <h2>Hash-commitment signing </h2>
+                <p>Every save and edit adds an entry to your project&rsquo;s record: the file, its content hash (SHA-256), and a time. Each entry links to the one before it. A signature is made over a <strong>fingerprint</strong> of that record &mdash; a hash that changes completely when even one byte changes. So a signature over the fingerprint is a signature over the <em>entire</em> record. The authority does not need the files.</p>
+            </section>
+
+            <section id="guarantees">
+                <h2>The three guarantees </h2>
+                <div class="doc-reqgrid">
+                    <div class="doc-reqcard">
+                        <div class="rc-label">Sole signer</div>
+                        <div class="rc-val">One private key</div>
+                        <div class="rc-note">The private key lives only on the signing authority. No one else can make a valid signature with it &mdash; not you, not an administrator, not us.</div>
+                    </div>
+                    <div class="doc-reqcard">
+                        <div class="rc-label">No file upload</div>
+                        <div class="rc-val">Only hashes travel</div>
+                        <div class="rc-note">Only fingerprints are sent to the authority. The signature is a small, fixed-size value, the same whether your project is one file or ten thousand.</div>
+                    </div>
+                    <div class="doc-reqcard">
+                        <div class="rc-label">Self-verifying</div>
+                        <div class="rc-val">Anyone, offline</div>
+                        <div class="rc-note">A third party checks the signature using only the public key (included in the sealed bundle) and the record. The check does not require WorkSigned's servers or databases.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="time">
+                <h2>Independent time anchoring </h2>
+                <p>File times are local and can be changed. WorkSigned does not rely on them. It asks an independent <strong>RFC&nbsp;3161 Time-Stamp Authority (TSA)</strong> to stamp the record; the TSA returns a signed token with its own clock, the value it stamped, and a serial number. The token can be checked later against the TSA&rsquo;s public certificate, with no need to contact the TSA.</p>
+                <p>Each seal carries its own independent timestamp, so a steady clock offset shows up as a <strong>constant shift, not a growing one</strong>, and the first stamp fixes where the timeline begins. The times are anchored to an external clock, not one anyone in a dispute could adjust.</p>
+            </section>
+
+            <section id="prove">
+                <h2>What the seal proves </h2>
+                <p>At time&nbsp;T, the signing authority committed to a fingerprint&nbsp;H. Because&nbsp;H is a fingerprint of the entire record, that attestation means:</p>
+                <div class="doc-reqgrid">
+                    <div class="doc-reqcard">
+                        <div class="rc-label">The record existed</div>
+                        <div class="rc-val">Byte-for-byte</div>
+                        <div class="rc-note">The full record &mdash; every file, every edit, every entry &mdash; was exactly what it is now, at time T. Change one byte and the signature no longer holds.</div>
+                    </div>
+                    <div class="doc-reqcard">
+                        <div class="rc-label">The authority saw it</div>
+                        <div class="rc-val">The fingerprint</div>
+                        <div class="rc-note">The authority saw the hash of your exact record. &ldquo;I signed H&rdquo; is the same as &ldquo;I saw this exact record.&rdquo;</div>
+                    </div>
+                    <div class="doc-reqcard">
+                        <div class="rc-label">The time is real</div>
+                        <div class="rc-val">TSA-stamped</div>
+                        <div class="rc-note">The timestamp is signed by an independent TSA &mdash; an external clock, not the researcher&rsquo;s machine.</div>
+                    </div>
+                </div>
+                <div class="doc-callout"><strong>Stated plainly.</strong> A seal proves <strong>you had this exact body of work &mdash; the files, the edits, the sequence &mdash; at time T.</strong> That is the claim that matters in a priority or intellectual-property question: it establishes <em>who had the work first</em>. It does not claim the work was original, or that the idea happened at that moment. The strength is in the <em>process</em>: a complete, time-anchored record of how the work developed, which is hard to fabricate.</div>
+            </section>
+
+            <section id="multi">
+                <h2>Multi-authority </h2>
+                <p>A record can be co-signed by <strong>multiple independent authorities</strong>, each with its own key. Each seal links to the previous one, so tampering at any point is detectable. Because each signer holds a key the researcher cannot access, no one on the machine &mdash; researcher, administrator, or operator &mdash; can forge a seal. If one signer fails, the others still stand.</p>
+            </section>
+
+            <section id="standards">
+                <h2>Built on open standards </h2>
+                <p>The record is not a proprietary format. It is assembled from a small set of open, published standards, each doing one job. A verifier does not have to trust WorkSigned: they check the work against the standard itself.</p>
+                <table>
+                    <thead><tr><th>Standard</th><th>What it does</th><th>Why it matters</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>RFC&nbsp;3161</strong><br><span class="rc-note">IETF Time-Stamp Protocol</span></td>
+                            <td>A signed time-stamp token from an independent TSA &mdash; an external clock.</td>
+                            <td>An independently anchored time.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Merkle tree</strong><br><span class="rc-note">Certificate-Transparency style (RFC&nbsp;6962)</span></td>
+                            <td>Hashes every file and folds them into a single root; the authority signs that root.</td>
+                            <td>A commit to <em>exactly which files existed</em> at sealing. Recompute it and it matches &mdash; or it does not.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hash chain</strong><br><span class="rc-note">Tamper-evident audit record</span></td>
+                            <td>Each activity entry links to the hash of the one before it; the end of the chain is signed.</td>
+                            <td>The sequence is tamper-evident. Drop, reorder, or edit any entry and it no longer checks out.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="doc-callout"><strong>Why several, not one.</strong> The time anchor (RFC&nbsp;3161), the commit to the file tree (Merkle), and the sequence (hash chain) are <em>independent</em> of one another. If any single one became obsolete or its operator disappeared, the others still hold.</div>
+                <div class="doc-callout ok"><strong>What it is not.</strong> WorkSigned does not verify a person&rsquo;s identity, and does not produce archival documents. It verifies <em>authorship of a file tree</em> and <em>time</em>, in a form any third party can re-check.</div>
+            </section>
+
+            <section id="verify">
+                <h2>The verification experience </h2>
+                <p>Verification is something a journal, funder, or court does themselves, not something they ask us to do. Given the record and the sealed bundle (which includes the public key), a verifier:</p>
+                <div class="doc-ledger">1&nbsp;&nbsp;Re-hashes the files and checks the Merkle root.<br>
+2&nbsp;&nbsp;Verifies each signature against the included public key.<br>
+3&nbsp;&nbsp;Checks the chain &mdash; each seal links to the one before it.<br>
+4&nbsp;&nbsp;Confirms the timestamp against the TSA&rsquo;s certificate.<br>
+5&nbsp;&nbsp;Result: <span class="l-ok">VALID</span>.</div>
+                <p>No reliance on our infrastructure is needed at any step.</p>
+            </section>
+
+            <section id="infra">
+                <h2>Auditable signing </h2>
+                <p>The authority runs on an <strong>immutable, hash-verified image</strong>: the exact code that produced the seals is fixed at deploy time and its hash is published, so anyone can confirm what ran. Each signature is written to an <strong>append-only signing log</strong>, stored apart from the live signing service. The log holds only fingerprints and signatures &mdash; there is no field in it where your data could go. A read-only view exposes the log and the public keys; never the private key, never file contents.</p>
+                <p>The private key never leaves the authority &mdash; the same model as an <strong>HSM</strong> or <strong>TPM</strong>: the key stays on trusted hardware, the code is auditable, and the log is tamper-evident.</p>
+            </section>
+
+            <section id="cost">
+                <h2>Lightweight by design </h2>
+                <p>Because only fingerprints are stored, the authority&rsquo;s footprint is small &mdash; a few hundred bytes per seal. The platform is selling <strong>trust and verification</strong>, not storage, and the architecture keeps that cost near zero.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned &middot; An Equitable Corporation &middot;
+                <a href="https://equitablestandard.com" target="_blank">equitablestandard.com</a>
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy: highlight the section currently in view.
+    (function () {
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        function onScroll() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 60);
+            var pos = window.scrollY + 120, current = sections[0];
+            for (var i = 0; i < sections.length; i++) {
+                if (sections[i].offsetTop <= pos) current = sections[i];
+            }
+            if (atBottom && sections.length) current = sections[sections.length - 1];
+            if (current) setActive(current.id);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

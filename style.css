@@ -687,8 +687,8 @@ body::before {
     box-shadow: var(--shadow-sm);
 }
 .trust-card h3 {
-    font-size: 19px; font-weight: 700; letter-spacing: -0.3px;
-    margin-bottom: 10px;
+    font-size: 26px; font-weight: 700; letter-spacing: -0.4px;
+    margin-bottom: 12px;
 }
 .trust-card .tc-problem {
     font-size: var(--fs-body);

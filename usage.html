@@ -199,7 +199,6 @@
                     <li><strong>Appended.</strong> The entry is written to the WorkSigned Record at the end. There is no update or delete operation in the format; a correction is a <em>new</em> event that references the one it supersedes.</li>
                     <li><strong>Optionally signed.</strong> Milestones and sealed states are additionally signed with the project's signing key, making them attributable (not merely tamper-evident).</li>
                 </ol>
-                <p>Because the WorkSigned Record is a single ordered stream, "accounting" is just a subset of it. Spend events and work events live on the same chain, so a grant ledger and a research timeline are the same artifact &mdash; no separate accounting software, no way to reconcile one against the other by hand.</p>
 
                 <h3>What a sealed entry looks like</h3>
                 <div class="doc-ledger"><span class="l-h">// WorkSigned Record — project zinc-kinase (excerpt)</span>

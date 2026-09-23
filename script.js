@@ -102,8 +102,19 @@ if (ledgerEl) {
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
         window.addEventListener('load', draw);
     }
-    // keep it in sync if the ledger fade-in transform shifts it
-    if (ledgerEl) ledgerEl.addEventListener('transitionend', draw);
+    // Draw when the ledger actually appears (it fades/rises in via .in; the
+    // first draw() above may run while it is still transformed/transparent,
+    // which captures the dot at the wrong x). Redraw as soon as it is visible
+    // and let the transition end settle the final position.
+    var lobs = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) draw(); });
+    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+    if (ledgerEl) {
+        lobs.observe(ledgerEl);
+        ledgerEl.addEventListener('transitionend', draw);
+    }
+    // One more settle pass once layout has stopped moving.
+    setTimeout(draw, 300); setTimeout(draw, 700);
 })();
 
 // ==========================================================================

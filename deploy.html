@@ -55,7 +55,7 @@
             <a href="#how-it-runs" class="active">How it runs</a>
             <a href="#what-runs-where">What runs where</a>
             <a href="#responsibilities">Shared responsibilities</a>
-            <a href="#your-data">Your data &amp; its access</a>
+            <a href="#your-data">Data &amp; its access</a>
             <a href="#signing">Who signs, who holds the key</a>
             <a href="#security">Security &amp; compliance</a>
             <a href="#llm">AI (LLM) backends</a>
@@ -73,27 +73,27 @@
         <main class="doc-content">
             <div class="doc-hero-eyebrow">Deployment</div>
             <h1>Deployment</h1>
-            <p class="doc-lede">WorkSigned runs on your network, under your control, and attaches to the storage and compute you already operate. Only one component is outside your network &mdash; the <a href="#signing">signing authority</a> &mdash; which is operated by WorkSigned or an approved institution, never by the platform operator. The proof model is the same in every configuration (see <a href="proof.html">Proof</a>). This page is for the teams responsible for integration, security, and procurement: what runs where, what each side owns and configures, and the security and compliance posture.</p>
+            <p class="doc-lede">WorkSigned runs on the institution's network, under the institution's control, and attaches to the storage and compute it already operates. Only one component is outside that network &mdash; the <a href="#signing">signing authority</a> &mdash; which is operated by WorkSigned or an approved institution, never by the platform operator. The proof model is the same in every configuration (see <a href="proof.html">Proof</a>). This page is for the teams responsible for integration, security, and procurement: what runs where, what each side owns and configures, and the security and compliance posture.</p>
 
             <!-- 1. HOW IT RUNS -->
             <section id="how-it-runs">
                 <h2>How it runs </h2>
-                <p>Two choices define the deployment. <strong>The client</strong> &mdash; the native desktop app (with local-file access) or the browser (no local-file access, but the same tools and office suite, reachable from any device on your network). And <strong>where auth and user data live</strong> &mdash; in your cloud, or entirely on your own machines. Research data is a separate matter: it always stays on your own backends and is attached, not moved.</p>
+                <p>Two choices define the deployment. <strong>The client</strong> &mdash; the native desktop app (with local-file access) or the browser (no local-file access, but the same tools and office suite, reachable from any device on the network). And <strong>where auth and user data live</strong> &mdash; in the institution's cloud, or entirely on the institution's own machines. Research data is a separate matter: it always stays on the institution's backends and is attached, not moved.</p>
                 <div class="doc-reqgrid">
                     <div class="doc-reqcard">
-                        <div class="rc-label">Desktop + your cloud</div>
+                        <div class="rc-label">Desktop + institutional cloud</div>
                         <div class="rc-val">Recommended</div>
-                        <div class="rc-note">Desktop app with local files and the office suite; online sign-in through your identity provider; user data in your cloud.</div>
+                        <div class="rc-note">Desktop app with local files and the office suite; online sign-in through the institution's identity provider; user data in the institution's cloud.</div>
                     </div>
                     <div class="doc-reqcard">
-                        <div class="rc-label">Browser + your cloud</div>
+                        <div class="rc-label">Browser + institutional cloud</div>
                         <div class="rc-val">Recommended</div>
                         <div class="rc-note">The same, in the browser. The only difference: no access to local files. Reachable from any device on the network.</div>
                     </div>
                     <div class="doc-reqcard">
                         <div class="rc-label">Desktop + fully on-prem</div>
                         <div class="rc-val">Maximum privacy</div>
-                        <div class="rc-note">Sign-in is on your own machines and user data stays local. The most restrictive option &mdash; confirm it fits your identity and access policy before choosing it.</div>
+                        <div class="rc-note">Sign-in is on the institution's own machines and user data stays local. The most restrictive option &mdash; confirm it fits the identity and access policy before choosing it.</div>
                     </div>
                 </div>
             </section>
@@ -101,47 +101,47 @@
             <!-- 2. WHAT RUNS WHERE -->
             <section id="what-runs-where">
                 <h2>What runs where </h2>
-                <p>Everything runs on your network except the signing authority. The table below is the whole topology:</p>
+                <p>Everything runs on the institution's network except the signing authority. The table below is the whole topology:</p>
                 <table>
                     <thead><tr><th>Component</th><th>Where it lives</th><th>What it holds</th></tr></thead>
                     <tbody>
-                        <tr><td>Platform (web app, job &amp; record services)</td><td>Your network</td><td>The WorkSigned Record and app state &mdash; <em>no user files</em></td></tr>
-                        <tr><td>Your research files</td><td>Your existing storage / compute (attached)</td><td>Project files &mdash; stay exactly where they are</td></tr>
-                        <tr><td>User data (settings, sessions)</td><td>Your cloud or your machines</td><td>Per-user state, separate from research files</td></tr>
+                        <tr><td>Platform (web app, job &amp; record services)</td><td>The institution's network</td><td>The WorkSigned Record and app state &mdash; <em>no user files</em></td></tr>
+                        <tr><td>Research files</td><td>The institution's existing storage / compute (attached)</td><td>Project files &mdash; stay exactly where they are</td></tr>
+                        <tr><td>User data (settings, sessions)</td><td>The institution's cloud or its own machines</td><td>Per-user state, separate from research files</td></tr>
                         <tr><td>Signing authority</td><td>WorkSigned / approved institutions</td><td>The signing key; signs only record fingerprints</td></tr>
                     </tbody>
                 </table>
-                <div class="doc-callout">The components that hold your <em>data</em> are never the same components that hold the <em>signing key</em>. That separation is what lets a record be verified without trusting the data store.</div>
+                <div class="doc-callout">The components that hold the <em>data</em> are never the same components that hold the <em>signing key</em>. That separation is what lets a record be verified without trusting the data store.</div>
             </section>
 
             <!-- 3. SHARED RESPONSIBILITIES -->
             <section id="responsibilities">
                 <h2>Shared responsibilities </h2>
-                <p>Deployment is a shared arrangement. Your IT team owns and administers the infrastructure; WorkSigned installs, configures, and operates the platform within it. The split below is the practical starting point &mdash; it is tuned to your environment during setup.</p>
+                <p>Deployment is a shared arrangement. The institution's IT team owns and administers the infrastructure; WorkSigned installs, configures, and operates the platform within it. The split below is the practical starting point &mdash; it is tuned to the environment during setup.</p>
                 <table>
-                    <thead><tr><th>Item</th><th>Your IT team</th><th>WorkSigned</th></tr></thead>
+                    <thead><tr><th>Item</th><th>The institution's IT team</th><th>WorkSigned</th></tr></thead>
                     <tbody>
                         <tr><td>Application servers</td><td>Provision the hardware/VMs and network placement</td><td>Install, configure, patch, and monitor the services</td></tr>
                         <tr><td>Identity (SSO)</td><td>Configure the IdP side (SAML / OIDC / CAS) and manage users</td><td>Integrate the platform side and map roles</td></tr>
-                        <tr><td>Storage &amp; compute backends</td><td>Own, administer, and set permissions</td><td>Configure the connection; never changes your permissions</td></tr>
+                        <tr><td>Storage &amp; compute backends</td><td>Own, administer, and set permissions</td><td>Configure the connection; never changes the institution's permissions</td></tr>
                         <tr><td>Mount credentials &amp; key custody</td><td>Hold the decryption key (by default); revoke credentials</td><td>Provide the encrypted credential store and the audit log</td></tr>
-                        <tr><td>AI (LLM) endpoint</td><td>Host your models / endpoint</td><td>Configure the platform to use it</td></tr>
+                        <tr><td>AI (LLM) endpoint</td><td>Host the institution's models / endpoint</td><td>Configure the platform to use it</td></tr>
                         <tr><td>The WorkSigned Record</td><td>Own the data and backup policy</td><td>Operate the service that produces it</td></tr>
                         <tr><td>Signing authority</td><td>Optionally join as an approved signing authority</td><td>Operate the signing network; publish public keys for verification</td></tr>
                         <tr><td>Updates &amp; support</td><td>Approve change windows</td><td>Ship and apply updates within them</td></tr>
                     </tbody>
                 </table>
-                <div class="doc-callout">WorkSigned does not require you to standardize or migrate storage. If you run a mix of S3, NFS, an HPC cluster, and a repository &mdash; as most institutions do &mdash; each is attached with its native protocol and each is recorded the same way.</div>
+                <div class="doc-callout">WorkSigned does not require storage to be standardized or migrated. If the institution runs a mix of S3, NFS, an HPC cluster, and a repository &mdash; as most do &mdash; each is attached with its native protocol and each is recorded the same way.</div>
             </section>
 
             <!-- 4. YOUR DATA -->
             <section id="your-data">
-                <h2>Your data &amp; its access </h2>
-                <p>WorkSigned attaches to the storage and compute you already run. In the workspace they appear as ordinary folders; your data does not move, your jobs keep reading and writing the same paths, and access levels follow the permissions the backend already enforces &mdash; the platform never grants more access than you have granted. Every non-local connection uses the backend&rsquo;s own authentication (S3 keys, SSH/SFTP keys, NFS Kerberos, a service account, a repository token).</p>
+                <h2>Data &amp; its access </h2>
+                <p>WorkSigned attaches to the storage and compute the institution already runs. In the workspace they appear as ordinary folders; the data does not move, jobs keep reading and writing the same paths, and access levels follow the permissions the backend already enforces &mdash; the platform never grants more access than the backend has been granted. Every non-local connection uses the backend&rsquo;s own authentication (S3 keys, SSH/SFTP keys, NFS Kerberos, a service account, a repository token).</p>
                 <p>How that is secured:</p>
                 <ul>
-                    <li><strong>Credentials are encrypted and stored on your side</strong> &mdash; they are never sent back to a browser once configured.</li>
-                    <li><strong>The decryption key is held by your institution</strong>, so you can audit and decrypt &mdash; or, as an option, by the individual user alone, so that even WorkSigned cannot read the credential.</li>
+                    <li><strong>Credentials are encrypted and stored on the institution's side</strong> &mdash; they are never sent back to a browser once configured.</li>
+                    <li><strong>The decryption key is held by the institution</strong>, so the institution can audit and decrypt &mdash; or, as an option, by the individual user alone, so that even WorkSigned cannot read the credential.</li>
                     <li><strong>Every use of a credential is logged</strong> &mdash; which connection, which user, when, and the result. Deleting a connection deletes its credential.</li>
                     <li><strong>For HPC:</strong> jobs keep running natively on Slurm; WorkSigned watches the output directories and records the results &mdash; optionally per-job, automatically.</li>
                 </ul>
@@ -151,7 +151,7 @@
             <!-- 5. SIGNING -->
             <section id="signing">
                 <h2>Who signs, and who holds the key </h2>
-                <p>The trust anchor is the <strong>signing authority</strong>. It holds a private key that never leaves it, signs only the fingerprints (hashes) of your WorkSigned Record &mdash; never your files &mdash; and runs on an immutable, hash-verified image. Because it only ever sees hashes, it does not need to trust your data, and you do not need to trust its storage. Verifying a seal requires only its public key and your WorkSigned Record.</p>
+                <p>The trust anchor is the <strong>signing authority</strong>. It holds a private key that never leaves it, signs only the fingerprints (hashes) of the WorkSigned Record &mdash; never the underlying files &mdash; and runs on an immutable, hash-verified image. Because it only ever sees hashes, it does not need to trust the data, and verifiers do not need to trust its storage. Verifying a seal requires only its public key and the WorkSigned Record.</p>
                 <p>Signatures come from the <strong>WorkSigned signing network</strong> &mdash; WorkSigned plus a small number of approved institutions, each signing with its own key. A deploying institution is not automatically a signer: it controls the platform, the sign-in, and its own data, and may <em>opt in</em> to joining the network as an approved authority in its own right (a distinct role with its own key custody). The full model, including multi-authority co-signing, is on the <a href="proof.html">Proof</a> page.</p>
             </section>
 
@@ -159,23 +159,23 @@
             <section id="security">
                 <h2>Security &amp; compliance posture </h2>
                 <ul>
-                    <li><strong>Single sign-on.</strong> Users sign in with their existing credentials via your identity provider (SAML 2.0 or OpenID Connect; CAS supported) &mdash; no second account.</li>
-                    <li><strong>No public endpoint required.</strong> On-prem, researchers reach the platform over your intranet or VPN. The signing authority is never a public endpoint and never exposes the private key.</li>
+                    <li><strong>Single sign-on.</strong> Users sign in with their existing credentials via the institution's identity provider (SAML 2.0 or OpenID Connect; CAS supported) &mdash; no second account.</li>
+                    <li><strong>No public endpoint required.</strong> On-prem, researchers reach the platform over the institution's intranet or VPN. The signing authority is never a public endpoint and never exposes the private key.</li>
                     <li><strong>Least-privilege, per user.</strong> Each user operates only the connections they are authorized for; each connection&rsquo;s access level is enforced by the backend, not just the interface.</li>
                     <li><strong>Authenticated internal services.</strong> The platform&rsquo;s services verify each other with cryptographic tokens; a component that cannot present a valid token is refused.</li>
                     <li><strong>Credentials never stored in plaintext.</strong> Encrypted in a credential store, institution- or user-keyed.</li>
-                    <li><strong>No training on your data.</strong> AI work runs on models that do not train on your content, or on your own endpoint where you control the model.</li>
-                    <li><strong>Data stays in your jurisdiction.</strong> Research data, the WorkSigned Record, and (in on-prem modes) the signing key remain on systems you control. There is no requirement to upload to a vendor cloud.</li>
-                    <li><strong>Independent verification.</strong> Any third party &mdash; a committee, a funder, a journal &mdash; can verify a sealed record against the signing authority&rsquo;s public key and the WorkSigned Record, without involving you or the data store.</li>
+                    <li><strong>No training on institutional data.</strong> AI work runs on models that do not train on institutional content, or on the institution's own endpoint, where the model is controlled in-house.</li>
+                    <li><strong>Data stays in the institution's jurisdiction.</strong> Research data, the WorkSigned Record, and (in on-prem modes) the signing key remain on systems the institution controls. There is no requirement to upload to a vendor cloud.</li>
+                    <li><strong>Independent verification.</strong> Any third party &mdash; a committee, a funder, a journal &mdash; can verify a sealed record against the signing authority&rsquo;s public key and the WorkSigned Record, without involving the institution or the data store.</li>
                 </ul>
             </section>
 
             <!-- 7. AI / LLM -->
             <section id="llm">
                 <h2>AI (LLM) backends </h2>
-                <p>AI-assisted work runs on <strong>your hosted LLMs</strong> by default, or on WorkSigned&rsquo;s private LLMs, or on a private endpoint you control &mdash; in every case on models that do not train on your data. The platform speaks the standard OpenAI-compatible chat-completions API, so any endpoint that implements it works. In on-prem mode, no prompt or completion ever leaves your hardware.</p>
+                <p>AI-assisted work runs on <strong>the institution's hosted LLMs</strong> by default, or on WorkSigned&rsquo;s private LLMs, or on a private endpoint the institution controls &mdash; in every case on models that do not train on institutional data. The platform speaks the standard OpenAI-compatible chat-completions API, so any endpoint that implements it works. In on-prem mode, no prompt or completion ever leaves the institution's hardware.</p>
                 <div class="doc-callout ok">The AI conversation itself is captured on the WorkSigned Record, so AI-assisted work is attributable just like any human contribution.</div>
-                <p>If you provision an on-prem LLM endpoint, the sizing notes are in <a href="#detail-llm">technical detail</a>.</p>
+                <p>If an on-prem LLM endpoint is provisioned, the sizing notes are in <a href="#detail-llm">technical detail</a>.</p>
             </section>
 
             <!-- TECHNICAL DETAIL (appendix) -->
@@ -187,7 +187,7 @@
                 <table>
                     <thead><tr><th>Backend</th><th>What it is</th><th>Access</th><th>Typical use</th></tr></thead>
                     <tbody>
-                        <tr><td><strong>Local filesystem</strong></td><td>Your machine&rsquo;s disk</td><td>Read / write / run</td><td>Desktop local-storage mode.</td></tr>
+                        <tr><td><strong>Local filesystem</strong></td><td>The local machine&rsquo;s disk</td><td>Read / write / run</td><td>Desktop local-storage mode.</td></tr>
                         <tr><td><strong>S3-compatible</strong></td><td>AWS S3, Cloudflare R2, MinIO, Ceph RGW</td><td>Read / write</td><td>Institutional or lab object stores.</td></tr>
                         <tr><td><strong>NFS</strong></td><td>NFSv3/v4, including Kerberos</td><td>Read / write</td><td>Cluster-shared scratch and group directories.</td></tr>
                         <tr><td><strong>SFTP</strong></td><td>File transfer over SSH</td><td>Read / write</td><td>Lab servers and legacy network drives.</td></tr>
@@ -218,7 +218,7 @@
             <section id="detail-network">
                 <h2>Network </h2>
                 <ul>
-                    <li><strong>Users &rarr; platform.</strong> Over your intranet or VPN. No public internet endpoint is required for an on-prem deployment.</li>
+                    <li><strong>Users &rarr; platform.</strong> Over the institution's intranet or VPN. No public internet endpoint is required for an on-prem deployment.</li>
                     <li><strong>Platform &rarr; backends.</strong> Ordinary internal connections from the job services to each backend they attach to, each using the backend&rsquo;s native transport. For storage that does not send the browser headers the client needs (typical of on-prem object stores and NFS), requests are routed through a server-side proxy on your network &mdash; the browser never talks directly to raw storage.</li>
                     <li><strong>Signing authority.</strong> Reached only by the components that request signatures. Never publicly exposed.</li>
                 </ul>
@@ -239,16 +239,16 @@
 
             <section id="detail-components">
                 <h2>Components </h2>
-                <p>WorkSigned is a small set of purpose-separated services, so no single component is both your data store and your trust anchor:</p>
+                <p>WorkSigned is a small set of purpose-separated services, so no single component is both the data store and the trust anchor:</p>
                 <table>
                     <thead><tr><th>Component</th><th>Role</th></tr></thead>
                     <tbody>
                         <tr><td><strong>Frontend / gateway</strong></td><td>Serves the shell and routes authenticated requests. Stateless.</td></tr>
                         <tr><td><strong>Job &amp; trust server</strong></td><td>Translates workspace operations to the attached backends, hashes and records them. Holds no user content &mdash; only the record and app state. Scales by adding servers behind a load balancer.</td></tr>
-                        <tr><td><strong>Data store</strong></td><td>Your project files, via the attached backends.</td></tr>
+                        <tr><td><strong>Data store</strong></td><td>The institution's project files, via the attached backends.</td></tr>
                         <tr><td><strong>User state</strong></td><td>Settings, sessions, preferences &mdash; separate from project data and from credentials.</td></tr>
                         <tr><td><strong>Record</strong></td><td>The append-only, hash-chained WorkSigned Record, sealed per milestone.</td></tr>
-                        <tr><td><strong>Signing network</strong></td><td>Holds the private keys and signs the record fingerprints. External to the data plane; never co-located with your data.</td></tr>
+                        <tr><td><strong>Signing network</strong></td><td>Holds the private keys and signs the record fingerprints. External to the data plane; never co-located with institutional data.</td></tr>
                         <tr><td><strong>Auth</strong></td><td>Issues and validates session credentials. In fully on-prem mode the user is their own authority and this is self-contained.</td></tr>
                     </tbody>
                 </table>

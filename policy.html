@@ -86,42 +86,42 @@
         <main class="doc-content">
             <div class="doc-hero-eyebrow">Trust</div>
             <h1>Data &amp; security policy</h1>
-            <p class="doc-lede">WorkSigned is a signing authority, and its value depends on you trusting it to keep your data yours. This policy states, plainly, what we store, what we don't, and how the highest-security workspaces are encrypted so that <em>we cannot read your files</em> &mdash; and so a compromise of our servers can't hand your data and keys to an attacker.</p>
+            <p class="doc-lede">WorkSigned is a signing authority, and its value depends on the institution trusting it to keep institutional data secure. This policy states, plainly, what we store, what we don't, and how the highest-security workspaces are encrypted so that <em>we cannot read institutional files</em> &mdash; and so a compromise of our servers can't hand data and keys to an attacker.</p>
             <div class="doc-callout ok"><strong>Alpha stage &mdash; the core is already permanent.</strong> WorkSigned is in alpha: individual application features may change as we build toward a stable release. This policy &mdash; and the data &amp; security commitments it describes &mdash; does <strong>not</strong> change; they are the permanent core of the platform.</div>
 
             <!-- ========================================================= -->
             <section id="data">
                 <h2>What data we keep</h2>
-                <p>The short version: <strong>we do not log user data.</strong> The only data we retain about you is what's strictly required to bill your account and let you log in. Your research, your files, your activity, your conversations, and your WorkSigned Record are yours &mdash; not a data set we mine, sell, or read.</p>
-                <div class="doc-callout">Rule of thumb: if it isn't needed to run your account (billing) or prove you're you (login), we don't keep a copy of it on the platform as a logged record.</div>
+                <p>The short version: <strong>we do not log user data.</strong> The only data we retain is what's strictly required to bill an account and let its members log in. Research, files, activity, conversations, and the WorkSigned Record belong to the project &mdash; not a data set we mine, sell, or read.</p>
+                <div class="doc-callout">Rule of thumb: if it isn't needed to run an account (billing) or authenticate a user (login), we don't keep a copy of it on the platform as a logged record.</div>
             </section>
 
             <!-- ========================================================= -->
             <section id="logging">
                 <h2>No user-data logging</h2>
-                <p>WorkSigned does not log the content of your work. We do not record your research to a searchable or analyzable store, we do not train on it, and we do not use it to build profiles or products. The WorkSigned Record the platform produces is <em>yours</em> &mdash; it belongs to you and to your project, and it is the artifact that is sealed and signed, not a backend log we keep for ourselves.</p>
+                <p>WorkSigned does not log the content of research work. We do not record research to a searchable or analyzable store, we do not train on it, and we do not use it to build profiles or products. The WorkSigned Record the platform produces is <em>the project's own</em> &mdash; it belongs to the project and its institution, and it is the artifact that is sealed and signed, not a backend log we keep for ourselves.</p>
                 <ul>
                     <li>No logging of research content, file contents, or conversation content.</li>
-                    <li>No training on your data. No mining, no licensing, no resale.</li>
-                    <li>Server logs (for operations) are user-auditable &mdash; you can see what they are.</li>
+                    <li>No training on institutional data. No mining, no licensing, no resale.</li>
+                    <li>Server logs (for operations) are user-auditable &mdash; each user can see what they contain.</li>
                 </ul>
             </section>
 
             <!-- ========================================================= -->
             <section id="billing">
                 <h2>Billing &amp; login data</h2>
-                <p>The only user data we retain is the minimum needed to operate your account:</p>
+                <p>The only user data we retain is the minimum needed to operate an account:</p>
                 <ul>
-                    <li><strong>Login.</strong> Your identity (email, credentials / auth tokens) so you can sign in.</li>
-                    <li><strong>Billing.</strong> Account and payment details required to bill you &mdash; held under standard PCI-style handling, not on the research data path.</li>
+                    <li><strong>Login.</strong> The user's identity (email, credentials / auth tokens) so the user can sign in.</li>
+                    <li><strong>Billing.</strong> Account and payment details required for billing &mdash; held under standard PCI-style handling, not on the research data path.</li>
                 </ul>
-                <p>That's it. It is functionally separated from your research data, and it is never combined into an analyzable profile.</p>
+                <p>That's it. It is functionally separated from research data, and it is never combined into an analyzable profile.</p>
             </section>
 
             <!-- ========================================================= -->
             <section id="workspace">
                 <h2>The encrypted workspace </h2>
-                <p>How your files are protected depends on the deployment mode. This page keeps the honest current state in the <strong>Current</strong> tab, and preserves &mdash; clearly marked as a former design &mdash; the maximum-security encrypted-workspace model in the <strong>Legacy</strong> tab.</p>
+                <p>How files are protected depends on the deployment mode. This page keeps the honest current state in the <strong>Current</strong> tab, and preserves &mdash; clearly marked as a former design &mdash; the maximum-security encrypted-workspace model in the <strong>Legacy</strong> tab.</p>
 
                 <div class="pol-tabs" role="tablist">
                     <button class="pol-tab active" data-panel="current" role="tab" aria-selected="true">Current</button>
@@ -130,13 +130,13 @@
 
                 <!-- CURRENT (what is actually true today) -->
                 <div class="pol-panel active" id="ws-current" role="tabpanel">
-                    <p><strong>Your data stays where you put it, under your control, in every deployment mode.</strong> The honest current picture:</p>
+                    <p><strong>Institutional data stays where the institution places it, under the institution's control, in every deployment mode.</strong> The honest current picture:</p>
                     <ul>
-                        <li><strong>Local mode:</strong> everything &mdash; files, WorkSigned Record, and the signing key &mdash; lives on your machine. Nothing is stored on any WorkSigned server. You are your own trust anchor.</li>
-                        <li><strong>On-prem / enterprise:</strong> your files and the WorkSigned Record live on <em>your</em> infrastructure (S3/SFTP/NFS), under your keys and access control. The platform and your data never have to share a storage layer.</li>
-                        <li><strong>WorkSigned cloud:</strong> WorkSigned hosts the platform and the sealed WorkSigned Records; your data remains accessible and auditable by you, with your credentials.</li>
+                        <li><strong>Local mode:</strong> everything &mdash; files, WorkSigned Record, and the signing key &mdash; lives on the local machine. Nothing is stored on any WorkSigned server. The user is the trust anchor.</li>
+                        <li><strong>On-prem / enterprise:</strong> research files and the WorkSigned Record live on <em>institutional</em> infrastructure (S3/SFTP/NFS), under institutional keys and access control. The platform and the data never have to share a storage layer.</li>
+                        <li><strong>WorkSigned cloud:</strong> WorkSigned hosts the platform and the sealed WorkSigned Records; institutional data remains accessible and auditable by the institution, with its own credentials.</li>
                     </ul>
-                    <div class="doc-callout"><strong>The commitments that hold today.</strong> We do not log your research content. We do not train on it or resell it. The only user data we retain is what's strictly required to run your account (login) and bill you &mdash; and it is functionally separated from your research data. In local and on-prem modes, your files never touch a WorkSigned server at all.</div>
+                    <div class="doc-callout"><strong>The commitments that hold today.</strong> We do not log research content. We do not train on it or resell it. The only user data we retain is what's strictly required to run an account (login) and bill it &mdash; and it is functionally separated from research data. In local and on-prem modes, research files never touch a WorkSigned server at all.</div>
                     <p>The maximum-security "encrypted volume + sealed key vault" model below is <strong>not an active product promise</strong>. It is preserved for the record as the design that informed these commitments. See the <strong>Legacy</strong> tab.</p>
                 </div>
 
@@ -145,11 +145,11 @@
                     <div class="legacy-banner"><strong>This is a legacy design, preserved for the record.</strong> The "encrypted cloud workspace" was a proposed maximum-security mode. It is <strong>not offered as a product today</strong>; it is kept here so the reasoning behind our data commitments is visible. Read it as a design artifact, not a current feature.</div>
 
                     <h3>Encrypted cloud workspace (legacy)</h3>
-                    <p>The model: your project files live inside a <strong>full-disk-encrypted volume</strong>, and the keys to decrypt it are <strong>supplied by you at runtime</strong>. The platform mounts and works with the volume while you&rsquo;re logged in, but at rest it is ciphertext the operator cannot open.</p>
+                    <p>The model: project files live inside a <strong>full-disk-encrypted volume</strong>, and the keys to decrypt it are <strong>supplied at runtime by the user</strong>. The platform mounts and works with the volume while the user is logged in, but at rest it is ciphertext the operator cannot open.</p>
                     <ul>
                         <li>Files live in an encrypted image (block-level encryption), not as plaintext on the storage.</li>
-                        <li>The decryption key comes from you at runtime &mdash; not from the operator, not from a database row.</li>
-                        <li>Even an operator of the storage cannot read the files without your key.</li>
+                        <li>The decryption key comes from the user at runtime &mdash; not from the operator, not from a database row.</li>
+                        <li>Even an operator of the storage cannot read the files without that key.</li>
                     </ul>
 
                     <h3>Sealed key vault (legacy)</h3>
@@ -158,7 +158,7 @@
                     <h3>Key recovery (legacy)</h3>
                     <p>Recovery was designed to happen <em>only</em> at the air-gapped machine: the sealed vault is transferred to that machine, which unseals it and recovers the key. Because the vault is unindexed, recovery has to iterate the sealed entries testing each one &mdash; deliberately slower in exchange for a vault that can&rsquo;t be turned into a person-to-key list.</p>
 
-                    <div class="doc-callout"><strong>Why it matters even though it&rsquo;s retired.</strong> The property these commitments rest on &mdash; <strong>we do not log your work, and in local/on-prem modes your files never touch our servers</strong> &mdash; is live and current. The legacy model is the maximum-security form of that same principle, kept here for transparency.</div>
+                    <div class="doc-callout"><strong>Why it matters even though it&rsquo;s retired.</strong> The property these commitments rest on &mdash; <strong>we do not log research work, and in local/on-prem modes research files never touch our servers</strong> &mdash; is live and current. The legacy model is the maximum-security form of that same principle, kept here for transparency.</div>
                 </div>
             </section>
 

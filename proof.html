@@ -68,28 +68,28 @@
         <main class="doc-content">
             <div class="doc-hero-eyebrow">Trust &amp; Verification</div>
             <h1>How the proof works</h1>
-            <p class="doc-lede">A WorkSigned Record is a record of your work that anyone can <strong>check for themselves</strong> &mdash; without relying on our servers or our word.</p>
-            <div class="doc-callout"><strong>The one idea.</strong> We do not read or upload your files. We sign a <strong>32-byte fingerprint</strong> of your WorkSigned Record. Because the fingerprint changes completely when even one byte changes, &ldquo;the authority signed fingerprint&nbsp;H&rdquo; is the same as &ldquo;the authority signed this exact record.&rdquo;</div>
+            <p class="doc-lede">A WorkSigned Record is a record of a researcher&rsquo;s work that anyone can <strong>check for themselves</strong> &mdash; without relying on WorkSigned&rsquo;s servers or its word.</p>
+            <div class="doc-callout"><strong>The one idea.</strong> WorkSigned does not read or upload the researcher&rsquo;s files. It signs a <strong>32-byte fingerprint</strong> of the WorkSigned Record. Because the fingerprint changes completely when even one byte changes, &ldquo;the authority signed fingerprint&nbsp;H&rdquo; is the same as &ldquo;the authority signed this exact record.&rdquo;</div>
 
             <section id="how">
                 <h2>How it works</h2>
-                <p>The whole process in five steps. The only technical word used is <strong>hash</strong> &mdash; a fixed-length fingerprint of your work that changes completely when even one byte changes.</p>
+                <p>The whole process in five steps. The only technical word used is <strong>hash</strong> &mdash; a fixed-length fingerprint of the work that changes completely when even one byte changes.</p>
 
                 <div class="doc-reqgrid">
-                    <div class="doc-reqcard"><div class="rc-label">1</div><div class="rc-val">You work</div><div class="rc-note">You edit and save files in your project, the normal way.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">2</div><div class="rc-val">We record what you do</div><div class="rc-note">The platform captures your activity in detail &mdash; edits, saves, terminal commands, chat messages. Your files never leave your machine.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">3</div><div class="rc-val">One hash of everything</div><div class="rc-note">On each seal, we fold the fingerprints of all your files into a single hash. That hash is the only thing that leaves your servers &mdash; no files, no names, no logs.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">4</div><div class="rc-val">Independently time-stamped and signed</div><div class="rc-note">An independent authority signs the hash together with the time, using a clock outside of anyone&rsquo;s control. You cannot change the time or the hash without breaking the signature.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">5</div><div class="rc-val">You keep the seal</div><div class="rc-note">You (or your institution) store the hash, the time, the signature, and the authority&rsquo;s public key. It is yours; it does not live on our servers.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">1</div><div class="rc-val">Researchers work</div><div class="rc-note">Researchers edit and save files in their project, the normal way.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">2</div><div class="rc-val">The work is recorded</div><div class="rc-note">The platform logs the project&rsquo;s activity &mdash; edits, saves, terminal commands, chat messages &mdash; into the researcher&rsquo;s WorkSigned Record. It stays on the researcher&rsquo;s machine.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">3</div><div class="rc-val">One hash of everything</div><div class="rc-note">On each seal, the fingerprints of all files are folded into a single hash. That hash is the only thing that leaves the researcher&rsquo;s servers &mdash; no files, no names, no logs.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">4</div><div class="rc-val">Independently time-stamped and signed</div><div class="rc-note">An independent authority signs the hash together with the time, using a clock outside anyone&rsquo;s control. The time and the hash cannot be changed without breaking the signature.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">5</div><div class="rc-val">The seal is kept</div><div class="rc-note">The researcher (or the institution) stores the hash, the time, the signature, and the authority&rsquo;s public key. It does not live on WorkSigned&rsquo;s servers.</div></div>
                 </div>
 
-                <div class="doc-ledger"><span class="l-h"># Your activity, as the platform records it</span>
+                <div class="doc-ledger"><span class="l-h"># The project&rsquo;s activity, as the platform records it</span>
 <span class="l-id">Wed 09:14:02</span>  methods.tex    key      <span class="l-h">typed \frac{a}{b}</span>
 <span class="l-id">Wed 09:14:41</span>  methods.tex    save     <span class="l-h">file saved</span>
 <span class="l-id">Wed 11:02:33</span>  terminal       cmd      <span class="l-h">python analysis.py</span>
 <span class="l-id">Wed 15:40:55</span>  chat           msg      <span class="l-h">&ldquo;baseline confirmed&rdquo;</span>
 <span class="l-id">Thu 08:22:19</span>  results.csv    save     <span class="l-h">file saved</span>
-<span class="l-h">&rarr; every event, in order, is your WorkSigned Record &mdash; not a single snapshot</span></div>
+<span class="l-h">&rarr; every event, in order, is the WorkSigned Record &mdash; not a single snapshot</span></div>
 
                 <p>At sealing time, exactly one value &mdash; the single hash above &mdash; is sent to the signing authority. Nothing else crosses the boundary: no file content, no file names, no keystrokes, no chat, no record. The hash is a fixed-length number with no way to read back from it.</p>
             </section>
@@ -98,22 +98,22 @@
                 <h2>What it proves</h2>
                 <div class="doc-reqgrid">
                     <div class="doc-reqcard">
-                        <div class="rc-label">Your work existed</div>
+                        <div class="rc-label">The work existed</div>
                         <div class="rc-val">At time T</div>
-                        <div class="rc-note">At time T, you had this exact body of work &mdash; the files, the edits, the sequence &mdash; and it has not changed since. Change one byte and the seal no longer holds.</div>
+                        <div class="rc-note">At time T, the researcher had this exact body of work &mdash; the files, the edits, the sequence &mdash; and it has not changed since. Change one byte and the seal no longer holds.</div>
                     </div>
                     <div class="doc-reqcard">
-                        <div class="rc-label">We never saw your files</div>
+                        <div class="rc-label">The files were never seen</div>
                         <div class="rc-val">Only the hash</div>
-                        <div class="rc-note">The authority signed a fingerprint, not your files. Your content never left your servers, and we do not store it.</div>
+                        <div class="rc-note">The authority signed a fingerprint, not the files. The content never left the researcher&rsquo;s servers, and WorkSigned does not store it.</div>
                     </div>
                     <div class="doc-reqcard">
                         <div class="rc-label">Anyone can check it</div>
-                        <div class="rc-val">Offline, no us</div>
-                        <div class="rc-note">A journal, funder, or court verifies the seal themselves, with only the public key and the record. No call to our servers, no word from us.</div>
+                        <div class="rc-val">Offline, no WorkSigned</div>
+                        <div class="rc-note">A journal, funder, or court verifies the seal themselves, with only the public key and the record. No call to WorkSigned&rsquo;s servers, no word from WorkSigned.</div>
                     </div>
                 </div>
-                <div class="doc-callout"><strong>Stated plainly.</strong> A seal is strong, independent evidence of <strong>when you had the work</strong> &mdash; the files, the edits, and the sequence, at a specific time. It does not claim the work was original, and it is powerful evidence, not a legal determination. Its strength is in the process: a complete, time-anchored record of how the work developed, which is hard to fabricate.</div>
+                <div class="doc-callout"><strong>Stated plainly.</strong> A seal is strong, independent evidence of <strong>when the researcher had the work</strong> &mdash; the files, the edits, and the sequence, at a specific time. It does not claim the work was original, and it is powerful evidence, not a legal determination. Its strength is in the process: a complete, time-anchored record of how the work developed, which is hard to fabricate.</div>
             </section>
 
             <section id="unforgeable">
@@ -127,7 +127,7 @@
 
             <section id="standards">
                 <h2>Built on open standards</h2>
-                <p>The record is not a proprietary format; it is assembled from published, open standards, so a verifier checks the work against the standard itself rather than trusting WorkSigned. An independent third party provides the time, so the clock is outside anyone&rsquo;s control in a dispute. The signing code and its append-only logs are auditable: anyone can confirm exactly what produced a given seal, and the private key never leaves the authority. And it is lightweight &mdash; because only fingerprints are stored, the authority keeps a few hundred bytes per seal, never your files.</p>
+                <p>The record is not a proprietary format; it is assembled from published, open standards, so a verifier checks the work against the standard itself rather than trusting WorkSigned. An independent third party provides the time, so the clock is outside anyone&rsquo;s control in a dispute. The signing code and its append-only logs are auditable: anyone can confirm exactly what produced a given seal, and the private key never leaves the authority. And it is lightweight &mdash; because only fingerprints are stored, the authority keeps a few hundred bytes per seal, never the researcher&rsquo;s files.</p>
             </section>
         </main>
     </div>

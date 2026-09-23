@@ -84,8 +84,8 @@
             <a href="#app-julia">Julia</a>
             <a href="#app-r">R</a>
 
-            <div class="doc-group">Your environment</div>
-            <a href="#req-client">What you need</a>
+            <div class="doc-group">Environment</div>
+            <a href="#req-client">Client requirements</a>
             <a href="#req-os">Desktop platforms</a>
             <a href="#req-browser">Web browser</a>
             <a href="#req-network">Network</a>
@@ -101,7 +101,7 @@
             <div class="doc-hero-eyebrow">Usage</div>
             <h1>How to use WorkSigned</h1>
             <p class="doc-lede">WorkSigned is a research platform and a signing authority that captures, signs, and seals everything you do so that the work &mdash; and who did it &mdash; is provable, while also providing enhanced privacy and protection from idea and data leakage. This page is the user's guide: how the platform is built, the modes it runs in, what every application on the platform can do, and what your own machine and browser need.</p>
-            <div class="doc-callout"><strong>Alpha stage.</strong> WorkSigned is in alpha: individual application features and their capabilities may change as we build toward a stable release. The core of the platform &mdash; the proof chain, the sealing and signing of your work, and the data &amp; security policy &mdash; does <strong>not</strong> change.</div>
+            <div class="doc-callout"><strong>Alpha stage.</strong> WorkSigned is in alpha: individual application features and their capabilities may change as we build toward a stable release. The core of the platform &mdash; the proof chain, the sealing and signing of a project's work, and the data &amp; security policy &mdash; does <strong>not</strong> change.</div>
 
             <!-- ========================================================= -->
             <section id="how">
@@ -124,20 +124,20 @@
                     <thead><tr><th>Dimension</th><th>Options</th></thead>
                     <tbody>
                         <tr><td><strong>Client</strong></td><td>Web (browser) or Desktop (macOS, Windows, Linux).</td></tr>
-                        <tr><td><strong>Files</strong></td><td>Your storage (S3, NFS, SFTP, and more), WorkSigned Private Cloud, or your local machine (desktop app).</td></tr>
+                        <tr><td><strong>Files</strong></td><td>Institutional storage (S3, NFS, SFTP, and more), WorkSigned Private Cloud, or the local machine (desktop app).</td></tr>
                     </tbody>
                 </table>
                 <p>Every configuration produces the same kind of WorkSigned Record and the same verification. The mode changes only <em>where the bytes live</em>; it never changes what is captured or how it is sealed.</p>
-                <div class="doc-callout"><strong>Local-first, with WorkSigned as the signer.</strong> The capture works on your own machine with no cloud involved. What the signing authority adds is the <strong>signature</strong>: your WorkSigned Record carries a signature that any third party can verify &mdash; not just a local one.</div>
+                <div class="doc-callout"><strong>Local-first, with WorkSigned as the signer.</strong> The capture works on the local machine with no cloud involved. What the signing authority adds is the <strong>signature</strong>: the WorkSigned Record carries a signature that any third party can verify &mdash; not just a local one.</div>
             </section>
 
 
             <!-- ========================================================= -->
             <section id="web">
                 <h2>Website usage </h2>
-                <p>WorkSigned can track and WorkSigned Record your activity on <em>any</em> website you work in &mdash; not just the built-in tools. This is how off-site research (papers, databases, dashboards, references you consult) lands on the same signed record as the work it informed.</p>
+                <p>WorkSigned can track and WorkSigned Record activity on <em>any</em> website used in research &mdash; not just the built-in tools. This is how off-site research (papers, databases, dashboards, referenced literature) lands on the same signed record as the work it informed.</p>
                 <ul>
-                    <li><strong>Desktop version.</strong> Supports website URL tracking and ledgering directly &mdash; the desktop client captures which pages you visit and when, and appends them to the WorkSigned Record. No extra setup.</li>
+                    <li><strong>Desktop version.</strong> Supports website URL tracking and ledgering directly &mdash; the desktop client captures which pages are visited and when, and appends them to the WorkSigned Record. No extra setup.</li>
                     <li><strong>Web version.</strong> Requires the WorkSigned open-source browser extension, which performs the same URL tracking and ledgering from within your browser.</li>
                     <li><strong>Both are open source.</strong> The desktop client and the browser extension are open source &mdash; you can inspect exactly what is captured and how it is sealed.</li>
                 </ul>
@@ -171,8 +171,8 @@
                 </ul>
 
                 <h3>The state is verified when a file or app is closed</h3>
-                <p>Verification is anchored at natural boundaries. When you <strong>close or save a file</strong>, or <strong>close an app session</strong>, WorkSigned seals that state: it computes the hash of the final content and writes a <code>sealed</code> event to the WorkSigned Record. A verifier later re-hashes the file and checks it against the sealed entry. If they match, the file is provably the one you produced at that moment; if not, the file changed afterward.</p>
-                <p>This gives you fine-grained and coarse-grained proof at the same time. Zoom out and the WorkSigned Record is the whole story &mdash; projects, milestones, spend, authorship. Zoom in on any single save and it is every keystroke, mouse move, and click that produced it, timestamped and hash-chained.</p>
+                <p>Verification is anchored at natural boundaries. When a file is <strong>closed or saved</strong>, or an <strong>app session is closed</strong>, WorkSigned seals that state: it computes the hash of the final content and writes a <code>sealed</code> event to the WorkSigned Record. A verifier later re-hashes the file and checks it against the sealed entry. If they match, the file is provably the one in existence at that moment; if not, the file changed afterward.</p>
+                <p>The result is fine-grained and coarse-grained proof at the same time: zoom out and the WorkSigned Record is the whole story &mdash; projects, milestones, spend, authorship. Zoom in on any single save and it is every keystroke, mouse move, and click that produced it, timestamped and hash-chained.</p>
 
                 <h3>Examples of what is on the chain</h3>
                 <ul>
@@ -190,7 +190,7 @@
             <!-- ========================================================= -->
             <section id="WorkSigned Record">
                 <h2>WorkSigned Record &amp; events </h2>
-                <p>Every project keeps <strong>one WorkSigned Record</strong>. It is append-only: entries are added, never edited or deleted. You cannot rewrite history because each entry's hash incorporates the previous entry's hash &mdash; change any entry and every hash after it breaks, which is immediately detectable.</p>
+                <p>Every project keeps <strong>one WorkSigned Record</strong>. It is append-only: entries are added, never edited or deleted. History cannot be rewritten because each entry's hash incorporates the previous entry's hash &mdash; change any entry and every hash after it breaks, which is immediately detectable.</p>
                 <h3>How events are inserted</h3>
                 <p>Insertion is a single, strict path. An event is produced by the client (a save, a keystroke, a milestone, a funding line), then:</p>
                 <ol>
@@ -241,7 +241,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- RUN -->
             <section id="app-run">
                 <h2>Live runner</h2>
-                <p>Code you write in the editor runs inside the platform &mdash; not just saved, but executed. This is what "runs live" means: the environment is part of the toolchain, so the inputs, the code, and the outputs are all captured together. Running a script or a cell is itself a logged event.</p>
+                <p>Code written in the editor runs inside the platform &mdash; not just saved, but executed. This is what "runs live" means: the environment is part of the toolchain, so the inputs, the code, and the outputs are all captured together. Running a script or a cell is itself a logged event.</p>
                 <ul>
                     <li>Execute code directly in the workspace and capture stdout/stderr to the record.</li>
                     <li>Outputs (plots, tables, result files) are sealed like any other artifact.</li>
@@ -252,7 +252,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- LATEX -->
             <section id="app-latex">
                 <h2>LaTeX</h2>
-                <p>Write LaTeX and compile it to a rendered paper in the same tab &mdash; source on one side, typeset output on the other. Both the <code>.tex</code> source and the compiled PDF are sealed, so the paper you submit is provably the one you authored.</p>
+                <p>Write LaTeX and compile it to a rendered paper in the same tab &mdash; source on one side, typeset output on the other. Both the <code>.tex</code> source and the compiled PDF are sealed, so a submitted paper is provably the one authored on the platform.</p>
                 <ul>
                     <li>Side-by-side source editor and live-compiled preview.</li>
                     <li>Common document classes and equation support.</li>
@@ -310,11 +310,11 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- SLIDES -->
             <section id="app-slides">
                 <h2>Slides </h2>
-                <p>Assemble presentations and figures, ready to defend your work to reviewers. The feature set:</p>
+                <p>Assemble presentations and figures, ready for review. The feature set:</p>
                 <ul>
                     <li><strong>Slides &amp; masters.</strong> Multiple slides; slide masters and layouts for consistent design.</li>
                     <li><strong>Placeholders &amp; text.</strong> Title/body placeholders; rich text and bullet formatting.</li>
-                    <li><strong>Shapes &amp; images.</strong> Draw shapes, insert images and charts from your sheets.</li>
+                    <li><strong>Shapes &amp; images.</strong> Draw shapes, insert images and charts from the project's sheets.</li>
                     <li><strong>Transitions &amp; animations.</strong> Slide transitions and object animations for delivery.</li>
                     <li><strong>Notes &amp; handouts.</strong> Speaker notes and handout layouts.</li>
                     <li><strong>Presentation mode.</strong> Full-screen delivery with a presenter view.</li>
@@ -330,15 +330,15 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
                 <ul>
                     <li>Streaming conversation with the configured LLM (dedicated, public, or private).</li>
                     <li>Full transcript captured to the WorkSigned Record &mdash; prompts and completions alike.</li>
-                    <li>Works across the project: the assistant can read the working set you give it.</li>
-                    <li>Model is your choice &mdash; including a fully local, on-hardware model.</li>
+                    <li>Works across the project: the assistant can read the working set provided to it.</li>
+                    <li>Model selection is configurable &mdash; including a fully local, on-hardware model.</li>
                 </ul>
             </section>
 
             <!-- FUNDING -->
             <section id="app-funding">
                 <h2>Funding ledger</h2>
-                <p>Log spend against grants as you go. Every dollar lands on the same signed timeline as the work it produced, so what was done, by whom, and at what cost is one artifact.</p>
+                <p>Log spend against grants as it occurs. Every dollar lands on the same signed timeline as the work it produced, so what was done, by whom, and at what cost is one artifact.</p>
                 <ul>
                     <li>Record line-item spend and tie each to a grant and a purpose.</li>
                     <li>See total committed vs. spent per grant.</li>
@@ -365,7 +365,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- JUPYTER -->
             <section id="app-jupyter">
                 <h2>Notebooks </h2>
-                <p>Run Jupyter notebooks directly in the platform. Cells, code execution, plots, and file access all happen in the workspace &mdash; and every cell edit and execution is captured on the WorkSigned Record, so the notebook you share is provably the one you ran.</p>
+                <p>Run Jupyter notebooks directly in the platform. Cells, code execution, plots, and file access all happen in the workspace &mdash; and every cell edit and execution is captured on the WorkSigned Record, so a shared notebook is provably the one that was run.</p>
                 <ul>
                     <li>Markdown + code cells with live in-browser execution.</li>
                     <li>Python notebooks today; <strong>Julia and R kernels are coming soon.</strong></li>
@@ -377,7 +377,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- PROTECTED SEARCH -->
             <section id="app-stealth">
                 <h2>Protected Search</h2>
-                <p>The privacy front end of the platform. A single query is <strong>sharded into harmless parts</strong> and the parts are dispatched across separate search engines, AI providers, and IP addresses, then synthesized privately. No single request reveals the shape of your project, so your intent never leaks.</p>
+                <p>The privacy front end of the platform. A single query is <strong>sharded into harmless parts</strong> and the parts are dispatched across separate search engines, AI providers, and IP addresses, then synthesized privately. No single request reveals the shape of the project, so the research intent behind it never leaks.</p>
                 <ul>
                     <li>Query sharding &mdash; the full question is never sent as one pattern.</li>
                     <li>Dispersal across multiple engines, providers, and exit IPs.</li>
@@ -395,7 +395,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- PINTA -->
             <section id="app-pinta">
                 <h2>Image editor</h2>
-                <p>Work on figures, screenshots, and data images in a full raster editor &mdash; the same environment a lab uses to prepare a panel for a manuscript, sealed to the WorkSigned Record when you save.</p>
+                <p>Work on figures, screenshots, and data images in a full raster editor &mdash; the same environment a lab uses to prepare a panel for a manuscript, sealed to the WorkSigned Record on save.</p>
                 <ul>
                     <li>Drawing and editing tools: pencil, brush, eraser, and more.</li>
                     <li>Layers &mdash; build complex figures in separable, editable layers.</li>
@@ -408,7 +408,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- GIT -->
             <section id="app-git">
                 <h2>Git tree</h2>
-                <p>See the version history of a project's files as a tree. WorkSigned tracks the repository so you can move through commits, inspect what changed between them, and tie each state to the WorkSigned Record &mdash; provenance for every revision, not just the latest file.</p>
+                <p>See the version history of a project's files as a tree. WorkSigned tracks the repository, so commits can be browsed, changes between them inspected, and each state tied to the WorkSigned Record &mdash; provenance for every revision, not just the latest file.</p>
                 <ul>
                     <li>Branch and commit tree for a project's files.</li>
                     <li>Diffs between revisions to see exactly what changed.</li>
@@ -420,9 +420,9 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- EMAIL -->
             <section id="app-email">
                 <h2>Email</h2>
-                <p>Compose and send mail from inside the platform under your WorkSigned identity. Because it lives on the same record as everything else, an email you send about the work is part of the proof &mdash; a handoff, decision, or claim of collaboration is verifiable, not just asserted.</p>
+                <p>Compose and send mail from inside the platform under a WorkSigned identity. Because it lives on the same record as everything else, an email about the work is part of the proof &mdash; a handoff, decision, or claim of collaboration is verifiable, not just asserted.</p>
                 <ul>
-                    <li>Compose and send as your WorkSigned identity.</li>
+                    <li>Compose and send as a WorkSigned identity.</li>
                     <li>Attachments and standard message features.</li>
                     <li>Outbound messages captured on the WorkSigned Record, timestamped and attributable.</li>
                     <li>Pairs with Team chat and AI Chat as the platform's on-record communication.</li>
@@ -432,9 +432,9 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- TEAM CHAT -->
             <section id="app-teamchat">
                 <h2>Team chat</h2>
-                <p>Converse with your team about the work &mdash; in the same workspace where the work happens. Human conversations, like everything else, are on the record, so claims of who said what and when are provable.</p>
+                <p>Converse with the project team about the work &mdash; in the same workspace where the work happens. Human conversations, like everything else, are on the record, so claims of who said what and when are provable.</p>
                 <ul>
-                    <li>Project-scoped conversations with your team.</li>
+                    <li>Project-scoped conversations with the project team.</li>
                     <li>Threads and message history within the workspace.</li>
                     <li>Messages captured to the WorkSigned Record &mdash; attributable to the individual.</li>
                     <li>Distinguishes human chat from AI Chat: both on-record, clearly separated.</li>
@@ -444,7 +444,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- CALENDAR -->
             <section id="app-calendar">
                 <h2>Calendar</h2>
-                <p>Plan the work around the tools that produce it. Experiments, milestones, submission deadlines, and meetings live next to the research &mdash; and events you set are on the same record as the work they point to.</p>
+                <p>Plan the work around the tools that produce it. Experiments, milestones, submission deadlines, and meetings live next to the research &mdash; and created events are on the same record as the work they point to.</p>
                 <ul>
                     <li>Events and schedules for experiments, milestones, and deadlines.</li>
                     <li>Meetings and lab coordination alongside the work they reference.</li>
@@ -458,7 +458,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             <!-- JULIA -->
             <section id="app-julia">
                 <h2>Julia </h2>
-                <p>A Julia kernel is on the way for Jupyter and the live runner, so high-performance scientific computing joins the sealed record. Same capture, same proof &mdash; your Julia cells, runs, and outputs will all be attributable and verifiable.</p>
+                <p>A Julia kernel is on the way for Jupyter and the live runner, so high-performance scientific computing joins the sealed record. Same capture, same proof &mdash; Julia cells, runs, and outputs are all attributable and verifiable.</p>
             </section>
 
             <!-- R -->
@@ -468,11 +468,11 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
             </section>
 
             <!-- ========================================================= -->
-            <div class="doc-group" style="margin-top:8px;">Your environment</div>
+            <div class="doc-group" style="margin-top:8px;">Environment</div>
 
             <section id="req-client">
-                <h2>What you need </h2>
-                <p>WorkSigned runs as a client that captures, signs, and seals your research WorkSigned Record. The client itself is light &mdash; the heavy work (large LLM inference, large file storage) is offloaded to the backend you choose. The figures below cover a comfortable research workstation; higher values add headroom for local LLMs and large data sets.</p>
+                <h2>Client requirements </h2>
+                <p>WorkSigned runs as a client that captures, signs, and seals the research WorkSigned Record. The client itself is light &mdash; the heavy work (large LLM inference, large file storage) is offloaded to the backend of the chosen configuration. The figures below cover a comfortable research workstation; higher values add headroom for local LLMs and large data sets.</p>
                 <table>
                     <thead><tr><th>Component</th><th>Minimum</th><th>Recommended</th><th>Notes</th></tr></thead>
                     <tbody>
@@ -534,7 +534,7 @@ prev  0x4410...6b77    <span class="l-id">hash 0xde02...91cc</span>   <span clas
                     <tbody>
                         <tr><td><strong>1. WorkSigned Private Cloud</strong></td><td>None</td><td>Files stored on WorkSigned infrastructure. Fully accessible and auditable by the user. Default cloud mode.</td></tr>
                         <tr><td><strong>2. Custom Private Cloud</strong></td><td>Backend proxy required</td><td>Connect WorkSigned to your own file server (S3-compatible, NFS, SFTP, and others &mdash; see Deployment). A backend proxy must be configured to bridge the platform to your storage &mdash; your server won't send the CORS headers the browser needs, so requests are routed through a server-side proxy.</td></tr>
-                        <tr><td><strong>3. Local machine</strong></td><td>Desktop app install required</td><td>Files stay on your workstation, captured by the desktop client. Maximum privacy; requires the desktop app.</td></tr>
+                        <tr><td><strong>3. Local machine</strong></td><td>Desktop app install required</td><td>Files stay on the workstation, captured by the desktop client. Maximum privacy; requires the desktop app.</td></tr>
                         <tr><td><strong>4. No files (browser only)</strong></td><td>None</td><td>Light usage entirely in the browser, including JupyterLite for notebooks. No external storage required.</td></tr>
                     </tbody>
                 </table>

@@ -64,32 +64,49 @@ if (ledgerEl) {
     var panel = document.querySelector('.mg-panel');
     if (!svg || !dot || !panel) return;
 
+    var glow = 'rgba(94,234,212,.95)';
+    var dim = 'rgba(94,234,212,.5)';
+
     function draw() {
         var r = lens.getBoundingClientRect();
         var H = Math.max(r.height, 10);
         var W = Math.max(r.width, 10);
         svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
 
+        // Shift the panel so its center sits directly under node 5 (one pass),
+        // then measure. This makes the beam a straight vertical at every width.
+        if (window.__mgShifted !== true) {
+            var d0 = dot.getBoundingClientRect();
+            var p0 = panel.getBoundingClientRect();
+            var dotC0 = d0.left + d0.width / 2;
+            var panelC0 = p0.left + p0.width / 2;
+            var shift = dotC0 - panelC0;
+            panel.style.setProperty('--mg-shift', shift + 'px');
+            window.__mgShifted = true;
+        }
+
+        // Measure the dot at its TRUE resting position: temporarily zero the
+        // ledger's fade/rise transform so a mid-animation draw can't capture
+        // node 5 at the wrong x (the root cause of the detached arrow).
+        var lt = null;
+        if (ledgerEl) { lt = ledgerEl.style.transform; ledgerEl.style.transform = 'none'; }
         var d = dot.getBoundingClientRect();
         var p = panel.getBoundingClientRect();
-        // node 5 top-center (where the beam originates)
+        if (ledgerEl && lt !== null) ledgerEl.style.transform = lt;
+
+        // node 5 top-center (where the beam originates) — the panel is now
+        // centered under it, so the beam is a straight vertical.
         var cx = d.left + d.width / 2 - r.left;
-        var cy = 0; // dot sits just above the lens band
-        // panel top edge spans (relative to the lens band)
+        var cy = 0;
         var pl = Math.max(4, p.left - r.left);
         var pr = Math.min(W - 4, p.right - r.left);
-        var pad = 12;                       // bracket insets from panel corners
+        var pad = 12;
         var lx = pl + pad, rx = pr - pad;
-        var by = H - 2;                     // bracket top (bottom of the band)
+        var by = H - 2;
 
-        var glow = 'rgba(94,234,212,.95)';
-        var dim = 'rgba(94,234,212,.5)';
         svg.innerHTML =
-            // single beam: node -> panel top-center
             '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + by + '" stroke="' + glow + '" stroke-width="2.5" stroke-linecap="round"/>' +
-            // bright bracket along the panel top edge
             '<path d="M ' + lx + ' ' + (by + 2) + ' L ' + lx + ' ' + by + ' L ' + rx + ' ' + by + ' L ' + rx + ' ' + (by + 2) + '" fill="none" stroke="' + glow + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-            // glow origin dot
             '<circle cx="' + cx + '" cy="' + cy + '" r="3.5" fill="' + glow + '"/>' +
             '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="none" stroke="' + dim + '" stroke-width="1.5"/>';
     }

@@ -110,7 +110,8 @@
         }
         /* the magnified panel */
         .mg-panel {
-            margin: 0 auto; max-width: 760px;
+            margin: 0; max-width: 760px;
+            transform: translateX(var(--mg-shift, 0));
             background: linear-gradient(180deg, rgba(94,234,212,.06), rgba(94,234,212,.02));
             border: 1px solid rgba(94,234,212,.3); border-radius: 16px;
             padding: 20px 22px 22px; box-shadow: 0 24px 60px -30px rgba(94,234,212,.5);
@@ -123,7 +124,7 @@
         .mg-sub code, .mg-row code { font-family: ui-monospace, Menlo, monospace; color: #cfe9ff; background: rgba(255,255,255,.05); padding: 0 5px; border-radius: 4px; }
         .mg-rows { border-top: 1px solid rgba(94,234,212,.18); }
         .mg-row {
-            display: grid; grid-template-columns: 74px 118px 1fr auto;
+            display: grid; grid-template-columns: 104px 118px 1fr auto;
             gap: 14px; align-items: center; padding: 8px 0;
             border-bottom: 1px solid rgba(94,234,212,.1);
             font-size: var(--fs-small); font-variant-numeric: tabular-nums;
@@ -421,7 +422,7 @@
                         <div class="te-kind">Project created</div>
                         <div class="te-desc">Project <em>zinc-kinase</em> initialized &mdash; 3 members, grant <strong>NIH-R35</strong> attached</div>
                         <span class="te-who">Dr. Chen</span>
-                        <span class="te-hash">0x3f9a…c21b</span>
+                        <span class="te-hash">3f9a…c21b</span>
                     </div>
                     <div class="te-item fund">
                         <div class="te-dot">2</div>
@@ -429,102 +430,90 @@
                         <div class="te-kind">Funding spent</div>
                         <div class="te-desc">$2,400 &mdash; <em>reagents &amp; consumables</em></div>
                         <span class="te-who">grant NIH-R35</span>
-                        <span class="te-hash">0x7c1d…88e0</span>
+                        <span class="te-hash">7c1d…88e0</span>
                     </div>
                     <div class="te-item work">
                         <div class="te-dot">3</div>
-                        <div class="te-time">Mar 5 &middot; 15:20</div>
-                        <div class="te-kind">File sealed</div>
-                        <div class="te-desc"><em>results_v1.csv</em> saved &amp; hashed</div>
+                        <div class="te-time">Mar 5</div>
+                        <div class="te-kind">Daily snapshot sealed</div>
+                        <div class="te-desc">Day&rsquo;s work folded into one hash &mdash; <em>results_v1.csv</em> &amp; 3 files, 412 events</div>
                         <span class="te-who">Dr. Okafor</span>
-                        <span class="te-hash">0xb2e4…44aa</span>
+                        <span class="te-hash">b2e4…44aa</span>
                     </div>
                     <div class="te-item mile">
                         <div class="te-dot">4</div>
-                        <div class="te-time">Mar 6 &middot; 08:05</div>
-                        <div class="te-kind">Milestone commit</div>
-                        <div class="te-desc">&ldquo;Baseline assay validated&rdquo; &mdash; 14 files signed</div>
+                        <div class="te-time">Mar 6</div>
+                        <div class="te-kind">Daily snapshot sealed</div>
+                        <div class="te-desc">&ldquo;Baseline assay validated&rdquo; &mdash; day&rsquo;s 14 files, 1,204 events in one hash</div>
                         <span class="te-who">Dr. Chen</span>
-                        <span class="te-hash">0x91f0…7d3c</span>
+                        <span class="te-hash">91f0…7d3c</span>
                     </div>
                     <div class="te-item fund zoomed">
                         <div class="te-dot"><span class="te-zoom-ring"></span>5</div>
-                        <div class="te-time">Mar 7 &middot; 16:31</div>
-                        <div class="te-kind">Funding spent</div>
-                        <div class="te-desc">$6,150 &mdash; <em>sequencing run</em></div>
-                        <span class="te-who">grant NIH-R35</span>
-                        <span class="te-hash">0x5a88…b1f2</span>
+                        <div class="te-time">Mar 7</div>
+                        <div class="te-kind">Daily snapshot sealed</div>
+                        <div class="te-desc">$6,150 sequencing run &mdash; day&rsquo;s work &amp; spend folded into one hash</div>
+                        <span class="te-who">grant NIH-R35 &middot; Dr. Okafor</span>
+                        <span class="te-hash">5a88…b1f2</span>
                     </div>
                     <div class="te-item mile">
                         <div class="te-dot">6</div>
-                        <div class="te-time">Mar 9 &middot; 10:48</div>
-                        <div class="te-kind">Milestone commit</div>
-                        <div class="te-desc">&ldquo;Draft complete&rdquo; &mdash; 42 files, 3 authors signed</div>
+                        <div class="te-time">Mar 9</div>
+                        <div class="te-kind">Daily snapshot sealed</div>
+                        <div class="te-desc">&ldquo;Draft complete&rdquo; &mdash; day&rsquo;s 42 files, 2,870 events in one hash</div>
                         <span class="te-who">Dr. Okafor, Dr. Chen</span>
-                        <span class="te-hash">0xde02…91cc</span>
+                        <span class="te-hash">de02…91cc</span>
                     </div>
                 </div>
 
-                <!-- ===== ZOOM-IN: fine-grained micro-keystroke WorkSigned Record ===== -->
+                <!-- ===== ZOOM-IN: the day's captured activity, folded into one snapshot ===== -->
                 <div class="te-lens">
                     <svg class="te-lens-svg" aria-hidden="true" preserveAspectRatio="none"></svg>
-                    <span class="te-lens-tag">&darr; one node, magnified &times;1000</span>
+                    <span class="te-lens-tag">&darr; one day, magnified</span>
                 </div>
                 <div class="mg-panel">
                     <div class="mg-head">
-                        <span class="mg-zoom">&times;1000</span>
-                        <span class="mg-title">Node 5 &mdash; <em>results_v1.csv</em>, 16:31:04.882 &rarr; 16:31:09.114</span>
+                        <span class="mg-zoom">Mar 7</span>
+                        <span class="mg-title">Node 5 &mdash; one day of captured activity, <em>Dr. Okafor</em></span>
                     </div>
-                    <p class="mg-sub">The same one save, at full resolution. Every keystroke, mouse move, and click is captured &mdash; not just the file that ended up on disk.</p>
+                    <p class="mg-sub">The same one day, in detail. The platform captures the work as it happens &mdash; edits, saves, terminal commands, and spend &mdash; and folds the whole day into a single hash.</p>
                     <div class="mg-rows">
                         <div class="mg-row">
-                            <span class="mg-t">16:31:04.882</span>
-                            <span class="mg-kind k-type">type</span>
-                            <span class="mg-detail"><code>"0.042</code> &rarr; cell <em>B7</em></span>
-                            <span class="mg-hash">0x7a11…c02d</span>
+                            <span class="mg-t">09:14</span>
+                            <span class="mg-kind k-type">edit</span>
+                            <span class="mg-detail"><em>results_v1.csv</em> &mdash; cell <em>B7</em> updated to <code>0.042</code></span>
+                            <span class="mg-hash">7a11&hellip;c02d</span>
                         </div>
                         <div class="mg-row">
-                            <span class="mg-t">16:31:05.114</span>
-                            <span class="mg-kind k-move">move</span>
-                            <span class="mg-detail">cursor <em>x:612&thinsp;y:148</em> &rarr; <em>x:614&thinsp;y:152</em></span>
-                            <span class="mg-hash">0x2f38…91ab</span>
+                            <span class="mg-t">11:02</span>
+                            <span class="mg-kind k-type">cmd</span>
+                            <span class="mg-detail">terminal &mdash; <code>python analysis.py</code></span>
+                            <span class="mg-hash">2f38&hellip;91ab</span>
                         </div>
                         <div class="mg-row">
-                            <span class="mg-t">16:31:05.630</span>
-                            <span class="mg-kind k-type">type</span>
-                            <span class="mg-detail"><code>"±0.003"</code> &rarr; cell <em>B7</em></span>
-                            <span class="mg-hash">0x8c40…33e1</span>
+                            <span class="mg-t">13:48</span>
+                            <span class="mg-kind k-type">save</span>
+                            <span class="mg-detail"><em>results_v1.csv</em> saved &middot; cell <em>C7</em> set to <code>p&lt;0.01</code></span>
+                            <span class="mg-hash">8c40&hellip;33e1</span>
                         </div>
                         <div class="mg-row">
-                            <span class="mg-t">16:31:06.020</span>
-                            <span class="mg-kind k-del">backspace &times;2</span>
-                            <span class="mg-detail">remove WorkSigned Recording comma &amp; space</span>
-                            <span class="mg-hash">0x1d07…b4f2</span>
+                            <span class="mg-t">16:31</span>
+                            <span class="mg-kind k-move">spend</span>
+                            <span class="mg-detail">$6,150 &mdash; sequencing run, grant NIH-R35</span>
+                            <span class="mg-hash">1d07&hellip;b4f2</span>
                         </div>
                         <div class="mg-row">
-                            <span class="mg-t">16:31:06.470</span>
-                            <span class="mg-kind k-type">type</span>
-                            <span class="mg-detail"><code>"p&lt;0.01"</code> &rarr; cell <em>C7</em></span>
-                            <span class="mg-hash">0x99ee…08cd</span>
-                        </div>
-                        <div class="mg-row">
-                            <span class="mg-t">16:31:08.990</span>
-                            <span class="mg-kind k-move">click</span>
-                            <span class="mg-detail"><em>Save</em> button &middot; (x:1240, y:64)</span>
-                            <span class="mg-hash">0x4410…6b77</span>
-                        </div>
-                        <div class="mg-row">
-                            <span class="mg-t">16:31:09.114</span>
-                            <span class="mg-kind k-save">sealed</span>
-                            <span class="mg-detail"><em>results_v1.csv</em> &middot; sha256 <code>b2e4…44aa</code></span>
-                            <span class="mg-hash">0xde02…91cc</span>
+                            <span class="mg-t">17:55</span>
+                            <span class="mg-kind k-save">end of day</span>
+                            <span class="mg-detail">412 events + 6 files &rarr; folded into <strong>one</strong> snapshot</span>
+                            <span class="mg-hash">5a88&hellip;b1f2</span>
                         </div>
                     </div>
                     <p class="mg-foot">
-                        This is the <strong>actual proof</strong> of the work: not &ldquo;a file exists,&rdquo; but
-                        <strong>every single keystroke and mouse movement that produced it</strong>, timestamped
-                        to the millisecond and hash-chained. The <em>process</em> cannot be faked the way the
-                        <em>product</em> can &mdash; and a back-dated file would leave no WorkSigned Record of how it was typed.
+                        The events are recorded in the order they happen and rolled up into
+                        <strong>one hash per day</strong> &mdash; a single SHA-256 of the day&rsquo;s files and activity,
+                        signed with the date and the researcher&rsquo;s identity and linked to the previous day.
+                        A back-dated file would leave no record of the activity that produced it.
                     </p>
                 </div>
 
@@ -615,7 +604,7 @@
             <p class="section-lead">
                 Proof that holds up no matter what happens to the
                 company. WorkSigned operates as an <strong>Equitable Corporation</strong>: the
-                WorkSigned Record is a hash chain that verifies against the public chain (or the
+                WorkSigned Record is a hash chain, signed by WorkSigned and anchored by an independent daily time-stamp (or the
                 institution&rsquo;s
                 own key), so a sale, a change of ownership, or even our failure does not
                 invalidate, re-price, or re-purpose what has already been signed. On top of that,
@@ -627,7 +616,7 @@
                 <div class="trust-card reveal">
                     <h3>The record outlives the company</h3>
                     <p class="tc-problem">A signed record is only durable if it can be checked after the fact &mdash; long after the company that made it has changed hands or ceased to exist.</p>
-                    <p class="tc-fix"><strong>The fix:</strong> The WorkSigned Record is a hash chain signed against a public chain (and, in the institution-hosted model, against the institution&rsquo;s own key). It verifies independently of the issuer &mdash; a capture, a sale, or our failure cannot invalidate or re-price it. This is the layer no acquirer can touch.</p>
+                    <p class="tc-fix"><strong>The fix:</strong> The WorkSigned Record is a hash chain signed by WorkSigned and anchored by an independent daily time-stamp (and, in the institution-hosted model, by the institution&rsquo;s own key). It verifies independently of the issuer &mdash; a capture, a sale, or our failure cannot invalidate or re-price it. This is the layer no acquirer can touch.</p>
                 </div>
                 <div class="trust-card reveal">
                     <h3>It can&rsquo;t be quietly bought away</h3>

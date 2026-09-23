@@ -56,9 +56,12 @@
             <span class="doc-side-brand">The Proof</span>
             <div class="doc-group">Overview</div>
             <a href="#how" class="active">How it works</a>
+            <a href="#layers">The layers</a>
             <a href="#proves">What it proves</a>
-            <a href="#unforgeable">Why it can&rsquo;t be forged</a>
-            <a href="#standards">Built on open standards</a>
+            <a href="#ai">What about AI?</a>
+            <a href="#dispute">In a dispute</a>
+            <a href="#log">The public log</a>
+            <a href="#standards">Standards</a>
             <div class="doc-group">Related</div>
             <a href="usage.html">Usage (for users)</a>
             <a href="deploy.html">Deployment &amp; architecture</a>
@@ -66,32 +69,64 @@
         </aside>
 
         <main class="doc-content">
-            <div class="doc-hero-eyebrow">Trust &amp; Verification</div>
+                        <div class="doc-hero-eyebrow">Trust &amp; Verification</div>
             <h1>How the proof works</h1>
-            <p class="doc-lede">A WorkSigned Record is a record of a researcher&rsquo;s work that anyone can <strong>check for themselves</strong> &mdash; without relying on WorkSigned&rsquo;s servers or its word.</p>
-            <div class="doc-callout"><strong>The one idea.</strong> WorkSigned does not read or upload the researcher&rsquo;s files. It signs a <strong>32-byte fingerprint</strong> of the WorkSigned Record. Because the fingerprint changes completely when even one byte changes, &ldquo;the authority signed fingerprint&nbsp;H&rdquo; is the same as &ldquo;the authority signed this exact record.&rdquo;</div>
+            <p class="doc-lede">WorkSigned signs a daily record of a researcher&rsquo;s work and pins it to a public, hash-chained log. Any independent verifier can audit the record directly, without relying on WorkSigned.</p>
+            <div class="doc-callout"><strong>The idea:</strong> Each day, the work is folded into a single hash. WorkSigned signs that hash with the day&rsquo;s date and the researcher&rsquo;s identity, links it to the previous day&rsquo;s hash, and writes it to a <strong>public, hash-chained log</strong>. One independent time-stamp issuer pins the whole log to a clock no party controls, once per day. The proof is the <strong>signed record + the actual work files</strong> &mdash; never the hash alone.</div>
 
-            <section id="how">
+            <section id="how" style="margin-top: 40px;">
                 <h2>How it works</h2>
-                <p>The whole process in five steps. The only technical word used is <strong>hash</strong> &mdash; a fixed-length fingerprint of the work that changes completely when even one byte changes.</p>
 
                 <div class="doc-reqgrid">
-                    <div class="doc-reqcard"><div class="rc-label">1</div><div class="rc-val">Researchers work</div><div class="rc-note">Researchers edit and save files in their project, the normal way.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">2</div><div class="rc-val">The work is recorded</div><div class="rc-note">The platform logs the project&rsquo;s activity &mdash; edits, saves, terminal commands, chat messages &mdash; into the researcher&rsquo;s WorkSigned Record. It stays on the researcher&rsquo;s machine.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">3</div><div class="rc-val">One hash of everything</div><div class="rc-note">On each seal, the fingerprints of all files are folded into a single hash. That hash is the only thing that leaves the researcher&rsquo;s servers &mdash; no files, no names, no logs.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">4</div><div class="rc-val">Independently time-stamped and signed</div><div class="rc-note">An independent authority signs the hash together with the time, using a clock outside anyone&rsquo;s control. The time and the hash cannot be changed without breaking the signature.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">5</div><div class="rc-val">The seal is kept</div><div class="rc-note">The researcher (or the institution) stores the hash, the time, the signature, and the authority&rsquo;s public key. It does not live on WorkSigned&rsquo;s servers.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">1</div><div class="rc-val">The researcher works</div><div class="rc-note">The researcher edits, saves, and runs work in the project the normal way. The platform records the day&rsquo;s activity.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">2</div><div class="rc-val">One hash of the day</div><div class="rc-note">The day&rsquo;s files, file events, and user events are combined into a single snapshot. That snapshot gets one hash.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">3</div><div class="rc-val">WorkSigned signs it</div><div class="rc-note">WorkSigned signs the hash together with the day&rsquo;s date, the researcher&rsquo;s identity, and a link to the previous day&rsquo;s hash. This is the signed record.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">4</div><div class="rc-val">It is written to the public log</div><div class="rc-note">The signed record is appended to a public, hash-chained log that any party can read and verify.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">5</div><div class="rc-val">One time-stamp per day</div><div class="rc-note">Once a day, an independent time-stamp issuer stamps the log&rsquo;s head. That single stamp pins every record that day to a clock outside every party&rsquo;s control.</div></div>
                 </div>
 
-                <div class="doc-ledger"><span class="l-h"># The project&rsquo;s activity, as the platform records it</span>
-<span class="l-id">Wed 09:14:02</span>  methods.tex    key      <span class="l-h">typed \frac{a}{b}</span>
-<span class="l-id">Wed 09:14:41</span>  methods.tex    save     <span class="l-h">file saved</span>
-<span class="l-id">Wed 11:02:33</span>  terminal       cmd      <span class="l-h">python analysis.py</span>
-<span class="l-id">Wed 15:40:55</span>  chat           msg      <span class="l-h">&ldquo;baseline confirmed&rdquo;</span>
-<span class="l-id">Thu 08:22:19</span>  results.csv    save     <span class="l-h">file saved</span>
-<span class="l-h">&rarr; every event, in order, is the WorkSigned Record &mdash; not a single snapshot</span></div>
+                <div class="doc-ledger"><span class="l-h"># Two consecutive days in the public, hash-chained log</span>
+<span class="l-id">2026-09-21</span>  researcher / project   <span class="l-h">snap=77b0a2…e04f  size=3.9MB</span>  <span class="l-id">&larr; chain: 0000…0000 (genesis)</span>  <span class="l-ok">&bull; signed</span>
+<span class="l-id">2026-09-22</span>  researcher / project   <span class="l-h">snap=3fa9c1…c21b  size=4.2MB</span>  <span class="l-id">&larr; chain: 77b0a2…e04f (previous day)</span>  <span class="l-ok">&bull; signed</span>
+<span class="l-h">&rarr; each day links to the one before it; drop or add a day and the chain breaks</span></div>
+            </section>
 
-                <p>At sealing time, exactly one value &mdash; the single hash above &mdash; is sent to the signing authority. Nothing else crosses the boundary: no file content, no file names, no keystrokes, no chat, no record. The hash is a fixed-length number with no way to read back from it.</p>
+            <section id="layers">
+                <h2>The layers</h2>
+                <p>The proof is built in layers, each one adding a specific guarantee. Understanding which layer does the work is the whole point.</p>
+
+                <table>
+                    <thead>
+                        <tr><th>Layer</th><th>What it is</th><th>What it proves</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Original data</strong></td>
+                            <td>The day&rsquo;s files, file events, user events, and optional biometrics &mdash; the actual work.</td>
+                            <td>This is the work itself. It remains with the researcher and the institution.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Snapshot archive</strong></td>
+                            <td>A packaged copy of the original data.</td>
+                            <td>Required with the signed record. Without it, a verifier holds a hash and nothing behind it.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Snapshot hash + size</strong></td>
+                            <td>One hash of the archive, and its size.</td>
+                            <td>On its own: <strong>nothing</strong>. Both values can be changed at will. The signature below is what makes it meaningful.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Signed record</strong></td>
+                            <td>The snapshot hash + size, the day&rsquo;s date, the researcher&rsquo;s identity, and a link to the prior record &mdash; signed with WorkSigned&rsquo;s private key.</td>
+                            <td><strong>The researcher held this exact hash on that date, in this order.</strong> The archive re-hashes to it; change one byte and it no longer verifies.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Signed record + archive</strong></td>
+                            <td>The signed record together with the actual work files.</td>
+                            <td><strong>The researcher held this work on that date, and the archive is the work the record points to.</strong> The complete, checkable proof.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </section>
 
             <section id="proves">
@@ -99,35 +134,49 @@
                 <div class="doc-reqgrid">
                     <div class="doc-reqcard">
                         <div class="rc-label">The work existed</div>
-                        <div class="rc-val">At time T</div>
-                        <div class="rc-note">At time T, the researcher had this exact body of work &mdash; the files, the edits, the sequence &mdash; and it has not changed since. Change one byte and the seal no longer holds.</div>
+                        <div class="rc-val">On that date, by that researcher</div>
+                        <div class="rc-note">On date T, the researcher held this exact hash &mdash; bound to the researcher&rsquo;s identity &mdash; and the work re-hashes to it. Change one byte and the record no longer verifies.</div>
                     </div>
                     <div class="doc-reqcard">
-                        <div class="rc-label">The files were never seen</div>
-                        <div class="rc-val">Only the hash</div>
-                        <div class="rc-note">The authority signed a fingerprint, not the files. The content never left the researcher&rsquo;s servers, and WorkSigned does not store it.</div>
+                        <div class="rc-label">The sequence held</div>
+                        <div class="rc-val">Nothing dropped or added</div>
+                        <div class="rc-note">Each day&rsquo;s record links to the previous one. A verifier can walk the whole history and confirm nothing was deleted or inserted. A timestamp alone cannot do this &mdash; the chain can.</div>
                     </div>
                     <div class="doc-reqcard">
-                        <div class="rc-label">Anyone can check it</div>
-                        <div class="rc-val">Offline, no WorkSigned</div>
-                        <div class="rc-note">A journal, funder, or court verifies the seal themselves, with only the public key and the record. No call to WorkSigned&rsquo;s servers, no word from WorkSigned.</div>
+                        <div class="rc-label">Any party can check it</div>
+                        <div class="rc-val">Trust is verifiable</div>
+                        <div class="rc-note">The public can trust the record because WorkSigned signs it &mdash; and WorkSigned&rsquo;s own signing log is hashed, chained, and signed, in turn by an independent time-stamp issuer.</div>
                     </div>
                 </div>
-                <div class="doc-callout"><strong>Stated plainly.</strong> A seal is strong, independent evidence of <strong>when the researcher had the work</strong> &mdash; the files, the edits, and the sequence, at a specific time. It does not claim the work was original, and it is powerful evidence, not a legal determination. Its strength is in the process: a complete, time-anchored record of how the work developed, which is hard to fabricate.</div>
             </section>
 
-            <section id="unforgeable">
-                <h2>Why it can&rsquo;t be forged</h2>
-                <p>To fake a sealed record, an attacker must either <strong>break the fingerprint</strong> &mdash; find different work that produces the same hash &mdash; or <strong>steal the signing key and the independent time-stamp at the same time</strong>. Breaking the fingerprint is far beyond any realistic computing power; no practical shortcut is known. The honest weak point is the second route: the key and the time-stamp, which is why the key is kept in a hardware vault and the time comes from an independent party.</p>
-                <div class="doc-ledger"><span class="l-h"># Rough estimate (a, ab, abc, &hellip;): forging one sealed day</span>
-<span class="l-h">&bull; matching a sealed fingerprint by luck &rarr; ~1 in 10^77 per attempt</span>
-<span class="l-h">&bull; all the computing in the age of the universe &rarr; ~10^35 attempts</span>
-<span class="l-ok">&rarr; still fails by ~40 orders of magnitude (rough estimate, not an exact answer)</span></div>
+            <section id="ai">
+                <h2>What about AI?</h2>
+                <p>WorkSigned does not attest that the work was unaided. But it records more than the finished file. It records the keystrokes, the optional biometrics, and the day-to-day evolution of the work as it is produced.</p>
+                <p>That leaves a trail a reviewer can read. Work that is pasted in all at once looks very different from work that is built up over hours and days, with edits, corrections, and drafts. The record makes that difference visible.</p>
+                <p>So the system gives strong, convincing evidence of <em>how</em> the work was made. It is not a definitive proof of human authorship. But it is the kind of record that can provide strong evidence of a human vs. AI origin of work. AI typing does exist, but to date no known system exists that can recreate the entire content-creation process action by action, including the intermediate steps, in a human-like way.</p>
+            </section>
+
+            <section id="dispute">
+                <h2>In a dispute</h2>
+                <div class="doc-callout"><strong>Stated plainly.</strong> WorkSigned settles the important question that matters between claimants: <strong>who held the work first.</strong> It does not claim the work was original or unaided &mdash; credit is a human claim, and the system proves priority: that a specific researcher committed a specific body of work to a verifiable, independently time-stamped record on a specific date, in an unbroken chain.</div>
+                <p><strong>It also shows the path the data took.</strong> The record captures the external services and systems the work contacted during production &mdash; outbound calls, uploads, and the state of the work before and after each. In a dispute over access to sensitive work, this gives a dated, verifiable account of the supply chain: what the data touched, when, and how it changed.</p>
+                <p>It shows the path the data actually took. It does not show what a third party did with it, and it covers only what passed through the monitored environment.</p>
+            </section>
+
+            <section id="log">
+                <h2>The public log</h2>
+                <p>The log is the keystone. It is public, append-only, hash-chained, and readable by any party. Because any party can read it and check the chain, <strong>no institution is the sole thing another party must trust.</strong></p>
+                <p>Once a day, an independent time-stamp issuer stamps the log&rsquo;s head &mdash; a single stamp that pins the entire chain below it to a neutral clock. That is why the time-stamp is not a per-record cost: one stamp per day covers every record that day, and it exists to be the neutral clock for a dispute, not to prove existence (the signature already does that).</p>
+                <div class="doc-ledger"><span class="l-h"># What the daily time-stamp pins</span>
+<span class="l-h">log head (end of day 2026-09-22)</span>  <span class="l-h">= sha256 of the whole chain up to that day</span>
+<span class="l-ok">&rarr; one independent stamp on that head &rarr; the entire day&rsquo;s log is pinned to an outside clock</span>
+<span class="l-id">if WorkSigned itself ceases to operate, the public log + the stamp still prove the history</span></div>
             </section>
 
             <section id="standards">
-                <h2>Built on open standards</h2>
-                <p>The record is not a proprietary format; it is assembled from published, open standards, so a verifier checks the work against the standard itself rather than trusting WorkSigned. An independent third party provides the time, so the clock is outside anyone&rsquo;s control in a dispute. The signing code and its append-only logs are auditable: anyone can confirm exactly what produced a given seal, and the private key never leaves the authority. And it is lightweight &mdash; because only fingerprints are stored, the authority keeps a few hundred bytes per seal, never the researcher&rsquo;s files.</p>
+                <h2>Standards</h2>
+                <p>The record is not a proprietary format. The snapshot hash is a standard SHA-256 digest, the signature is a standard public-key signature verifiable with the published key, and the daily time-stamp is issued by an independent time-stamp issuer &mdash; so a verifier checks the work against open standards rather than trusting WorkSigned. The signing is open and the logs are append-only and public: any party can confirm exactly what produced a given record, and the private key never leaves the authority. It is also light: only truncated hashes and metadata are stored per record &mdash; a few hundred bytes &mdash; never the researcher&rsquo;s files.</p>
             </section>
         </main>
     </div>

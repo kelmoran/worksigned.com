@@ -59,7 +59,6 @@
             <a href="#how" class="active">How it works</a>
             <a href="#modes">Operating modes</a>
             <a href="#web">Website usage</a>
-            <a href="#llm">LLM backends</a>
             <a href="#proof">The proof chain</a>
             <a href="#WorkSigned Record">WorkSigned Record &amp; events</a>
 
@@ -120,30 +119,18 @@
             <!-- ========================================================= -->
             <section id="modes">
                 <h2>Operating modes </h2>
-                <p>Two independent choices define the mode: <strong>where files are stored</strong> and <strong>which LLM handles AI-assisted work</strong>. Combined with whether you use the browser or the desktop client, that gives a small matrix of configurations.</p>
+                <p>Two choices define how you run it: <strong>which client</strong> (browser or desktop) and <strong>where your files live</strong> (your storage, WorkSigned&rsquo;s cloud, or your local machine). AI-assisted work runs on <strong>your hosted LLMs</strong> by default, or on a private model you control &mdash; the configuration and any on-prem sizing are covered on the <a href="deploy.html#llm">Deployment</a> page.</p>
                 <table>
-                    <thead><tr><th>Dimension</th><th>Options</th></tr></thead>
+                    <thead><tr><th>Dimension</th><th>Options</th></thead>
                     <tbody>
                         <tr><td><strong>Client</strong></td><td>Web (browser) or Desktop (macOS, Windows, Linux).</td></tr>
-                        <tr><td><strong>Files</strong></td><td>WorkSigned Private Cloud, Custom Private Cloud (your storage, via a backend proxy), Local machine (desktop app), or no files (browser-only, includes JupyterLite).</td></tr>
-                        <tr><td><strong>LLM</strong></td><td>Your hosted LLMs by default, optionally WorkSigned&rsquo;s private LLMs, or your own private LLM endpoint (local or on-premises).</td></tr>
+                        <tr><td><strong>Files</strong></td><td>Your storage (S3, NFS, SFTP, and more), WorkSigned Private Cloud, or your local machine (desktop app).</td></tr>
                     </tbody>
                 </table>
-                <p>Every mode produces the same kind of WorkSigned Record and the same verification. The mode changes only <em>where the bytes live and which model does the inference</em>; it never changes what is captured or how it is sealed.</p>
-                <div class="doc-callout"><strong>Local-first, with WorkSigned as the signer.</strong> Nothing about the <em>capture</em> depends on the cloud &mdash; a researcher can record everything on their own machine (local files + local LLM). What the cloud adds is the <strong>signature</strong>: WorkSigned signs the WorkSigned Record with a platform key, so the WorkSigned Record carries a signature that any third party can verify against that key &mdash; not just a local one. Locally, the researcher is their own trust anchor; with WorkSigned signing, the WorkSigned Record carries a signature you can hand to a verifier.</div>
+                <p>Every configuration produces the same kind of WorkSigned Record and the same verification. The mode changes only <em>where the bytes live</em>; it never changes what is captured or how it is sealed.</p>
+                <div class="doc-callout"><strong>Local-first, with WorkSigned as the signer.</strong> The capture works on your own machine with no cloud involved. What the signing authority adds is the <strong>signature</strong>: your WorkSigned Record carries a signature that any third party can verify &mdash; not just a local one.</div>
             </section>
 
-            <!-- ========================================================= -->
-            <section id="llm">
-                <h2>LLM backends </h2>
-                <p>WorkSigned supports both <strong>public</strong> and <strong>private</strong> LLMs, and it operates its own <strong>dedicated LLMs</strong> for the default cloud experience. The platform is agnostic to which model serves the request &mdash; it speaks the standard OpenAI-compatible chat-completions API, so any endpoint works.</p>
-                <ul>
-                    <li><strong>WorkSigned-dedicated LLMs.</strong> The default for cloud usage. These are models operated by WorkSigned that do <em>not</em> train on your data. Your prompts, files, and completions are not used for model improvement.</li>
-                    <li><strong>Public LLMs.</strong> Bring a frontier or commercial model for maximum capability. We obfuscate your queries to these models to minimize the data attack surface &mdash; no single request exposes the shape of your project.</li>
-                    <li><strong>Private / local LLMs.</strong> Point the platform at a model you control &mdash; a local inference server (<code>llama.cpp</code>, <code>vLLM</code>, <code>Ollama</code>) or an on-premises endpoint at your institution. This is the fully-private path: no prompt data ever leaves your hardware.</li>
-                </ul>
-                <p>Regardless of backend, the AI conversation itself is captured on the WorkSigned Record (see <a href="#app-chat">AI Chat</a>), so an LLM-assisted contribution is attributable just like any human one.</p>
-            </section>
 
             <!-- ========================================================= -->
             <section id="web">

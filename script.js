@@ -51,18 +51,15 @@ if (ledgerEl) {
     lio.observe(ledgerEl);
 }
 
-/* Work Ledger — draw the "magnification" connector: a single straight beam from
-   the highlighted node (5) down to a bright bracket spanning the panel's top
-   edge (straight beam + bracket = clean "zoom of this node" cue). Measured with
-   getBoundingClientRect so it lands on node 5 and the panel corners at ANY
-   width; redrawn on resize/font-load. */
+/* Work Ledger — draw the "magnification" connector: a single straight vertical
+   beam down the center of the band, to the centered panel below. Pure CSS
+   geometry (band center == panel center), no measurement, no shifts. */
 (function drawLens() {
     var lens = document.querySelector('.te-lens');
     if (!lens) return;
     var svg = lens.querySelector('.te-lens-svg');
-    var dot = document.querySelector('.te-item.zoomed .te-dot');
     var panel = document.querySelector('.mg-panel');
-    if (!svg || !dot || !panel) return;
+    if (!svg || !panel) return;
 
     var glow = 'rgba(94,234,212,.95)';
     var dim = 'rgba(94,234,212,.5)';
@@ -73,65 +70,27 @@ if (ledgerEl) {
         var W = Math.max(r.width, 10);
         svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
 
-        // Shift the panel so its center sits directly under node 5 (one pass),
-        // then measure. This makes the beam a straight vertical at every width.
-        if (window.__mgShifted !== true) {
-            var d0 = dot.getBoundingClientRect();
-            var p0 = panel.getBoundingClientRect();
-            var dotC0 = d0.left + d0.width / 2;
-            var panelC0 = p0.left + p0.width / 2;
-            var shift = dotC0 - panelC0;
-            panel.style.setProperty('--mg-shift', shift + 'px');
-            window.__mgShifted = true;
-        }
-
-        // Measure the dot at its TRUE resting position: temporarily zero the
-        // ledger's fade/rise transform so a mid-animation draw can't capture
-        // node 5 at the wrong x (the root cause of the detached arrow).
-        var lt = null;
-        if (ledgerEl) { lt = ledgerEl.style.transform; ledgerEl.style.transform = 'none'; }
-        var d = dot.getBoundingClientRect();
-        var p = panel.getBoundingClientRect();
-        if (ledgerEl && lt !== null) ledgerEl.style.transform = lt;
-
-        // node 5 top-center (where the beam originates) — the panel is now
-        // centered under it, so the beam is a straight vertical.
-        var cx = d.left + d.width / 2 - r.left;
-        var cy = 0;
-        var pl = Math.max(4, p.left - r.left);
-        var pr = Math.min(W - 4, p.right - r.left);
-        var pad = 12;
-        var lx = pl + pad, rx = pr - pad;
+        // The panel is centered on the page; the beam is a straight vertical
+        // down the center of the band (== the panel's center).
+        var cx = W / 2;
         var by = H - 2;
+        var half = 60; // bracket half-width
+        var lx = cx - half, rx = cx + half;
 
         svg.innerHTML =
-            '<line x1="' + cx + '" y1="' + cy + '" x2="' + cx + '" y2="' + by + '" stroke="' + glow + '" stroke-width="2.5" stroke-linecap="round"/>' +
+            '<line x1="' + cx + '" y1="0" x2="' + cx + '" y2="' + by + '" stroke="' + glow + '" stroke-width="2.5" stroke-linecap="round"/>' +
             '<path d="M ' + lx + ' ' + (by + 2) + ' L ' + lx + ' ' + by + ' L ' + rx + ' ' + by + ' L ' + rx + ' ' + (by + 2) + '" fill="none" stroke="' + glow + '" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-            '<circle cx="' + cx + '" cy="' + cy + '" r="3.5" fill="' + glow + '"/>' +
-            '<circle cx="' + cx + '" cy="' + cy + '" r="7" fill="none" stroke="' + dim + '" stroke-width="1.5"/>';
+            '<circle cx="' + cx + '" cy="0" r="3.5" fill="' + glow + '"/>' +
+            '<circle cx="' + cx + '" cy="0" r="7" fill="none" stroke="' + dim + '" stroke-width="1.5"/>';
     }
 
     draw();
-    // redraw after fonts/imagery settle and on any resize / layout change
     if (window.addEventListener) {
         var t;
         window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 80); });
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
         window.addEventListener('load', draw);
     }
-    // Draw when the ledger actually appears (it fades/rises in via .in; the
-    // first draw() above may run while it is still transformed/transparent,
-    // which captures the dot at the wrong x). Redraw as soon as it is visible
-    // and let the transition end settle the final position.
-    var lobs = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (e.isIntersecting) draw(); });
-    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
-    if (ledgerEl) {
-        lobs.observe(ledgerEl);
-        ledgerEl.addEventListener('transitionend', draw);
-    }
-    // One more settle pass once layout has stopped moving.
-    setTimeout(draw, 300); setTimeout(draw, 700);
 })();
 
 // ==========================================================================

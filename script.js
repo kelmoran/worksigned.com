@@ -240,9 +240,8 @@ function submitApply(e) {
                      + '<span class="mt-cell-cap">' + x.cap + '</span></div>';
             }).join("");
             media = '<div class="montage">'
-                  +   '<div class="mt-lead">Be able to use tools like <span class="mt-more">— and far more. This list is not exhaustive.</span></div>'
+                  +   '<div class="mt-lead">Be able to use tools for <span class="mt-more">— and far more. This list is not exhaustive:</span></div>'
                   +   '<div class="mt-head">' + chips + '</div>'
-                  +   '<div class="mt-examples">' + examples + '</div>'
                   +   '<div class="mt-grid">' + grid + '</div>'
                   + '</div>';
         } else if (t.video) {

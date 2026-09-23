@@ -210,8 +210,8 @@ function submitApply(e) {
     var windowEl = stage.closest(".window");
     if (!stage || !tabs) return;
 
-    var AUTO_MS = 0;             // auto-advance disabled: manual-only (user picks the tool they care about)
-    var AUTO_ADVANCE = false;    // master switch — flip to true to restore auto-rotation
+    var AUTO_MS = 5000;          // auto-advance every 5s
+    var AUTO_ADVANCE = true;     // master switch — auto-rotation on
     var current = 0;
 
     // Build slides

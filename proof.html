@@ -57,22 +57,20 @@
             <div class="doc-group">Overview</div>
             <a href="#how" class="active">How it works</a>
             <a href="#layers">The layers</a>
+            <a href="#compare">How it compares</a>
             <a href="#proves">What it proves</a>
             <a href="#ai">What about AI?</a>
             <a href="#dispute">In a dispute</a>
+            <a href="#tsa">Why not time-stamp my own work?</a>
             <a href="#log">The public log</a>
             <a href="#standards">Standards</a>
-            <div class="doc-group">Related</div>
-            <a href="usage.html">Usage (for users)</a>
-            <a href="deploy.html">Deployment &amp; architecture</a>
-            <a href="policy.html">Data &amp; security policy</a>
         </aside>
 
         <main class="doc-content">
                         <div class="doc-hero-eyebrow">Trust &amp; Verification</div>
             <h1>How the proof works</h1>
-            <p class="doc-lede">WorkSigned signs a daily record of a researcher&rsquo;s work and pins it to a public, hash-chained log. Any independent verifier can audit the record directly, without relying on WorkSigned.</p>
-            <div class="doc-callout"><strong>The idea:</strong> Each day, the work is folded into a single hash. WorkSigned signs that hash with the day&rsquo;s date and the researcher&rsquo;s identity, links it to the previous day&rsquo;s hash, and writes it to a <strong>public, hash-chained log</strong>. One independent time-stamp issuer pins the whole log to a clock no party controls, once per day. The proof is the <strong>signed record + the actual work files</strong> &mdash; never the hash alone.</div>
+            <p class="doc-lede">WorkSigned signs a daily record of a researcher&rsquo;s work and pins it to a public, hash-chained log that an independent time-stamp issuer signs once a day.</p>
+            <div class="doc-callout"><strong>The idea:</strong> Each day, a hash, or digital fingerprint, is generated from the work. WorkSigned signs that hash with the day&rsquo;s date and the researcher&rsquo;s identity, links it to the previous day&rsquo;s hash, and writes it to a public, hash-chained log. One independent time-stamp issuer signs our log, once per day. The researcher holds the signed record + the actual work files as their proof.</div>
 
             <section id="how" style="margin-top: 40px;">
                 <h2>How it works</h2>
@@ -82,7 +80,7 @@
                     <div class="doc-reqcard"><div class="rc-label">2</div><div class="rc-val">One hash of the day</div><div class="rc-note">The day&rsquo;s files, file events, and user events are combined into a single snapshot. That snapshot gets one hash.</div></div>
                     <div class="doc-reqcard"><div class="rc-label">3</div><div class="rc-val">WorkSigned signs it</div><div class="rc-note">WorkSigned signs the hash together with the day&rsquo;s date, the researcher&rsquo;s identity, and a link to the previous day&rsquo;s hash. This is the signed record.</div></div>
                     <div class="doc-reqcard"><div class="rc-label">4</div><div class="rc-val">It is written to the public log</div><div class="rc-note">The signed record is appended to a public, hash-chained log that any party can read and verify.</div></div>
-                    <div class="doc-reqcard"><div class="rc-label">5</div><div class="rc-val">One time-stamp per day</div><div class="rc-note">Once a day, an independent time-stamp issuer stamps the log&rsquo;s head. That single stamp pins every record that day to a clock outside every party&rsquo;s control.</div></div>
+                    <div class="doc-reqcard"><div class="rc-label">5</div><div class="rc-val">One time-stamp per day</div><div class="rc-note">One independent time-stamp issuer signs our log, once per day.</div></div>
                 </div>
 
                 <div class="doc-ledger"><span class="l-h"># Two consecutive days in the public, hash-chained log</span>
@@ -129,6 +127,25 @@
                 </table>
             </section>
 
+            <section id="compare">
+                <h2>How it compares</h2>
+                <p>Other ways to prove work exist. They each cover part of the picture. WorkSigned covers all of it.</p>
+                <table class="matrix">
+                    <thead>
+                        <tr><th></th><th>WorkSigned</th><th>TSA on my files</th><th>File-change snapshots</th><th>Peer / publication proof</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Proves process</strong></td><td>yes</td><td>no</td><td>partial</td><td>no</td></tr>
+                        <tr><td><strong>Proves result at T</strong></td><td>yes</td><td>yes</td><td>yes</td><td>yes</td></tr>
+                        <tr><td><strong>AI differentiation</strong></td><td>yes</td><td>no</td><td>partial</td><td>no</td></tr>
+                        <tr><td><strong>Public log</strong></td><td>yes</td><td>no</td><td>no</td><td>no</td></tr>
+                        <tr><td><strong>Rapidly verifiable</strong></td><td>yes</td><td>yes</td><td>yes</td><td>slow</td></tr>
+                        <tr><td><strong>Data leakage</strong></td><td>low</td><td>low</td><td>high</td><td>high</td></tr>
+                        <tr><td><strong>Evidence quantity</strong></td><td>high</td><td>low</td><td>medium</td><td>low</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
             <section id="proves">
                 <h2>What it proves</h2>
                 <div class="doc-reqgrid">
@@ -145,7 +162,7 @@
                     <div class="doc-reqcard">
                         <div class="rc-label">Any party can check it</div>
                         <div class="rc-val">Trust is verifiable</div>
-                        <div class="rc-note">The public can trust the record because WorkSigned signs it &mdash; and WorkSigned&rsquo;s own signing log is hashed, chained, and signed, in turn by an independent time-stamp issuer.</div>
+                        <div class="rc-note">The record is verifiable because it lives in the public log, which is anchored by an independent time-stamp issuer. No single party &mdash; including WorkSigned &mdash; controls that anchor.</div>
                     </div>
                 </div>
             </section>
@@ -154,20 +171,26 @@
                 <h2>What about AI?</h2>
                 <p>WorkSigned does not attest that the work was unaided. But it records more than the finished file. It records the keystrokes, the optional biometrics, and the day-to-day evolution of the work as it is produced.</p>
                 <p>That leaves a trail a reviewer can read. Work that is pasted in all at once looks very different from work that is built up over hours and days, with edits, corrections, and drafts. The record makes that difference visible.</p>
-                <p>So the system gives strong, convincing evidence of <em>how</em> the work was made. It is not a definitive proof of human authorship. But it is the kind of record that can provide strong evidence of a human vs. AI origin of work. AI typing does exist, but to date no known system exists that can recreate the entire content-creation process action by action, including the intermediate steps, in a human-like way.</p>
+                <p>So the system gives strong, convincing evidence of <em>how</em> the work was made. It is not a definitive proof of human authorship. But it is the kind of record that can provide strong evidence of a human vs. AI origin of work. AI typing does exist, but to date no known system exists that can recreate the entire work process action by action, including the intermediate steps, in a human-like way.</p>
             </section>
 
             <section id="dispute">
                 <h2>In a dispute</h2>
                 <div class="doc-callout"><strong>Stated plainly.</strong> WorkSigned settles the important question that matters between claimants: <strong>who held the work first.</strong> It does not claim the work was original or unaided &mdash; credit is a human claim, and the system proves priority: that a specific researcher committed a specific body of work to a verifiable, independently time-stamped record on a specific date, in an unbroken chain.</div>
-                <p><strong>It also shows the path the data took.</strong> The record captures the external services and systems the work contacted during production &mdash; outbound calls, uploads, and the state of the work before and after each. In a dispute over access to sensitive work, this gives a dated, verifiable account of the supply chain: what the data touched, when, and how it changed.</p>
-                <p>It shows the path the data actually took. It does not show what a third party did with it, and it covers only what passed through the monitored environment.</p>
+                <p><strong>It also shows the path the data took.</strong> The record captures the external services and systems the work contacted during production. In a dispute over access to sensitive work, this gives a dated, verifiable account of what the data touched, when, and how it changed.</p>
+            </section>
+
+            <section id="tsa">
+                <h2>Why not just time-stamp my own work?</h2>
+                <p>A researcher can, and often does, hash their own work and send it to a time-stamp authority directly. That produces a valid time-stamp: it proves a specific piece of data existed on a specific date. It is a reasonable way to protect a single file.</p>
+                <p>It does not, on its own, produce the same kind of record. A self-issued time-stamp is a single point in time. It is not a chain. It is not bound to a verified identity. And, most importantly in a dispute, it is a record that only the claimant holds and only the claimant produces. Its internal math can be verified, but its origin cannot &mdash; the other party can always argue it was assembled, and time-stamped, at the claimant&rsquo;s own convenience, at the time of the dispute.</p>
+                <p>The WorkSigned record differs in one specific way: it is not produced only by the claimant. It is a record in a <strong>public, append-only log</strong>, anchored by a time-stamp issuer the claimant does not control. The record was written to that log before any dispute existed, and it is readable by any party without the claimant&rsquo;s cooperation. That is the difference between a record a party can verify <em>on its own</em> and a record that is <em>independently attested</em> &mdash; the kind that carries weight when the party who made it is also the party who stands to win.</p>
             </section>
 
             <section id="log">
                 <h2>The public log</h2>
-                <p>The log is the keystone. It is public, append-only, hash-chained, and readable by any party. Because any party can read it and check the chain, <strong>no institution is the sole thing another party must trust.</strong></p>
-                <p>Once a day, an independent time-stamp issuer stamps the log&rsquo;s head &mdash; a single stamp that pins the entire chain below it to a neutral clock. That is why the time-stamp is not a per-record cost: one stamp per day covers every record that day, and it exists to be the neutral clock for a dispute, not to prove existence (the signature already does that).</p>
+                <p>The log is the keystone. It is public, append-only, hash-chained, and readable by any party.</p>
+                <p>Once a day, an independent time-stamp issuer stamps the log&rsquo;s head to pin the entire chain below it to a neutral clock. This gives credibility to the timestamps we issue.</p>
                 <div class="doc-ledger"><span class="l-h"># What the daily time-stamp pins</span>
 <span class="l-h">log head (end of day 2026-09-22)</span>  <span class="l-h">= sha256 of the whole chain up to that day</span>
 <span class="l-ok">&rarr; one independent stamp on that head &rarr; the entire day&rsquo;s log is pinned to an outside clock</span>

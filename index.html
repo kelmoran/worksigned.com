@@ -112,8 +112,9 @@
         .hero-showcase .hs-window {
             border-radius: 14px; overflow: hidden; background: #f8fafc;
         }
+        .hero-showcase .mobile-compare { display: none; }
         @media (max-width: 768px) {
-            .hero-showcase div[style*="overflow-x"] { display: none !important; }
+            .hero-showcase .desktop-table-wrap { display: none !important; }
             .hero-showcase .mobile-compare { display: block !important; font-size: 1.05rem !important; }
             .hero-showcase .mobile-compare div { display: flex !important; font-size: 1.05rem !important; }
             .hero-showcase .mobile-compare div span:first-child { text-align: left; flex: 1; }
@@ -228,7 +229,7 @@
                         <span style="font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text, #1a2a3a); text-transform: uppercase;" class="desktop-title">WorkSigned vs Alternatives</span>
                         <span style="font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text, #1a2a3a); text-transform: uppercase; display: none;" class="mobile-compare-title">Why Use WorkSigned</span>
                     </div>
-                    <div style="overflow-x: auto; padding: 40px 20px 32px;">
+                    <div class="desktop-table-wrap" style="overflow-x: auto; padding: 40px 20px 32px;">
                         <table style="min-width: 1000px; width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--fs-body, 1rem); color: var(--text, #1a2a3a); table-layout: fixed; line-height: 1.3;">
                             <colgroup>
                                     <col style="width: 300px;">
@@ -263,7 +264,7 @@
                         </table>
                     </div>
                     <!-- Mobile-only comparison list -->
-                    <div class="mobile-compare" style="display: none; padding: 20px 16px 24px; color: var(--text, #1a2a3a);">
+                    <div class="mobile-compare" style="padding: 20px 16px 24px; color: var(--text, #1a2a3a);">
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line, #e5e7eb); font-size: 0.95rem;"><span>Tamper-proof record signing</span><span style="font-weight: 700; color: #06b6d4;">Yes</span></div>
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line, #e5e7eb); font-size: 0.95rem;"><span class="chain-tip" data-tip="Each day's record is cryptographically linked to the previous day. If any day is modified, removed, or inserted, the chain breaks and tampering is immediately detectable. This provides stronger evidence in disputes." style="cursor: pointer;">Tamper-proof daily chain<span style="color: #06b6d4; font-weight: 700; font-size: 1.1em; line-height: 1; margin-left: 4px;">¹</span></span><span style="font-weight: 700; color: #06b6d4;">Yes</span></div>
                         <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line, #e5e7eb); font-size: 0.95rem;"><span>Complete Research Record</span><span style="font-weight: 700; color: #06b6d4;">Yes</span></div>

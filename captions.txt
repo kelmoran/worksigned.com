@@ -1,0 +1,38 @@
+# WorkSigned infographic captions
+#
+# Edit the lines below, then tell me to "apply my caption edits".
+# Each entry is:  STEP:  "text"
+#   - STEP 1-10 are the per-scene captions (in playback order).
+#   - STEP 3 is intentionally BLANK: the ZOOM transcript caption (STEP ZOOM)
+#     takes that screen time during the zoom into the chat cards.
+#   - STEP 4 is intentionally BLANK: its beat is short, so it was merged into STEP 5.
+#   - Blank steps = leave the text empty (write: STEP 3:  "")
+#
+# You may use normal characters here (— em dash, ' apostrophe, " quotes).
+# I'll convert them to the proper escapes when applying.
+#
+# ---------------------------------------------------------------------------
+
+Title: How WorkSigned creates resilient proofs of research work.
+
+STEP 1:  "Your research day is recorded: files, database views, AI chats, searches, and email."
+STEP 2:  "Each item produces a digital fingerprint."
+STEP 3:  ""
+STEP 4:  ""
+STEP 5:  "All individual fingerprints are combined into a single daily fingerprint."
+STEP 6:  "One fingerprint now provides proof for everything done during that day."
+STEP 7:  "A digital package is assembled that includes the researcher's identity, project identity, time, and the prior day's fingerprint."
+STEP 8:  "WorkSigned signs this package qand attests to its contents - adding it to the daily research record. This proves the work existed."
+STEP 9:  "The signature process only involves the fingerprint and not the actual data, keeping things private and in the researcher's control."
+STEP 10: "All research records are digitally chained and anchors to trusted timestamps. This creates a timeline that proves the work was done at this time and in this order."
+
+# The zoom caption (shows during the zoom into the 4 chat cards, ~5.8s).
+# This is STEP 3's actual on-screen line.
+STEP ZOOM: "Full AI transcripts are recorded: this clarifies the role AI took in your research."
+
+# ---------------------------------------------------------------------------
+# Timing notes (current, so you know your headroom):
+#   STEP 1  ~2.6s   STEP 2  ~4.5s   STEP ZOOM ~5.8s   STEP 5  ~3.2s
+#   STEP 6  ~2.8s   STEP 7  ~2.9s   STEP 8  ~3.5s     STEP 9  ~2.8s
+#   STEP 10 ~10.8s  (holds on the pulsing node)
+# Keep each line under ~90 chars so it fits on two lines at the video width.

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>What the research record contains — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">The Record</span>
+            <a href="#overview" class="active" data-spy="overview">Overview</a>
+            <a href="#files" data-spy="files">Research files</a>
+            <a href="#data" data-spy="data">Research data</a>
+            <a href="#logs" data-spy="logs">Research logs</a>
+            <a href="#ai-usage" data-spy="ai-usage">AI tool usage</a>
+            <a href="#emails" data-spy="emails">Research emails</a>
+            <a href="#web" data-spy="web">Web search history</a>
+        </aside>
+
+        <main class="doc-content">
+                        <div class="doc-hero-eyebrow">The Record</div>
+            <h1>What the research record contains</h1>
+            <p class="doc-lede">A complete record contains research files, research data, and research logs. AI tool usage, research emails, and research web search history are recorded in a tamper-resistant manner. The record is designed to be as comprehensive as possible for proving authorship and priority in research.</p>
+
+            <section id="overview" style="margin-top: 40px;">
+                <h2>Overview</h2>
+                <p>WorkSigned generates research records using a unified approach. This addresses the structural complexity of projects - many contain different data sources and types. WorkSigned is fully extensible and capable of including additional file or data formats.</p>
+            </section>
+
+            <section id="files">
+                <h2>Research files</h2>
+                <p>WorkSigned supports regular text files, office document formats such as pdf, docx, pptx, and xlsx, and publishing formats like LaTex. Files include notes, drafts, presentation materials, conference materials, publications, and anything else that supported the process of creating the final result.</p>
+            </section>
+
+            <section id="data">
+                <h2>Research data</h2>
+                <p>WorkSigned supports detecting and signing data stored in special files or databases. Unlike traditional electronic lab notebooks (ELNs), WorkSigned works with existing local and cloud data stores.</p>
+            </section>
+
+            <section id="logs">
+                <h2>Research logs</h2>
+                <p>There is no universal standard for research logs. WorkSigned supports logs stored as files or databases.</p>
+            </section>
+
+            <section id="ai-usage">
+                <h2>AI tool usage</h2>
+                <p>Connect WorkSigned to any AI provider (standard OpenAI protocol), and sign all conversations into the research record. Signed AI conversations are tamper resistant - they are signed before arriving at the researcher's machine.</p>
+            </section>
+
+            <section id="emails">
+                <h2>Research emails</h2>
+                <p>Emails are important adjunctive documents that show thought processes and relative contributions of each researcher. Signed emails are tamper resistant.</p>
+            </section>
+
+            <section id="web">
+                <h2>Web search history</h2>
+                <p>Research related web searches are documented to show how key pieces of information were gathered and how research ideas were explored. Web search history is tamper resistant.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy (scroll-event based).
+    (function () {
+        var OFFSET = 170; // sticky nav bar height
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        // Intercept sidebar clicks: smooth scroll without changing URL hash
+        links.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.getElementById(a.getAttribute('data-spy'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActive(a.getAttribute('data-spy'));
+            });
+        });
+        function update() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
+            if (atBottom) {
+                setActive(sections[sections.length - 1].id);
+                return;
+            }
+            var current = null, best = null, bestDiff = Infinity;
+            for (var i = 0; i < sections.length; i++) {
+                var top = sections[i].getBoundingClientRect().top;
+                if (top <= OFFSET) { current = sections[i]; continue; }
+                var d = top - OFFSET;
+                if (d < bestDiff) { bestDiff = d; best = sections[i]; }
+            }
+            if (current) setActive(current.id);
+            else if (best && bestDiff <= 300) setActive(best.id);
+            else setActive(sections[0].id);
+        }
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

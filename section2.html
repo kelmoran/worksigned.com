@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>AI Usage — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">AI Usage</span>
+            <a href="#overview" class="active" data-spy="overview">Overview</a>
+            <a href="#ai-tool" data-spy="ai-tool">Using AI as a helpful tool</a>
+            <a href="#attribution" data-spy="attribution">The growing importance of attribution</a>
+            <a href="#protection" data-spy="protection">The protection WorkSigned provides</a>
+            <a href="#categories" data-spy="categories">WorkSigned's grading categories</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">AI Usage</div>
+            <h1>How AI contribution is evaluated</h1>
+            <p class="doc-lede">During record construction, WorkSigned monitors the contribution of AI tools towards the research as a whole, making audits and dispute-related tasks straightforward.</p>
+
+            <section id="overview" style="margin-top: 40px;">
+                <h2>Overview</h2>
+                <p>There have been recent claims that AI tools are now capable, or are becoming capable of doing research itself autonomously, with "minimal" human intervention. WorkSigned's mission is to help researchers prove that they are, and always will be the driving force behind innovation. While AI technology may continue to advance, WorkSigned strongly believes that humans are the ones that provide the direction and expertise to conduct meaningful research activity.</p>
+            </section>
+
+            <section id="ai-tool">
+                <h2>Using AI as a helpful tool</h2>
+                <p>WorkSigned and many researchers recognize AI as a useful tool. That's why WorkSigned uses AI to detect the extent of research activity that is AI driven. When researchers use a web-based AI tool, they have no expedient way of proving "I directed the AI to do a minor task for me, one that simply saves me time and energy.", rather than "I delegated important strategic decisions to the AI.". Most platforms do not provide this kind of service. WorkSigned addresses this by applying a strict grading scale to gauge how much AI contributed to some task, like brainstorming or drafting.</p>
+            </section>
+
+            <section id="attribution">
+                <h2>The growing importance of attribution</h2>
+                <p>Most AI providers have a strong claim to the inputs that are provided to their services. If the inputs were only used to train and improve their AI service, that would be a small problem. However, if the AI service starts to make the claim that their AI can produce innovation autonomously, a serious conflict of interest arises. How can a party who ingests intelligent input from others, claim credit for intelligent output without giving credit to those who provided the inputs?</p>
+            </section>
+
+            <section id="protection">
+                <h2>The protection WorkSigned provides</h2>
+                <p>WorkSigned's view is that modern ways to protect one's work are currently limited. Patent law is one of the strongest tools, but is restricted in what types of intellectual property it can protect. Research is especially exposed in that it has the dual requirement of needing open collaboration and public exposure, but also definitive, appropriate credit to those who produced the research. WorkSigned's approach is to prove the most - what was done, how it was done, when it was done, and who did it - with the least amount of reasonable doubt. This puts the researcher and institution in a very strong legal position.</p>
+            </section>
+
+            <section id="categories">
+                <h2>WorkSigned's grading categories for research items with respect to AI generation</h2>
+                <p class="h2-sub"><em>Note that human-assisted work is not a category here. Researchers already have human collaborators under existing authorship frameworks. These categories exist because AI is a new type of contributor that does not fit that framework.</em></p>
+                <p><strong>Human generated.</strong> Researcher produced this artifact by hand, with no AI assistance in its creation (no AI drafting, coding, or idea generation). It is entirely their own work. The Researcher must also attest they did not use external AI services which are outside the scope of the WorkSigned application.</p>
+                <p><strong>Human-driven AI generation.</strong> The Researcher is the driving force behind the entire idea and the artifact: Researcher supplies the direction, the requirements, and the decisions, and an AI tool executes the mechanical work (e.g. AI coding where the Researcher wrote the spec and the AI wrote the code, or AI drafting where the Researcher dictated the structure and the AI filled in the rough text.</p>
+                <p><strong>AI-assisted generation.</strong> The Researcher gave the AI a creative task and let it propose solutions/options on its own; Researcher then selected the best one (or several) from what it produced. The AI generated the candidates; Researcher made the selection. The Researcher is still completely responsible for the ultimate result.</p>
+                <p><strong>AI-only generation.</strong> The Researcher gave the AI a very general research goal (usually a nontrivial primary goal, e.g. 'produce an analysis of X') and it carried it out on its own with little or no human input or decision making along the way. The artifact is basically the AI's own work. The distinction with AI-assisted generation here is the Researcher only made the initial input.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy (scroll-event based).
+    (function () {
+        var OFFSET = 170; // sticky nav bar height
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        // Intercept sidebar clicks: smooth scroll without changing URL hash
+        links.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.getElementById(a.getAttribute('data-spy'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActive(a.getAttribute('data-spy'));
+            });
+        });
+        function update() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
+            if (atBottom) {
+                setActive(sections[sections.length - 1].id);
+                return;
+            }
+            var current = null, best = null, bestDiff = Infinity;
+            for (var i = 0; i < sections.length; i++) {
+                var top = sections[i].getBoundingClientRect().top;
+                if (top <= OFFSET) { current = sections[i]; continue; }
+                var d = top - OFFSET;
+                if (d < bestDiff) { bestDiff = d; best = sections[i]; }
+            }
+            if (current) setActive(current.id);
+            else if (best && bestDiff <= 300) setActive(best.id);
+            else setActive(sections[0].id);
+        }
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

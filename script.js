@@ -1,55 +1,7 @@
-// WorkSigned landing page — scroll reveal + lightweight form handling.
+// WorkSigned landing page — lightweight form handling and slideshow logic. (Scroll-reveal removed: sections render immediately.)
 // Non-module browser JS (matches the project's no-ES-modules convention).
 
-// ==========================================================================
-// SCROLL REVEAL — add .visible when an element enters the viewport.
-// ==========================================================================
-const revealEls = document.querySelectorAll('.reveal');
-
-if (revealEls.length) {
-    const io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                io.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-    revealEls.forEach(function (el) {
-        io.observe(el);
-    });
-}
-
-// Major sections: fade + rise in as the section's container enters the viewport.
-const sectionContainers = document.querySelectorAll(
-    '#process > .container, #institutions > .container, #tools > .container, #trust > .container'
-);
-if (sectionContainers.length) {
-    const sio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in');
-                sio.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
-    sectionContainers.forEach(function (el) { sio.observe(el); });
-}
-
-// Work Ledger block: fade + rise in on its own, when it scrolls into view.
-const ledgerEl = document.querySelector('.trail-example');
-if (ledgerEl) {
-    const lio = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in');
-                lio.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.18, rootMargin: '0px 0px -60px 0px' });
-    lio.observe(ledgerEl);
-}
+// Scroll-reveal removed: sections render immediately, no fade-in on scroll.
 
 /* Work Ledger — draw the "magnification" connector: a single straight vertical
    beam down the center of the band, to the centered panel below. Pure CSS
@@ -207,8 +159,8 @@ function submitApply(e) {
     var tabs  = document.getElementById("showcase-tabs");
     var urlEl = document.getElementById("showcase-url");
     var capEl = document.getElementById("showcase-caption");
+    if (!stage || !tabs) return;  // showcase not on this page (it was retired to staging3.html)
     var windowEl = stage.closest(".window");
-    if (!stage || !tabs) return;
 
     var AUTO_MS = 5000;          // auto-advance every 5s
     var AUTO_ADVANCE = true;     // master switch — auto-rotation on

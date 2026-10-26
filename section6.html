@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>Productivity — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Productivity</span>
+            <a href="#overview" class="active" data-spy="overview">Overview</a>
+            <a href="#tools" data-spy="tools">How the built in tools work</a>
+            <a href="#ai-email" data-spy="ai-email">AI, web search, and email</a>
+            <a href="#optional" data-spy="optional">Other viewer and editing tools</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Productivity</div>
+            <h1>The tools built into WorkSigned</h1>
+            <p class="doc-lede">Our platform contains a wide array of productivity tools to aid the research and publication process.</p>
+
+            <section id="overview" style="margin-top: 40px;">
+                <h2>Overview</h2>
+                <p>WorkSigned has a rich tool ecosystem that is self contained within the client. When a user wishes to view, access, or edit their files or databases, they may choose to do so within WorkSigned without ever leaving the client. However, this is completely optional. WorkSigned's primary mission is to provide frictionless signing of project documents and data.</p>
+            </section>
+
+            <section id="tools">
+                <h2>How the built in tools work</h2>
+                <p>When the user selects any supported file or database from their explorer panel (found on the left hand side of the interface, which shows the researcher's data sources and the files within), the client's main window automatically opens the file with the appropriate program. Nearly all of the built in programs can create, read, and edit the file formats they support. This provides the necessary convenience to do routine tasks that would otherwise require frequent switching out of the client.</p>
+            </section>
+
+            <section id="ai-email">
+                <h2>Do I have to use AI tools, web search, and email within the client?</h2>
+                <p>It is highly recommended - as this is the only feasible method that these activities can be attested to. One cannot attest to third party traffic that does not pass through the WorkSigned platform. Such verbal attestations without signed records would be weak, and it would be difficult to acquire such evidence from AI/search/email providers themselves. By using an institution-controlled relay that the user cannot access, we can provide some assurances that the contents of the record were not tampered with, and thus provide a stronger legal standing to the attestations.</p>
+            </section>
+
+            <section id="optional">
+                <h2>Do I have to use the other viewer and editing tools?</h2>
+                <p>They are optional. Data generated on the user's own machine and on their own terms does not face the same scrutiny from a record signing standpoint.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy (scroll-event based).
+    (function () {
+        var OFFSET = 170; // sticky nav bar height
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        // Intercept sidebar clicks: smooth scroll without changing URL hash
+        links.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.getElementById(a.getAttribute('data-spy'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActive(a.getAttribute('data-spy'));
+            });
+        });
+        function update() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
+            if (atBottom) {
+                setActive(sections[sections.length - 1].id);
+                return;
+            }
+            var current = null, best = null, bestDiff = Infinity;
+            for (var i = 0; i < sections.length; i++) {
+                var top = sections[i].getBoundingClientRect().top;
+                if (top <= OFFSET) { current = sections[i]; continue; }
+                var d = top - OFFSET;
+                if (d < bestDiff) { bestDiff = d; best = sections[i]; }
+            }
+            if (current) setActive(current.id);
+            else if (best && bestDiff <= 300) setActive(best.id);
+            else setActive(sections[0].id);
+        }
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

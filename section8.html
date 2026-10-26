@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>Getting Started — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Getting Started</span>
+            <a href="#overview" class="active" data-spy="overview">Overview</a>
+            <a href="#mounts" data-spy="mounts">Linking up data sources</a>
+            <a href="#tools" data-spy="tools">Using the tools</a>
+            <a href="#email" data-spy="email">Hooking up email</a>
+            <a href="#record" data-spy="record">Generating a record</a>
+            <a href="#insights" data-spy="insights">Insights from the record</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Getting Started</div>
+            <h1>The full walkthrough</h1>
+            <p class="doc-lede">The whole pipeline in 90 seconds: connect the work, sign each day, seal it, and hand the record to anyone who should check it.</p>
+
+            <section id="overview" style="margin-top: 40px;">
+                <h2>Overview</h2>
+                <p>Getting WorkSigned up to speed on your project is a one time setup. After that, the software runs in the background and signs your work automatically. Here is what that setup looks like, step by step.</p>
+            </section>
+
+            <section id="mounts">
+                <h2>Linking up data sources</h2>
+                <p>A <strong>mount</strong> is how WorkSigned connects to a data source. When you mount a source, its files and databases appear in the explorer panel on the left side of the interface, as if they were local files. WorkSigned then watches every file on that mount and records its content hash into the project record. Supported sources include: local folders, SSH/SFTP servers, S3, Azure Blob, GCS, Google Drive, DSpace, iRODS, and databases (PostgreSQL, MariaDB, SQLite).</p>
+                <p>To link up a source:</p>
+                <p><strong>1.</strong> Open the explorer panel. Right-click on the project name and select "Mount Storage&hellip;".</p>
+                <p><strong>2.</strong> Choose the source type (local path, SFTP, S3, etc.) and enter the connection details (host, credentials, bucket name, etc.).</p>
+                <p><strong>3.</strong> The mount appears in the tree. Expand it to confirm the files are visible. That is all - WorkSigned is now tracking that source.</p>
+                <p>Repeat for each source the researcher uses. A typical setup might be: one local mount for the project folder, one S3 or Drive mount for shared data, and one database mount for structured results.</p>
+            </section>
+
+            <section id="tools">
+                <h2>Using the tools</h2>
+                <p>Once the data is linked, the researcher works in the built in tools exactly as they would in any other application. Click a file in the explorer and it opens in the appropriate tool: a .py file opens in the code editor, a .docx in the document editor, a .tex in LaTeX, a .png in the image viewer. The researcher reads, edits, and saves files without leaving the client. Every save is captured and signed.</p>
+                <p>The AI chat, web search, and other tools work the same way. Open them, use them, and the activity is recorded into the project record alongside the file work.</p>
+            </section>
+
+            <section id="email">
+                <h2>Hooking up email</h2>
+                <p>Email is connected through the institution's local witness server. The researcher configures their mail provider (IMAP/SMTP or API) once, and after that all email sent or received through the WorkSigned client is witnessed and signed into the record. This means handoffs, decisions, and collaboration claims made over email are on the signed timeline, not just in an inbox that anyone could delete.</p>
+            </section>
+
+            <section id="record">
+                <h2>Generating a record</h2>
+                <p>The record is not something the researcher manually generates. It builds itself. Every file save, every AI interaction, every email, every web search - each one is appended to the project record as it happens. At the end of each day, the record is sealed: a cryptographic signature is applied to the day's entries and a timestamp is issued by the remote signing server. The result is a signed, tamper-evident chain that shows exactly what happened, when, and who did it.</p>
+                <p>When the researcher is ready to produce evidence (a dispute, an audit, a publication requirement), the record is handed to the verifier. The verifier checks the signatures and timestamps, and the chain confirms the work was done as claimed.</p>
+            </section>
+
+            <section id="insights">
+                <h2>Insights generated from the record</h2>
+                <p>Once the record is built, WorkSigned can generate several documents and analyses from it. These are not separate tools - they read the same signed record and produce structured output for specific purposes.</p>
+                <p><strong>Calendar.</strong> The record as a month of days. Each day shows its seal (the Merkle root, signed and timestamped). Click a day to see the files, hashes, and signed digest for that day.</p>
+                <p><strong>Timeline.</strong> The record over time: each file version as a node, the change between versions as the edge. Goals are placed at the first recorded version that contains their topics, giving a prior-use / conception data point.</p>
+                <p><strong>Snapshot.</strong> The current-state research map: one node per file (final state), with goals, subgoals, and topics connected by typed edges.</p>
+                <p><strong>Patent.</strong> A lawyer-facing patent draft (specification sections, claims, and a dated artifact ledger) assembled from the research map and the signed record. Deterministic - a template, not an LLM. An attorney must finalize it.</p>
+                <p><strong>AI Disclosure.</strong> A report showing how much AI contributed to the research and what it contributed. Which AI tools were used to achieve which goals, and which artifacts contain AI-generated content. Deterministic - a report, not an LLM.</p>
+                <p><strong>Gap Analysis.</strong> A 5-dimension assessment (completeness, sufficiency, authenticity, relevance, timeliness) of whether the record is sufficient to support the research goals. Deterministic - a rule-based check.</p>
+                <p><strong>Legal Standards.</strong> A check against 6 current legal standards for AI-IP (from 2023-2026 case law and guidelines). Shows which standards the record meets and which it does not. Deterministic.</p>
+                <p><strong>Search.</strong> Find recorded days by text query or by tag, with the signed day record inlined under each hit.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy (scroll-event based).
+    (function () {
+        var OFFSET = 170; // sticky nav bar height
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        // Intercept sidebar clicks: smooth scroll without changing URL hash
+        links.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.getElementById(a.getAttribute('data-spy'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActive(a.getAttribute('data-spy'));
+            });
+        });
+        function update() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
+            if (atBottom) {
+                setActive(sections[sections.length - 1].id);
+                return;
+            }
+            var current = null, best = null, bestDiff = Infinity;
+            for (var i = 0; i < sections.length; i++) {
+                var top = sections[i].getBoundingClientRect().top;
+                if (top <= OFFSET) { current = sections[i]; continue; }
+                var d = top - OFFSET;
+                if (d < bestDiff) { bestDiff = d; best = sections[i]; }
+            }
+            if (current) setActive(current.id);
+            else if (best && bestDiff <= 300) setActive(best.id);
+            else setActive(sections[0].id);
+        }
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

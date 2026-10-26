@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WorkSigned — tool showcase (retired from index.html while deciding what to do with it).">
+    <title>WorkSigned — tool showcase (staging)</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Small top bar so the showcase can be previewed in isolation and the
+           theme can be toggled. Not part of the live site. */
+        .stage-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 24px; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: var(--bg); z-index: 10;
+        }
+        .stage-bar .note { font-size: var(--fs-small); color: var(--text-muted); }
+        .stage-bar .note strong { color: var(--text); }
+        .stage-bar a { font-size: var(--fs-small); color: var(--accent-2); text-decoration: none; font-weight: 600; }
+        .stage-bar a:hover { text-decoration: underline; }
+        /* Center the showcase on its own (it normally sits between other sections). */
+        .showcase { border-top: none; }
+    </style>
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') { t = 'auto'; }
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+</head>
+<body>
+<div class="stage-bar">
+    <span class="note"><strong>Staging</strong> &mdash; the retired tool showcase from index.html. <a href="index.html">Back to site &rarr;</a></span>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+</div>
+
+<div class="lightbody">
+    <!-- ============================ TOOL SHOWCASE (retired from index.html) ============================ -->
+    <section class="showcase" id="tools">
+        <div class="container">
+            <div style="text-align:center;">
+                <h2 class="section-title">One platform. <span class="grad">Every tool</span> in the workflow.</h2>
+                <p class="section-lead">
+                    Code, documents, spreadsheets, presentations, LaTeX &mdash; and the work that happens between you:
+                    <strong>email and AI-assisted conversations, signed as they pass through the institution&rsquo;s relay.</strong>
+                    Every tool and every exchange writes to the same signed record. And code written in the editor
+                    <strong>runs right in the platform.</strong>
+                </p>
+            </div>
+
+            <!-- The framed product window -->
+            <div class="window">
+                <div class="window-bar">
+                    <div class="window-dots"><i></i><i></i><i></i></div>
+                    <div class="window-url">
+                        <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        <span id="showcase-url">app.worksigned.com/&#8203;code</span>
+                    </div>
+                    <span class="window-live"><span class="pulse"></span> sealed</span>
+                </div>
+                <div class="stage" id="showcase-stage">
+                    <!-- Slides are filled by script.js from the TOOLS data set -->
+                </div>
+                <button class="showcase-nav prev" id="showcase-prev" aria-label="Previous tool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button class="showcase-nav next" id="showcase-next" aria-label="Next tool">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+
+            <!-- live caption describing the current tool -->
+            <p class="showcase-caption" id="showcase-caption"></p>
+
+            <!-- Segmented tab rail: one tab per tool -->
+            <div class="showcase-tabs" id="showcase-tabs"></div>
+        </div>
+    </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

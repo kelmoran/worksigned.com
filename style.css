@@ -132,11 +132,11 @@
 .lightbody .window { box-shadow: 0 30px 80px rgba(20,40,90,0.22); }
 /* The .section-alt (institutions) used --bg-elev; on light that's white — give it a tint */
 .lightbody .section-alt { background: #eef2f9; }
-/* cta-band stays a dark accent moment (contrast anchor near the bottom) */
-.lightbody .cta-band { background: #0d1420; }
-.lightbody .cta-band .section-title { color: #ffffff; }
-.lightbody .cta-band .section-lead { color: rgba(244,246,251,0.82); }
-.lightbody .cta-band .section-lead strong { color: #ffffff; }
+/* cta-band follows the theme (uniform light/dark) */
+.lightbody .cta-band { background: #eef2f9; }
+.lightbody .cta-band .section-title { color: var(--text); }
+.lightbody .cta-band .section-lead { color: var(--text-muted); }
+.lightbody .cta-band .section-lead strong { color: var(--text); }
 /* The signed-trail "ledger" stays a DARK terminal-style block (it's a product mock —
    a cryptographic ledger should look like a dark terminal). On the light body it reads
    as a deliberate dark card, exactly like 1Password's terminal mockups on a light page.
@@ -153,25 +153,23 @@
 .lightbody .trail-example .te-heading { color: #141824; }
 .lightbody .trail-example .te-lead { color: #4a5568; }
 .lightbody .trail-example .te-label { color: #6b7280; }
-/* The .mg-panel is the actual visible magnified ledger card and is semi-transparent,
-   so the light body bleeds through and the light-tuned row text becomes illegible.
-   Give it its own SOLID dark surface so it's a self-contained dark "terminal" card
-   (the cryptographic ledger reads best as a dark terminal on the light page). */
+/* The .mg-panel (magnified ledger card) follows the theme. On the light body it is
+   a light card with standard text tokens, so it reads uniform with the rest of the
+   page; in dark mode it reverts to the dark card via the [data-theme="dark"] block. */
 .lightbody .mg-panel {
-    background: #0b1420;
-    border-color: rgba(94,234,212,0.30);
-    box-shadow: 0 30px 80px -30px rgba(10,20,40,0.6);
+    background: #ffffff;
+    border-color: var(--border-strong);
+    box-shadow: 0 24px 60px -30px rgba(20,40,90,0.35);
 }
-/* Re-tune the light-tuned row text so it's legible on the dark card */
-.lightbody .mg-panel .mg-title { color: #f4f6fb; }
+.lightbody .mg-panel .mg-title { color: var(--text); }
 .lightbody .mg-panel .mg-sub, .lightbody .mg-panel .mg-t, .lightbody .mg-panel .mg-detail {
-    color: #cfd5e2;
+    color: var(--text-muted);
 }
-.lightbody .mg-panel .mg-hash { color: #8b93a7; }
-.lightbody .mg-panel .mg-row code { color: #cfe9ff; background: rgba(255,255,255,0.06); }
-.lightbody .mg-panel .mg-foot { color: #cfd5e2; }
-.lightbody .mg-panel .mg-rows { border-top-color: rgba(94,234,212,0.22); }
-.lightbody .mg-panel .mg-row { border-bottom-color: rgba(94,234,212,0.12); }
+.lightbody .mg-panel .mg-hash { color: var(--text-faint); }
+.lightbody .mg-panel .mg-row code { color: var(--accent); background: rgba(94,234,212,0.12); }
+.lightbody .mg-panel .mg-foot { color: var(--text-muted); }
+.lightbody .mg-panel .mg-rows { border-top-color: var(--border); }
+.lightbody .mg-panel .mg-row { border-bottom-color: var(--border); }
 /* The stealth hover cards (.sl-card) use var(--bg-elev) -> now white. Make the
    hover card a white card with light borders so it's legible on the light body. */
 .lightbody .sl-card { background: #ffffff; }
@@ -182,6 +180,8 @@
 }
 .lightbody .proc-body h3 { color: var(--text); }
 .lightbody .proc-body p { color: var(--text-muted); }
+/* Card headings (institutions + open-standards pillars): flip to dark on light theme */
+.lightbody .inst-cards .ic h3, .lightbody .std-cards .ic h3 { color: var(--text); }
 .lightbody .proc-body p strong { color: var(--text); }
 /* The "institutions" case carousel: ensure light text flips */
 .lightbody .case-big .case-headline { color: var(--text); }
@@ -331,7 +331,10 @@ body::before {
     -webkit-text-fill-color: transparent; color: transparent;
 }
 .hero .sub {
-    font-size: clamp(16px, 1.4vw + 6px, 21px);
+    /* Body/subtext is FIXED size (never shrinks with viewport width; only titles
+       scale down). Locked at the readable 22px body size so it never drops below
+       it on narrow windows. */
+    font-size: 22px;
     color: var(--text-muted);
     max-width: 720px; margin: 0 auto 44px; line-height: 1.65;
 }
@@ -339,8 +342,9 @@ body::before {
 .hero .sub a { color: #7df0e0; font-weight: 700; text-decoration: none; cursor: pointer; border-bottom: 1px dotted #5eead4; transition: color .2s, border-color .2s; }
 .hero .sub a::after { content: "\2195"; font-size: .7em; margin-left: 3px; opacity: .7; }
 .hero .sub a:hover { color: #a8fff2; border-color: #a8fff2; }
-.hero-cta { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 22px; }
+.hero-cta { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 100px; }
 .hero-cta .btn { padding: 19px 40px; font-size: var(--fs-body); font-weight: 700; border-radius: 999px; }
+.apply-form .alpha-note { margin: 16px auto 0; max-width: 100%; font-size: 14px; line-height: 1.5; text-align: center; color: #6b7280; }
 .hero-note { font-size: var(--fs-small); color: var(--text-faint); }
 
 /* ===== LIGHT HERO (option 1b) =====
@@ -629,7 +633,9 @@ body::before {
     margin: 0 auto 18px; max-width: 720px;
 }
 .case-detail {
-    font-size: clamp(17px, 1.7vw, 20px);
+    /* Body/subtext is FIXED size (never shrinks with viewport width; only titles
+       scale down). Locked at a readable size so it never drops on narrow windows. */
+    font-size: 19px;
     color: var(--text-muted); line-height: 1.65; max-width: 660px; margin: 0 auto;
 }
 .case-detail b {
@@ -769,59 +775,37 @@ body::before {
 .footer-copy { font-size: var(--fs-small); color: var(--text-faint); }
 .footer-copy a { color: var(--text-muted); }
 .footer-copy a:hover { color: var(--text); }
-
-/* ==========================================================================
-   SCROLL REVEAL
-   ========================================================================== */
-.reveal {
-    opacity: 0; transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-    will-change: opacity, transform;
+.footer-alpha {
+    width: 100%; font-size: 14px; line-height: 1.5;
+    color: var(--text-faint); margin: 6px 0 0;
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* Major sections fade + rise in as you scroll (applied to the section's container). */
-#process > .container,
-#institutions > .container,
-#tools > .container,
-#trust > .container {
-    opacity: 0; transform: translateY(28px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-}
-#process > .container.in,
-#institutions > .container.in,
-#tools > .container.in,
-#trust > .container.in { opacity: 1; transform: translateY(0); }
+/* SCROLL REVEAL removed: sections render immediately, no fade-in on scroll. */
 
-/* Work Ledger — its own scroll-triggered fade so it animates when it enters
-   the viewport (it sits below the #process title, so the whole-section fade
-   completes before it's in view). */
-.trail-example { opacity: 0; transform: translateY(34px);
-    transition: opacity 0.8s ease, transform 0.8s ease; margin-top: 84px; }
-.trail-example.in { opacity: 1; transform: translateY(0); }
-.steps .reveal:nth-child(2) { transition-delay: 0.12s; }
-.steps .reveal:nth-child(3) { transition-delay: 0.24s; }
-.steps .reveal:nth-child(4) { transition-delay: 0.36s; }
+
+/* Work Ledger: static (no scroll fade). Keeps its top margin. */
+.trail-example { margin-top: 84px; }
 
 /* ==========================================================================
    DOCUMENTATION + REQUIREMENTS PAGES
    Shared, official-doc layout: left sidebar nav + scrollable content.
    ========================================================================== */
 .doc-shell {
-    display: grid;
-    grid-template-columns: 280px 1fr;
     max-width: var(--maxw);
     margin: 0 auto;
-    min-height: calc(100vh - 64px);
+    padding-left: 280px;
 }
 .doc-sidebar {
-    position: sticky; top: 64px;
-    align-self: start;
-    height: calc(100vh - 64px);
+    position: fixed;
+    top: 0; left: 0;
+    width: 280px;
+    height: 100vh;
     overflow-y: auto;
-    padding: 28px 20px 40px 28px;
+    padding: 88px 20px 40px 28px;
     border-right: 1px solid var(--border);
     font-size: 15px;
+    background: var(--bg);
+    z-index: 40;
 }
 .doc-sidebar .doc-side-brand {
     display: block; margin-bottom: 22px; font-weight: 700; font-size: 15px;
@@ -863,6 +847,9 @@ body::before {
 }
 .doc-content section > h2 .h2-sub {
     display: block; font-size: 15px; font-weight: 400; color: var(--text-muted); margin-top: 6px;
+}
+.doc-content section p.h2-sub {
+    font-size: 15px; font-weight: 400; color: var(--text-muted); margin-top: -6px; margin-bottom: 20px;
 }
 .doc-content h3 { font-size: 21px; font-weight: 600; margin: 26px 0 10px; color: var(--text); }
 .doc-content p { margin: 0 0 16px; color: var(--text-muted); font-size: 20px; line-height: 1.7; }
@@ -944,10 +931,10 @@ body::before {
 :root[data-theme="dark"] .doc-reqcard { border-color: #3a4256; background: #171b26; }
 :root[data-theme="dark"] .doc-ledger { border-color: #1c212d; }
 
-/* responsive: sidebar collapses on mobile */
+/* responsive: sidebar hidden on mobile */
 @media (max-width: 860px) {
-    .doc-shell { grid-template-columns: 1fr; }
-    .doc-sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 20px 18px; }
+    .doc-shell { padding-left: 0; }
+    .doc-sidebar { display: none; }
     .doc-content { padding: 40px 18px 72px; }
 }
 
@@ -958,7 +945,6 @@ body::before {
     .steps { grid-template-columns: 1fr; max-width: 460px; }
     .trust-cards { grid-template-columns: 1fr; max-width: 460px; }
     .cases-panel { padding: 28px 22px; min-height: 0; }
-    .case-detail { font-size: 16px; }
     .cases-hero { margin-top: 40px; }
 }
 @media (max-width: 1080px) {
@@ -982,21 +968,6 @@ body::before {
 }
 @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    /* Every scroll-reveal / fade-rise must settle to fully visible — otherwise
-       reduced-motion users (JS-driven .visible/.in never fire the transition) can
-       see content stuck at opacity:0. Cover them all. */
-    .reveal,
-    .reveal.visible,
-    .trail-example,
-    .trail-example.in,
-    #process > .container,
-    #institutions > .container,
-    #tools > .container,
-    #trust > .container,
-    #process > .container.in,
-    #institutions > .container.in,
-    #tools > .container.in,
-    #trust > .container.in { opacity: 1; transform: none; transition: none; }
     /* Infinite/looping decorative motion: stop it (the counters/dots keep their
        final value, they just stop pulsing/zooming). */
     .window-live .pulse { animation: none; box-shadow: 0 0 0 2px rgba(52,211,166,0.4); }
@@ -1078,6 +1049,19 @@ body::before {
 [data-theme="dark"] .lightbody .trust-card { background: #12151d; border-color: #232838; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
 [data-theme="dark"] .lightbody .window { box-shadow: 0 30px 80px rgba(0,0,0,0.6); }
 [data-theme="dark"] .lightbody .section-alt { background: #0e1119; }
+[data-theme="dark"] .lightbody .cta-band { background: #0d1420; }
+[data-theme="dark"] .lightbody .cta-band .section-title { color: #ffffff; }
+[data-theme="dark"] .lightbody .cta-band .section-lead { color: rgba(244,246,251,0.82); }
+[data-theme="dark"] .lightbody .cta-band .section-lead strong { color: #ffffff; }
+/* .mg-panel (magnified ledger card) reverts to its dark terminal look in dark mode */
+[data-theme="dark"] .lightbody .mg-panel { background: #0b1420; border-color: rgba(94,234,212,0.30); box-shadow: 0 30px 80px -30px rgba(10,20,40,0.6); }
+[data-theme="dark"] .lightbody .mg-panel .mg-title { color: #f4f6fb; }
+[data-theme="dark"] .lightbody .mg-panel .mg-sub, [data-theme="dark"] .lightbody .mg-panel .mg-t, [data-theme="dark"] .lightbody .mg-panel .mg-detail { color: #cfd5e2; }
+[data-theme="dark"] .lightbody .mg-panel .mg-hash { color: #8b93a7; }
+[data-theme="dark"] .lightbody .mg-panel .mg-row code { color: #cfe9ff; background: rgba(255,255,255,0.06); }
+[data-theme="dark"] .lightbody .mg-panel .mg-foot { color: #cfd5e2; }
+[data-theme="dark"] .lightbody .mg-panel .mg-rows { border-top-color: rgba(94,234,212,0.22); }
+[data-theme="dark"] .lightbody .mg-panel .mg-row { border-bottom-color: rgba(94,234,212,0.12); }
 [data-theme="dark"] .lightbody .sl-card { background: #171b25; }
 [data-theme="dark"] .lightbody .proc-node {
     background: #12151d; color: #5b8cff; border-color: #2f3648; box-shadow: 0 0 0 4px rgba(91,140,255,0.12);
@@ -1129,3 +1113,8 @@ body::before {
     background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); color: #f4f6fb;
 }
 [data-theme="dark"] .theme-toggle:hover { background: rgba(255,255,255,0.12); border-color: #5b8cff; }
+[data-theme="dark"] .hs-window td.ws-col {
+    background: rgba(6,182,212,0.3) !important;
+    border-left: 3px solid rgba(6,182,212,0.9) !important;
+    border-right: 3px solid rgba(6,182,212,0.9) !important;
+}

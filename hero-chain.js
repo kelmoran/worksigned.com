@@ -25,6 +25,7 @@
   var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var dark = (document.documentElement.getAttribute('data-theme') === 'dark');
+  var inView = true; // hero band visibility (skip drawing when scrolled away)
 
   var BLUE = [70, 150, 255], TEAL = [40, 210, 175], GLOW = [170, 225, 255];
   function mix(a, b, t) { return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
@@ -210,9 +211,28 @@
 
   var last = performance.now(), raf = null;
   function frame(now) {
-    var dt = Math.min(0.05, (now - last) / 1000); last = now;
-    step(dt); draw();
     raf = requestAnimationFrame(frame);
+    // Skip work when the hero band is scrolled out of view. inView is set by an
+    // IntersectionObserver (below) -- not a per-frame getBoundingClientRect(),
+    // which on a transformed/100vw ancestor forces an expensive layout flush per frame.
+    if (!inView) { last = now; return; }
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    try {
+      step(dt); draw();
+    } catch (err) {
+      // Never let a transient draw error kill the loop (would look "frozen").
+      // Just skip this frame; the rAF re-arm above keeps the chain alive.
+    }
+  }
+
+  // Track whether the hero band is on screen WITHOUT a per-frame layout read.
+  // IntersectionObserver fires only when the band crosses the viewport edge.
+  if (typeof IntersectionObserver !== 'undefined') {
+    var io = new IntersectionObserver(function (entries) {
+      inView = entries[0] && entries[0].isIntersecting;
+      if (inView && !reduced) start();
+    }, { threshold: 0 });
+    io.observe(cv);
   }
   function start() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
   function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
@@ -230,7 +250,13 @@
     else { buildDateCache(); if (!reduced) start(); }
   });
 
-  resize();
-  if (reduced) { staticPopulate(); draw(); }
-  else start();
+  if (reduced) {
+    // Respect prefers-reduced-motion by hiding the chain ENTIRELY (no static frame).
+    // Collapse the band AND its margins so the hero leaves no big empty gap.
+    var band = cv.parentElement;
+    if (band) { band.style.display = 'none'; }
+  } else {
+    resize();
+    start();
+  }
 })();

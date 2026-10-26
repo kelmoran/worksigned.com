@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>Customization — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Customization</span>
+            <a href="#overview" class="active" data-spy="overview">Overview</a>
+            <a href="#components" data-spy="components">What can be customized</a>
+            <a href="#special" data-spy="special">Special requests</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Customization</div>
+            <h1>What can be customized</h1>
+            <p class="doc-lede">Virtually all components of WorkSigned's workflow and features are easily customizable.</p>
+
+            <section id="overview" style="margin-top: 40px;">
+                <h2>Overview</h2>
+                <p>Customization and extensibility is a core philosophy of WorkSigned software. Data access methods are constantly evolving, and as such we have made the client adaptable to the researcher's technical needs. WorkSigned updates its software with new adapters (eg to new data sources) to meet customer needs at no additional cost. Furthermore, each research project is different. The research record assembly pipeline, which is AI powered, is highly customizable to the researcher's need.</p>
+            </section>
+
+            <section id="components">
+                <h2>What components of WorkSigned are customizable?</h2>
+                <p><strong>1. The data source adapters.</strong> Connection and integration to new cloud storage providers and new data storage/transfer protocols, for example.</p>
+                <p><strong>2. The built-in tools.</strong> WorkSigned accommodates almost any type of additional tool. Adding a new tool is part of the client design and does not conflict with other tools.</p>
+                <p><strong>3. Research record generation pipeline.</strong> An AI pipeline helps categorize files/data, generate metadata, and create additional insights into the record. WorkSigned includes a pipeline editor to customize, replace, or create new pipelines that are more suited towards specific types of research.</p>
+                <p><strong>4. AI/email/web search tooling.</strong> AI tools are originally highly customizable. Researchers will eventually need to adapt AI tools to specific needs. WorkSigned anticipates this and provides a modular and flexible AI agent stack. Email provider integrations can be added on demand free of charge. Web search providers can be added on demand free of charge.</p>
+            </section>
+
+            <section id="special">
+                <h2>I would like to customize something special, is it possible?</h2>
+                <p>Please contact us for special requests for customization. There is a high chance that it is and we would be happy to walk you through it. WorkSigned's design philosophy favors customization heavily and in the event that something isn't already customizable, we would be happy to make it so provided it does not disrupt the program's core functionality.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy (scroll-event based).
+    (function () {
+        var OFFSET = 170; // sticky nav bar height
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        // Intercept sidebar clicks: smooth scroll without changing URL hash
+        links.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.getElementById(a.getAttribute('data-spy'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActive(a.getAttribute('data-spy'));
+            });
+        });
+        function update() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
+            if (atBottom) {
+                setActive(sections[sections.length - 1].id);
+                return;
+            }
+            var current = null, best = null, bestDiff = Infinity;
+            for (var i = 0; i < sections.length; i++) {
+                var top = sections[i].getBoundingClientRect().top;
+                if (top <= OFFSET) { current = sections[i]; continue; }
+                var d = top - OFFSET;
+                if (d < bestDiff) { bestDiff = d; best = sections[i]; }
+            }
+            if (current) setActive(current.id);
+            else if (best && bestDiff <= 300) setActive(best.id);
+            else setActive(sections[0].id);
+        }
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

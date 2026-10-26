@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>WorkSigned mounts</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --tile: #161b26;
+    --tile-brd: #232b3a;
+    --label: #8b98ab;
+    --accent: #5aa2f0;
+  }
+  [data-theme="light"] {
+    --bg: #ffffff;
+    --tile: #f6f8fa;
+    --tile-brd: #e3e8ef;
+    --label: #5b6572;
+    --accent: #2563eb;
+  }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .card {
+    display: grid;
+    grid-template-columns: repeat(4, 96px);
+    grid-auto-rows: 96px;
+    gap: 14px;
+    padding: 34px 40px;
+    border-radius: 22px;
+    background: var(--bg);
+  }
+  [data-theme="dark"] .card {
+    box-shadow: 0 0 0 1px var(--tile-brd), 0 24px 70px -18px rgba(0,0,0,.75);
+  }
+  [data-theme="light"] .card {
+    box-shadow: 0 0 0 1px var(--tile-brd), 0 24px 60px -22px rgba(20,35,60,.35);
+  }
+  .tile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    background: var(--tile);
+    border: 1px solid var(--tile-brd);
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    cursor: default;
+  }
+  .tile:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 24px -12px rgba(37, 99, 235, .55);
+  }
+  .tile svg { width: 46px; height: 46px; display: block; }
+  .tile img.mark { height: 46px; width: auto; max-width: 46px; display: block; }
+  .tile .label {
+    position: absolute;
+    left: 0; right: 0; bottom: 7px;
+    text-align: center;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+    color: var(--label);
+    opacity: 0;
+    transition: opacity .18s ease;
+    pointer-events: none;
+  }
+  .tile:hover .label { opacity: 1; }
+</style>
+</head>
+<body>
+  <div class="card" id="card"></div>
+<script>
+  var TILES = [
+    ["posix", "Local dir"],
+    ["ssh", "SSH"],
+    ["sftp", "SFTP"],
+    ["azure-blob", "Azure Blob"],
+    ["s3", "S3 / MinIO / R2"],
+    ["gcs", "GCS"],
+    ["gdrive", "Google Drive"],
+    ["dspace", "DSpace"],
+    ["irods", "iRODS"],
+    ["postgres", "PostgreSQL"],
+    ["mariadb", "MariaDB / MySQL"],
+  ];
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var theme = q.get("theme") === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+    var BG = theme === "light" ? "#f6f8fa" : "#161b26";
+    fetch("icons.json")
+      .then(function (r) { return r.json(); })
+      .then(function (icons) {
+        var card = document.getElementById("card");
+        TILES.forEach(function (t) {
+          var div = document.createElement("div");
+          div.className = "tile";
+          var v = icons[t[0]];
+          var label = '<span class="label">' + t[1] + "</span>";
+          if (v.indexOf("data:image") === 0) {
+            div.innerHTML = '<img class="mark' + (t[0] === "dspace" ? " mark--dspace" : "") + '" src="' + v + '" alt="">' + label;
+          } else {
+            div.innerHTML = v.replace(/var\(--surface-2[^)]*\)/g, BG) + label;
+          }
+          card.appendChild(div);
+        });
+        document.title = "ready:" + theme;
+      })
+      .catch(function (e) {
+        document.title = "error:" + e;
+        console.error(e);
+      });
+  })();
+</script>
+</body>
+</html>

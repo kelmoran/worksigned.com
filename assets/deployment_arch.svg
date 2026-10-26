@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" class="deploy-diagram">
+  <defs>
+    <marker id="arR" markerWidth="14" markerHeight="12" refX="14" refY="6" orient="auto"><path d="M0,0 L14,6 L0,12 Z" fill="#4a9ede"/></marker>
+    <marker id="arG" markerWidth="14" markerHeight="12" refX="14" refY="6" orient="auto"><path d="M0,0 L14,6 L0,12 Z" fill="#4ec99a"/></marker>
+    <marker id="arG2" markerWidth="14" markerHeight="12" refX="0" refY="6" orient="auto"><path d="M14,0 L0,6 L14,12 Z" fill="#4ec99a"/></marker>
+  </defs>
+
+  <!-- Institutional boundary -->
+  <rect x="50" y="60" width="680" height="380" rx="16" fill="none" stroke="#4a9ede" stroke-width="3" stroke-dasharray="14,8" opacity="0.7"/>
+
+  <!-- Node 1: Client box -->
+  <rect x="90" y="120" width="200" height="200" rx="14" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <!-- Monitor icon -->
+  <rect x="140" y="150" width="100" height="70" rx="6" fill="none" stroke="#4ec99a" stroke-width="4"/>
+  <line x1="190" y1="220" x2="190" y2="242" stroke="#4ec99a" stroke-width="4"/>
+  <line x1="160" y1="242" x2="220" y2="242" stroke="#4ec99a" stroke-width="4"/>
+
+  <!-- Node 2: Witness box -->
+  <rect x="390" y="120" width="200" height="200" rx="14" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <!-- Server icon -->
+  <rect x="440" y="148" width="100" height="24" rx="5" fill="none" stroke="#4a9ede" stroke-width="4"/>
+  <rect x="440" y="180" width="100" height="24" rx="5" fill="none" stroke="#4a9ede" stroke-width="4"/>
+  <rect x="440" y="212" width="100" height="24" rx="5" fill="none" stroke="#4a9ede" stroke-width="4"/>
+  <circle cx="455" cy="160" r="4.5" fill="#4ec99a"/>
+  <circle cx="455" cy="192" r="4.5" fill="#4ec99a"/>
+  <circle cx="455" cy="224" r="4.5" fill="#4ec99a"/>
+
+  <!-- Node 3: Signing box -->
+  <rect x="840" y="120" width="280" height="200" rx="14" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.5"/>
+  <!-- Lock icon -->
+  <rect x="950" y="160" width="60" height="50" rx="6" fill="none" stroke="#d4a832" stroke-width="4"/>
+  <path d="M962,160 v-18 a18,18 0 0,1 36,0 v18" fill="none" stroke="#d4a832" stroke-width="4"/>
+  <circle cx="980" cy="185" r="7" fill="none" stroke="#d4a832" stroke-width="3"/>
+  <line x1="980" y1="192" x2="980" y2="203" stroke="#d4a832" stroke-width="3"/>
+
+  <!-- Arrow: Client -> Witness -->
+  <line x1="290" y1="210" x2="385" y2="210" stroke="#4a9ede" stroke-width="4" marker-end="url(#arR)"/>
+
+  <!-- Arrow: Witness -> Signing -->
+  <line x1="590" y1="185" x2="835" y2="185" stroke="#4ec99a" stroke-width="4" marker-end="url(#arG)"/>
+
+  <!-- Arrow: Signing -> Witness (return) -->
+  <line x1="835" y1="245" x2="590" y2="245" stroke="#4ec99a" stroke-width="3" stroke-dasharray="10,6" marker-end="url(#arG2)"/>
+
+  <!-- Info boxes -->
+  <rect x="90" y="370" width="200" height="70" rx="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>
+  <rect x="390" y="370" width="200" height="70" rx="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>
+  <rect x="840" y="370" width="280" height="70" rx="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.35"/>
+</svg>

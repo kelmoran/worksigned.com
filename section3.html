@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>Signing & Proof — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Signing &amp; Proof</span>
+            <a href="#overview" class="active" data-spy="overview">Overview</a>
+            <a href="#methods" data-spy="methods">The methods</a>
+            <a href="#daily-seal" data-spy="daily-seal">The daily seal</a>
+            <a href="#global-anchor" data-spy="global-anchor">The global anchor</a>
+            <a href="#verification" data-spy="verification">Verification</a>
+            <a href="#transparency" data-spy="transparency">Why this is court-recognized</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Signing &amp; Proof</div>
+            <h1>How research records are signed and proven</h1>
+            <p class="doc-lede">WorkSigned uses a two-level cryptographic system: a daily seal signed by the operator, and a global anchor from an independent timestamping authority. Together they prove what was done, when, and that it has not been altered.</p>
+
+            <section id="overview" style="margin-top: 40px;">
+                <h2>Overview</h2>
+                <p>Every piece of research activity that WorkSigned captures is hashed the moment it is recorded. At the end of each day, all of those hashes are folded into a single value and signed. That signature, combined with an independent timestamp from a third-party authority, is the proof that the record existed at that time and has not been changed since.</p>
+                <p>The system has two levels. Level 1 is the researcher's own daily seal: a cryptographic signature over everything they did that day. Level 2 is the global anchor: a timestamp from an independent authority that proves the seal existed in the platform's log for that day. A researcher holds a small receipt (about 5 KB) that is sufficient for a third party to verify the entire day offline, with no access to WorkSigned's servers.</p>
+            </section>
+
+            <section id="methods">
+                <h2>The methods</h2>
+                <p>WorkSigned uses standard, publicly documented cryptographic primitives. There are no proprietary algorithms. Every step can be reproduced and verified by anyone with the public information.</p>
+                <p><strong>SHA-256 hashing.</strong> Every tracked item (a file version, a database view, an email, a chat turn, a web search) is reduced to a 32-byte hash the moment it is captured. The hash is a fingerprint: any change to the content, even a single byte, produces a completely different hash. This is the same algorithm used by Bitcoin, TLS, and NIST-approved document systems.</p>
+                <p><strong>RS256 digital signatures (RSA-2048).</strong> The operator of the WorkSigned software holds a private key and signs each day's seal. The public key is published. Anyone with the public key can verify that the signature is authentic. This is the same signature standard used by TLS certificates, code-signing certificates, and eIDAS-qualified electronic signatures.</p>
+                <p><strong>Timestamping (RFC 3161).</strong> Once per day, the global root hash is sent to an independent Timestamping Authority (TSA). The TSA returns a signed token binding that hash to a time from the TSA's own clock. The TSA is a separate legal entity, often eIDAS-qualified, and is not controlled by WorkSigned or the researcher. This is the same standard used for legally binding electronic signatures in the EU.</p>
+                <p><strong>Merkle trees.</strong> All of a day's hashes are arranged in a binary tree. The root of that tree is a single 32-byte value that represents the entire day's content. A Merkle tree allows a third party to prove that a specific item was in the signed set without needing to see or download the entire set. This is the same construction used in Bitcoin's lightweight (SPV) verification.</p>
+            </section>
+
+            <section id="daily-seal">
+                <h2>The daily seal</h2>
+                <p>At the end of each day, WorkSigned collects every content hash captured that day: all file versions, all database views, all email records, all AI chat sessions, all web searches. These hashes are arranged in a Merkle tree. The root of that tree, along with a manifest (a table of contents listing what was captured), is combined into a single 32-byte value called the DAY FINAL.</p>
+                <p>The DAY FINAL is chained to the previous day's DAY FINAL. This makes the researcher's record a hash chain: day N's seal includes day N-1's seal. If any day is deleted or altered, the next day's signature will not verify, and the break is visible. This is the researcher's personal integrity guarantee, independent of the global log.</p>
+                <p>The operator then signs the DAY FINAL with their RSA-2048 private key. The signature binds the researcher's identity (via the user and project fields) to the day's content. The signed receipt, along with the manifest and the public key, is stored in the researcher's local database. This is the daily seal.</p>
+                <p>Each individual item in the day can also be proven independently. Because the day's hashes form a Merkle tree, any single file or record can be shown to be part of the signed day's root using only its own Merkle path (a few hundred bytes). A missing or corrupted local file does not invalidate the rest of the day: the other items still verify against the signed root, and the gap is visible and reportable.</p>
+            </section>
+
+            <section id="global-anchor">
+                <h2>The global anchor</h2>
+                <p>Every day, all users' daily seals are collected into a single global Merkle tree. One timestamp from the TSA is taken over the root of that tree. This is the global anchor: the single time reference for the entire platform that day, regardless of how many researchers sealed.</p>
+                <p>The global log is chained across days. Today's global hash includes yesterday's global hash. If any day's log entry is deleted or altered, the next day's chain hash will not verify. The log is gap-detectable.</p>
+                <p>The researcher's receipt includes a Merkle path that proves their daily seal was in that day's global set. The path is about 640 bytes even for a platform with a million users. The researcher does not need to download or trust the full global log; the path is self-contained proof of membership.</p>
+                <p>Because there is only one TSA call per day for the entire platform, the cost is minimal (approximately $20/year) and does not scale with the number of users. A premium tier is available that adds a second, private TSA token over the researcher's own seal, giving their proof a self-contained time anchor with no dependency on the global log at all.</p>
+            </section>
+
+            <section id="verification">
+                <h2>Verification</h2>
+                <p>A third party (a court, an auditor, a grant agency) can verify any day of a researcher's record using only the small receipt that the researcher holds. No network access to WorkSigned is required. The steps are:</p>
+                <p>First, verify the operator's RS256 signature over the day's canonical string. This proves the operator attested to that day's content. Second, check the personal hash chain: today's DAY FINAL includes yesterday's DAY FINAL, so any gap or alteration is detected. Third, take the researcher's signature as a leaf and walk the Merkle path to the global root, proving the seal was in that day's global set. Fourth, for any specific file or record the verifier wants to check, prove it into the day's signed root via its own Merkle path. Fifth, verify the TSA token: its embedded hash must match the global chain hash, and the token's certificate chain must be valid. This proves the global set existed at the TSA's timestamp.</p>
+                <p>All of this works offline. The verifier needs the receipt (about 5 KB per day) and the file content they want to check. They do not need WorkSigned's servers, the operator's private key, or the full global log. Verification is deterministic: the same inputs always produce the same result, and the result is a binary pass/fail with no ambiguity.</p>
+            </section>
+
+            <section id="transparency">
+                <h2>Why this is court-recognized</h2>
+                <p>Every component of WorkSigned's proof system is a standard, publicly documented method that is already accepted in legal proceedings. SHA-256 is an approved hash function by NIST (FIPS 180-4). RS256 is the signature algorithm in TLS 1.2 and 1.3. RFC 3161 timestamping is the standard for qualified electronic time stamps in the EU and is being adopted in US court proceedings for authenticating digital evidence. Merkle trees are a standard data structure in cryptography, patented in 1989 and used in Bitcoin's lightweight verification protocol.</p>
+                <p>There are no proprietary algorithms, no black-box trust, and no single point of failure that could invalidate the proof. The trust model is explicit: the researcher trusts the operator's signature key, the operator's integrity in running the software, and the TSA's clock. Each of these is a standard, auditable trust assumption. If any one is compromised, the others still hold. The research record itself, stored locally on the researcher's machine, is always accessible regardless of what happens to WorkSigned the company.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy (scroll-event based).
+    (function () {
+        var OFFSET = 170; // sticky nav bar height
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        // Intercept sidebar clicks: smooth scroll without changing URL hash
+        links.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.getElementById(a.getAttribute('data-spy'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActive(a.getAttribute('data-spy'));
+            });
+        });
+        function update() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
+            if (atBottom) {
+                setActive(sections[sections.length - 1].id);
+                return;
+            }
+            var current = null, best = null, bestDiff = Infinity;
+            for (var i = 0; i < sections.length; i++) {
+                var top = sections[i].getBoundingClientRect().top;
+                if (top <= OFFSET) { current = sections[i]; continue; }
+                var d = top - OFFSET;
+                if (d < bestDiff) { bestDiff = d; best = sections[i]; }
+            }
+            if (current) setActive(current.id);
+            else if (best && bestDiff <= 300) setActive(best.id);
+            else setActive(sections[0].id);
+        }
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

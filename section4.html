@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Anti-flash: apply saved / system theme before first paint (no FOUC) -->
+    <script>
+    (function(){
+        try {
+            var t = localStorage.getItem('ws-theme');
+            if (t !== 'light' && t !== 'dark' && t !== 'auto') {
+                t = 'auto';
+            }
+            // 'auto' (or no value) -> follow the OS; explicit light/dark -> honor it
+            var eff = (t === 'auto' || !t) ?
+                ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light')
+                : t;
+            if (eff === 'dark') document.documentElement.setAttribute('data-theme','dark');
+        } catch(e) {}
+    })();
+    </script>
+    <title>Deployment — WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+    <!-- Top navigation -->
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Deployment</span>
+            <a href="#overview" class="active" data-spy="overview">Overview</a>
+            <a href="#privacy" data-spy="privacy">How data privacy is achieved</a>
+            <a href="#result" data-spy="result">The end result</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Deployment</div>
+            <h1>How to deploy WorkSigned</h1>
+            <p class="doc-lede">WorkSigned is not cloud software. It's designed to operate with zero exposure of any sensitive data to external networks.</p>
+
+            <section id="overview" style="margin-top: 40px;">
+                <h2>Overview</h2>
+                <p>WorkSigned operates completely on institutional networks. Only record fingerprints (hash sequences which do not contain any data or carry any real meaning) are sent to WorkSigned's servers for signing. No telemetry or sensitive data is ever collected. This is the minimal amount of external network interaction that can happen while using a 3rd party signing authority. In other words, there is zero chance for WorkSigned or any third party cloud to interact with user data.</p>
+            </section>
+
+            <section id="privacy">
+                <h2>How data privacy is achieved</h2>
+                <div style="margin: 20px 0 30px;">
+                    <div class="arch-diagram" style="position: relative; border-radius: 14px; padding: 24px 20px; margin-bottom: 16px;">
+                        <div style="text-align: center; font-size: 1.8rem; font-weight: 700; color: var(--text); margin-bottom: 24px;">WorkSigned Deployment Architecture</div>
+                        <div style="display: flex; align-items: center; justify-content: center; flex-wrap: nowrap;">
+                            <!-- Client -->
+                            <div style="flex: 0 0 170px; border: 2px solid var(--text-muted); border-radius: 12px; padding: 14px; text-align: center;">
+                                <svg width="65" height="50" viewBox="0 0 70 55" style="margin: 0 auto 10px; display: block;">
+                                </svg>
+                                <div style="font-weight: 700; font-size: 1.2rem; color: var(--text);">WorkSigned Client</div>
+                                <div style="font-size: 1rem; color: var(--text-muted); margin-top: 4px;">Researcher's machine</div>
+                            </div>
+                            <!-- Arrow 1 -->
+                            <div style="flex: 0 0 80px; text-align: center; padding: 8px 0;">
+                                <svg width="80" height="40" viewBox="0 0 80 40">
+                                    <line x1="5" y1="20" x2="65" y2="20" stroke="#4a9ede" stroke-width="3.5"/>
+                                    <polygon points="65,14 78,20 65,26" fill="#4a9ede"/>
+                                </svg>
+                                <div style="font-size: 0.9rem; color: #4a9ede; margin-top: 4px; line-height: 1.4;">AI, email, search<br>file hashes</div>
+                            </div>
+                            <!-- Witness -->
+                            <div style="flex: 0 0 170px; border: 2px solid var(--text-muted); border-radius: 12px; padding: 14px; text-align: center;">
+                                <svg width="65" height="50" viewBox="0 0 70 55" style="margin: 0 auto 10px; display: block;">
+                                </svg>
+                                <div style="font-weight: 700; font-size: 1.2rem; color: var(--text);">Local Witness</div>
+                                <div style="font-size: 1rem; color: var(--text-muted); margin-top: 4px;">Institution's server</div>
+                            </div>
+                            <!-- Arrow 2 -->
+                            <div style="flex: 0 0 100px; text-align: center; padding: 8px 0;">
+                                <svg width="100" height="40" viewBox="0 0 100 40">
+                                    <line x1="5" y1="15" x2="85" y2="15" stroke="#4ec99a" stroke-width="3.5"/>
+                                    <polygon points="85,9 98,15 85,21" fill="#4ec99a"/>
+                                    <line x1="95" y1="30" x2="10" y2="30" stroke="#4ec99a" stroke-width="2.5" stroke-dasharray="6,4"/>
+                                    <polygon points="10,24 -3,30 10,36" fill="#4ec99a"/>
+                                </svg>
+                                <div style="font-size: 0.9rem; color: #4ec99a; margin-top: 4px; line-height: 1.4;"><strong>Fingerprints only</strong><br>(no data, no content)<br>Signature + TSA returned</div>
+                            </div>
+                            <!-- Signing -->
+                            <div style="flex: 0 0 170px; border: 2px solid var(--text-muted); border-radius: 12px; padding: 14px; text-align: center;">
+                                <svg width="44" height="52" viewBox="0 0 50 60" style="margin: 0 auto 10px; display: block;">
+                                    <rect x="8" y="22" width="34" height="30" rx="4" fill="none" stroke="#d4a832" stroke-width="3"/>
+                                    <path d="M14,22 v-10 a11,11 0 0,1 22,0 v10" fill="none" stroke="#d4a832" stroke-width="3"/>
+                                    <circle cx="25" cy="37" r="4.5" fill="none" stroke="#d4a832" stroke-width="2.5"/>
+                                    <line x1="25" y1="41" x2="25" y2="48" stroke="#d4a832" stroke-width="2.5"/>
+                                </svg>
+                                <div style="font-weight: 700; font-size: 1.2rem; color: var(--text);">WorkSigned Signing</div>
+                                <div style="font-size: 1rem; color: var(--text-muted); margin-top: 4px;">Remote server</div>
+                            </div>
+                        </div>
+                        <!-- Institutional label -->
+                        
+                    </div>
+                    <!-- Info boxes -->
+                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px;">
+                        <div style="border: 1.5px solid var(--text-muted); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
+                            <strong style="color: var(--text);">Client:</strong> Runs locally, no external connections
+                        </div>
+                        <div style="border: 1.5px solid var(--text-muted); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
+                            <strong style="color: var(--text);">Witness:</strong> Hosted by institution IT, relays traffic
+                        </div>
+                        <div style="border: 1.5px solid var(--text-muted); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
+                            <strong style="color: var(--text);">Signing:</strong> Signs fingerprints only, no data access
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 1rem; color: var(--text-muted); margin: 0;">Only cryptographic hash fingerprints cross the institutional boundary. No research data, files, or telemetry ever leave the network.</p>
+                </div>
+                <p><strong>WorkSigned local client software.</strong> The researcher-facing desktop interface. The package is downloaded and runs locally on the researcher's machine of choice - usually an institutional issued laptop or workstation. This software only talks to institution-controlled machines, and NEVER sends data, telemetry, or other information outside of the institution's own networks.</p>
+                <p><strong>WorkSigned local witness server.</strong> The institution installs this component onto their own servers. This server acts as a central relay to direct traffic: AI, email, and web search activity all occur via this relay. The purpose of the relay is to provide credibility to the record. The traffic passing through here is witnessed and signed, meaning that it cannot possibly be tampered with by the user. This makes the record robust as evidence in a legal setting. The relay submits the fingerprints only (without any data) to the external WorkSigned server for signing, so that WorkSigned may attest to the validity of the record.</p>
+                <p><strong>WorkSigned remote signing servers.</strong> WorkSigned operates this server. Its only purpose is to sign incoming fingerprints and return it - it cannot and does not receive any other input of any kind.</p>
+            </section>
+
+            <section id="result">
+                <h2>The end result for the user</h2>
+                <p>With this architecture, the user does not have to worry about data or knowledge being compromised. The institution can enforce its data policies easily since WorkSigned software provides no sanctioned code paths for violations.</p>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="container footer-inner">
+            <span class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</span>
+            <span class="footer-copy">
+                &copy; 2026 WorkSigned
+            </span>
+        </div>
+    </footer>
+
+    <script>
+    // Sidebar scroll-spy (scroll-event based).
+    (function () {
+        var OFFSET = 170; // sticky nav bar height
+        var links = Array.prototype.slice.call(document.querySelectorAll('.doc-sidebar a[href^="#"]'));
+        if (!links.length) return;
+        var map = {};
+        links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+        var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); })
+            .filter(Boolean);
+        function setActive(id) {
+            links.forEach(function (a) { a.classList.remove('active'); });
+            if (map[id]) map[id].classList.add('active');
+        }
+        // Intercept sidebar clicks: smooth scroll without changing URL hash
+        links.forEach(function (a) {
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                var target = document.getElementById(a.getAttribute('data-spy'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+                setActive(a.getAttribute('data-spy'));
+            });
+        });
+        function update() {
+            var atBottom = (window.innerHeight + window.scrollY) >= (document.body.scrollHeight - 20);
+            if (atBottom) {
+                setActive(sections[sections.length - 1].id);
+                return;
+            }
+            var current = null, best = null, bestDiff = Infinity;
+            for (var i = 0; i < sections.length; i++) {
+                var top = sections[i].getBoundingClientRect().top;
+                if (top <= OFFSET) { current = sections[i]; continue; }
+                var d = top - OFFSET;
+                if (d < bestDiff) { bestDiff = d; best = sections[i]; }
+            }
+            if (current) setActive(current.id);
+            else if (best && bestDiff <= 300) setActive(best.id);
+            else setActive(sections[0].id);
+        }
+        var ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                update();
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+    })();
+    </script>
+    <script>
+    (function(){
+        var root = document.documentElement;
+        var btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        var LABEL=function(){ return cur()==='dark'?'Dark':'Light'; };
+        function cur(){ return root.getAttribute('data-theme')==='dark'?'dark':'light'; }
+        function set(t){
+            if (t==='dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+            btn.textContent = LABEL();
+            try{ localStorage.setItem('ws-theme',t); }catch(e){}
+        }
+        btn.textContent = LABEL();
+        btn.addEventListener('click', function(){ set(cur()==='dark'?'light':'dark'); });
+    })();
+    </script>
+</body>
+</html>

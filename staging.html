@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+    (function(){ try { document.documentElement.setAttribute('data-theme','dark'); } catch(e){} })();
+    </script>
+    <title>Deployment flow: WorkSigned</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ---------- Flow-diagram infographic styles (dark) ---------- */
+        .flow { background: #0d1017; border: 1px solid #1c212d; border-radius: 16px; padding: 10px 8px 4px; margin: 20px 0 8px; overflow-x: auto; }
+        .flow svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+        .flowcap { color: var(--text-faint); font-size: 14px; text-align: center; padding: 8px 4px 10px; }
+
+        /* legend */
+        .legend { display: flex; flex-wrap: wrap; gap: 14px 22px; justify-content: center; padding: 4px 0 6px; font-size: 14px; color: var(--text-muted); }
+        .legend span { display: inline-flex; align-items: center; gap: 7px; }
+        .legend i { width: 22px; height: 0; border-top-width: 3px; border-top-style: solid; display: inline-block; }
+        .lg-sign { border-top-color: #34d3a6; }
+        .lg-data { border-top-color: #5b8cff; border-top-style: dashed; }
+        .lg-sync { border-top-color: #f5b83d; }
+        .lg-prot { border-top-color: #ff6b6b; }
+
+        /* pick / callout boxes next to diagrams */
+        .picklist { margin: 14px 0 4px; }
+        .pick { display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: start; padding: 14px 0; border-bottom: 1px solid #1c212d; }
+        .pick:last-child { border-bottom: none; }
+        .pick .pn { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 20px; color: #34d3a6; line-height: 1.2; }
+        .pick .pt { font-size: 19px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .pick .pd { font-size: 16px; color: var(--text-muted); line-height: 1.55; }
+        .pick .pd b { color: var(--text); font-weight: 600; }
+
+        /* ---------- Animated hash-flow infographic (single viewport, persistent cast) ---------- */
+        .hashflow-wrap { margin: 28px 0 10px; }
+        .hf-stage {
+            position: relative; height: 560px; max-width: 960px; margin: 0 auto;
+            border: 1px solid #1c212d; border-radius: 16px; background: #0d1017; overflow: hidden;
+            user-select: none;
+        }
+        .hf-block {
+            position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 4px; text-align: center; border-radius: 10px; opacity: 0; overflow: hidden;
+            transition: left .6s cubic-bezier(.5,.05,.2,1), top .6s cubic-bezier(.5,.05,.2,1),
+                        width .6s cubic-bezier(.5,.05,.2,1), height .6s cubic-bezier(.5,.05,.2,1),
+                        opacity .4s ease, background .5s ease, border-color .5s ease, color .5s ease,
+                        font-size .5s ease, box-shadow .5s ease, transform .6s cubic-bezier(.5,.05,.2,1);
+            will-change: left, top, width, height;
+        }
+        .hf-block.snap { transition: none; }
+        .hf-block svg { width: 24px; height: 24px; stroke: #5b8cff; fill: none; stroke-width: 1.6; flex: none; }
+        .hf-block .t { font-size: 13px; color: #d6dbe7; line-height: 1.3; }
+        .hf-block .h { font-size: 11px; color: #8b93a5; font-family: "IBM Plex Mono", monospace; }
+        .hf-item  { background: #171b26; border: 1px solid #2f3648; }
+        .hf-chip  { background: #0f1a2e; border: 1px solid #5b8cff; font-family: "IBM Plex Mono", monospace; font-size: 13px; color: #9fd0ff; }
+        .hf-root  { background: #0f2019; border: 2px solid #34d3a6; font-family: "IBM Plex Mono", monospace; }
+        .hf-final { background: #0f2019; border: 2px solid #34d3a6; font-family: "IBM Plex Mono", monospace; box-shadow: 0 0 22px rgba(52,211,166,.28); }
+        .hf-root .t, .hf-final .t { font-size: 15px; font-weight: 700; color: #7ee2bd; letter-spacing: .04em; }
+        .hf-final .h { color: #a3b3a1; }
+        .hf-sigframe {
+            background: rgba(52,211,166,.05); border: 2px solid #34d3a6;
+            box-shadow: 0 0 16px rgba(52,211,166,.15) inset;
+        }
+        .hf-sigframe .slabel {
+            position: absolute; bottom: 7px; left: 0; right: 0; text-align: center;
+            font-size: 10.5px; color: #6f7789; letter-spacing: .05em; font-family: "IBM Plex Mono", monospace;
+        }
+        .hf-pill  { position: absolute; width: fit-content; background: #171b26; border: 1px solid #2f3648; border-radius: 999px;
+                    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: #9fd0ff;
+                    padding: 4px 10px; white-space: nowrap; opacity: 0;
+                    transition: left .55s cubic-bezier(.5,.05,.2,1), top .55s cubic-bezier(.5,.05,.2,1), opacity .35s ease; }
+        .hf-logrow { background: #12151d; border: 1px solid #1c212d; font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: #8b93a5; }
+        .hf-logrow.me { background: rgba(52,211,166,.05); border-color: #34d3a6; color: #cfd5e2; }
+        .hf-tsa   { border: 1px dashed #f5b83d; color: #f5b83d; background: none; font-size: 13px; }
+        .hf-caption {
+            position: absolute; left: 0; right: 0; bottom: 14px; text-align: center;
+            font-size: 14px; color: var(--text-faint); padding: 0 20px; pointer-events: none;
+            transition: opacity .35s ease;
+        }
+        .hf-stepnum {
+            position: absolute; top: 14px; left: 16px; font-family: "IBM Plex Mono", monospace;
+            font-size: 12px; color: #7ee2bd; border: 1px solid #34d3a6; background: #0f2019;
+            border-radius: 999px; padding: 3px 12px;
+        }
+        .hf-controls { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+        .hf-step-btn {
+            background: #171b26; border: 1px solid #2f3648; color: var(--text-muted); border-radius: 999px;
+            padding: 8px 18px; font-size: 14px; cursor: pointer; font-family: inherit;
+            transition: border-color .2s, color .2s;
+        }
+        .hf-step-btn:hover { border-color: #34d3a6; color: #7ee2bd; }
+        .hf-step-btn:disabled { opacity: .35; cursor: default; }
+    </style>
+</head>
+<body id="top">
+    <header class="nav">
+        <div class="nav-left">
+            <a href="index.html" class="brand"><span class="brand-mark"><img class="brand-logo" src="assets/logows_nav.png" alt="WorkSigned"><img class="brand-logo-dark" src="assets/logows_dark_nav.png" alt="" aria-hidden="true"></span> WorkSigned</a>
+            <nav class="nav-links nav-links-left">
+                <a href="usage.html">Usage</a>
+                <a href="deploy.html">Deployment</a>
+                <a href="proof.html">Proof</a>
+                <a href="policy.html">Policy</a>
+            </nav>
+        </div>
+        <nav class="nav-links">
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">&#9788;</button>
+            <a href="index.html#apply" class="nav-cta">Join</a>
+        </nav>
+    </header>
+
+    <div class="doc-shell">
+        <aside class="doc-sidebar">
+            <span class="doc-side-brand">Deployment</span>
+            <div class="doc-group">Who plugs in</div>
+            <a href="#user" class="active">1 &middot; The researcher</a>
+            <a href="#it">2 &middot; IT</a>
+            <a href="#admin">3 &middot; Administration</a>
+            <div class="doc-group">Model</div>
+            <a href="#model">Three locations</a>
+                <a href="#hashflow">How a day becomes proof</a>
+        </aside>
+
+        <main class="doc-content">
+            <div class="doc-hero-eyebrow">Deployment &middot; staging</div>
+            <h1>Who plugs in, and how</h1>
+            <p class="doc-lede">WorkSigned is a <strong>signing layer</strong>. It signs the fingerprints in your <strong>backup / version-control</strong> and stores only a tiny <strong>signed record</strong> (hash + signature + pointer). Three people plug in: the researcher, IT, and administration. Each has a different job.</p>
+            <div class="doc-callout"><strong>Summary:</strong> the researcher picks three locations (live files, backup/version-control, signed records), IT protects the backups the proofs point to, and administration chooses how much to run. Only the <strong>backup/version-control</strong> layer gets signed; WorkSigned stores only the <strong>signed records</strong>; nobody re-hosts your data.</div>
+
+            <section id="model">
+                <h2>The three things</h2>
+                <p>There are exactly three distinct things. You pick the location for each (any mount, local or remote, yours or IT&rsquo;s). Picking these three is the only thing you ever configure. Only <strong>one</strong> gets signed, and WorkSigned stores only <strong>one</strong>.</p>
+
+                <div class="flow">
+                    <svg viewBox="0 0 940 330" role="img" aria-label="Three things: live files (not signed), backup or version control (signed, must be retained), and signed records">
+                        <defs>
+                            <marker id="mBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5b8cff"/></marker>
+                        </defs>
+                        <!-- researcher -->
+                        <rect x="20" y="120" width="150" height="84" rx="12" fill="#171b26" stroke="#2f3648" stroke-width="1.5"/>
+                        <text x="95" y="157" fill="#f4f6fb" font-size="18" font-weight="600" text-anchor="middle">Researcher</text>
+                        <text x="95" y="180" fill="#6f7789" font-size="13" text-anchor="middle">picks 3 locations</text>
+
+                        <!-- 1 live files (NOT signed) -->
+                        <rect x="330" y="20" width="280" height="70" rx="12" fill="#141821" stroke="#2f3648" stroke-width="1.5"/>
+                        <text x="470" y="48" fill="#cfd5e2" font-size="16" font-weight="600" text-anchor="middle">1 &middot; Live files</text>
+                        <text x="470" y="69" fill="#6f7789" font-size="13" text-anchor="middle">ephemeral working state, NOT signed</text>
+
+                        <!-- 2 backup / version control (SIGNED) -->
+                        <rect x="330" y="130" width="280" height="70" rx="12" fill="#0f2019" stroke="#34d3a6" stroke-width="2"/>
+                        <text x="470" y="158" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">2 &middot; Backup / version control</text>
+                        <text x="470" y="179" fill="#34d3a6" font-size="13" text-anchor="middle">git, backups, tape: SIGNED &amp; retained</text>
+
+                        <!-- 3 signed records -->
+                        <rect x="330" y="240" width="280" height="70" rx="12" fill="#0f1a2e" stroke="#5b8cff" stroke-width="1.5"/>
+                        <text x="470" y="268" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">3 &middot; Signed records</text>
+                        <text x="470" y="289" fill="#6f7789" font-size="13" text-anchor="middle">hashes + WorkSigned signature (tiny)</text>
+
+                        <!-- WorkSigned engine -->
+                        <rect x="710" y="120" width="210" height="84" rx="12" fill="#12151d" stroke="#2f3648" stroke-width="1.5"/>
+                        <text x="815" y="155" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">WorkSigned</text>
+                        <text x="815" y="176" fill="#34d3a6" font-size="13" text-anchor="middle">signs &middot; anchors &middot; logs</text>
+
+                        <!-- live files flow into backup (versioning/backup captures them) -->
+                        <path d="M470,90 L470,128" fill="none" stroke="#5b8cff" stroke-width="2" stroke-dasharray="2 5" marker-end="url(#mBlue)"/>
+                        <text x="480" y="114" fill="#5b8cff" font-size="12">captured by</text>
+
+                        <!-- engine signs backup -> writes signed records -->
+                        <path d="M710,160 L614,160" fill="none" stroke="#34d3a6" stroke-width="2.5" marker-end="url(#mBlue)"/>
+                        <text x="662" y="152" fill="#34d3a6" font-size="12" text-anchor="middle">signs</text>
+                        <path d="M614,180 C660,210 660,250 614,268" fill="none" stroke="#34d3a6" stroke-width="2.5" marker-end="url(#mBlue)"/>
+                        <text x="662" y="228" fill="#34d3a6" font-size="12" text-anchor="middle">writes</text>
+                    </svg>
+                    <div class="flowcap">Live files are ephemeral and are <b>not</b> signed. WorkSigned signs the <b>backup / version-control</b> layer (what already holds the work) and writes only the tiny <b>signed records</b>.</div>
+                </div>
+
+                <div class="picklist">
+                    <div class="pick"><div class="pn">1</div><div><div class="pt">Live files</div><div class="pd">Your working directory: the files as they are <b>right now</b>. This is <b>ephemeral state</b>; it changes constantly and is <b>not signed</b>. WorkSigned points at it to know where the work is, but the proof does not depend on it.</div></div></div>
+                    <div class="pick"><div class="pn">2</div><div><div class="pt">Backup / version control</div><div class="pd">Git, backups, or tape: the <b>durable</b> record of the work. <b>This is what gets signed.</b> A proof depends on these bytes, so it must be <b>retained and accessible</b>.</div></div></div>
+                    <div class="pick"><div class="pn">3</div><div><div class="pt">Signed records</div><div class="pd">The <b>hashes + WorkSigned&rsquo;s signature</b> (and the daily-anchored log). <b>This is tiny and is the only thing WorkSigned writes.</b> Local disk or a remote mount both work.</div></div></div>
+                </div>
+            </section>
+
+            <section id="user">
+                <h2>1 &middot; The researcher</h2>
+                <p>The researcher&rsquo;s only job is to <strong>point WorkSigned at three places</strong> and then keep doing their work. The core proof requires no new app; the signed record comes from what already exists. Optional layers (AI proxy, mail, in-app editor) activate only if the researcher opts in.</p>
+
+                <div class="flow">
+                    <div class="legend">
+                        <span><i class="lg-sign"></i> read / sign</span>
+                        <span><i class="lg-data"></i> pointer (no copy)</span>
+                        <span><i class="lg-sync"></i> opt-in capture</span>
+                    </div>
+                    <svg viewBox="0 0 940 470" role="img" aria-label="Researcher flow: select locations, work as normal, proof is produced">
+                        <defs>
+                            <marker id="uSign" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#34d3a6"/></marker>
+                            <marker id="uPtr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5b8cff"/></marker>
+                            <marker id="uSync" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#f5b83d"/></marker>
+                        </defs>
+
+                        <!-- step 1: select -->
+                        <rect x="310" y="16" width="320" height="58" rx="12" fill="#0f1a2e" stroke="#5b8cff" stroke-width="1.5"/>
+                        <text x="470" y="41" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">1. Select 3 locations</text>
+                        <text x="470" y="60" fill="#6f7789" font-size="12.5" text-anchor="middle">live files &middot; backup / version control &middot; signed records</text>
+
+                        <path d="M470,74 L470,102" fill="none" stroke="#34d3a6" stroke-width="2" marker-end="url(#uSign)"/>
+
+                        <!-- step 2: work as normal -->
+                        <rect x="300" y="104" width="340" height="64" rx="12" fill="#171b26" stroke="#2f3648" stroke-width="1.5"/>
+                        <text x="470" y="131" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">2. Keep working the normal way</text>
+                        <text x="470" y="152" fill="#6f7789" font-size="13" text-anchor="middle">edit, save, and commit; no workflow change</text>
+
+                        <path d="M470,168 L470,196" fill="none" stroke="#34d3a6" stroke-width="2" marker-end="url(#uSign)"/>
+
+                        <!-- step 3: engine signs -->
+                        <rect x="300" y="198" width="340" height="64" rx="12" fill="#0f2019" stroke="#34d3a6" stroke-width="1.5"/>
+                        <text x="470" y="225" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">3. WorkSigned signs daily</text>
+                        <text x="470" y="246" fill="#6f7789" font-size="13" text-anchor="middle">signs the backup layer &rarr; chain &rarr; anchor &rarr; log</text>
+
+                        <path d="M470,262 L470,290" fill="none" stroke="#34d3a6" stroke-width="2" marker-end="url(#uSign)"/>
+
+                        <!-- step 4: proof exists -->
+                        <rect x="300" y="292" width="340" height="60" rx="12" fill="#171b26" stroke="#2f3648" stroke-width="1.5"/>
+                        <text x="470" y="317" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">4. Proof exists: &ldquo;existed at T, in order&rdquo;</text>
+                        <text x="470" y="338" fill="#34d3a6" font-size="13" text-anchor="middle">self-sufficient; it needs no optional layer</text>
+
+                        <!-- pointers out to the durable backup layer (right) -->
+                        <rect x="700" y="206" width="210" height="64" rx="12" fill="#0f2019" stroke="#34d3a6" stroke-width="1.5"/>
+                        <text x="805" y="233" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Backup / version control</text>
+                        <text x="805" y="253" fill="#6f7789" font-size="13" text-anchor="middle">the durable bytes &middot; must be retained</text>
+                        <path d="M640,230 L696,233" fill="none" stroke="#5b8cff" stroke-width="2" stroke-dasharray="2 5" marker-end="url(#uPtr)"/>
+                        <text x="668" y="222" fill="#5b8cff" font-size="12" text-anchor="middle">points to</text>
+
+                        <!-- optional layers (left) -->
+                        <rect x="40" y="150" width="200" height="54" rx="12" fill="#12151d" stroke="#f5b83d" stroke-width="1.3"/>
+                        <text x="140" y="174" fill="#f4f6fb" font-size="14" font-weight="600" text-anchor="middle">AI proxy</text>
+                        <text x="140" y="192" fill="#6f7789" font-size="12" text-anchor="middle">human-drove-the-AI</text>
+                        <rect x="40" y="216" width="200" height="54" rx="12" fill="#12151d" stroke="#f5b83d" stroke-width="1.3"/>
+                        <text x="140" y="240" fill="#f4f6fb" font-size="14" font-weight="600" text-anchor="middle">Mail router</text>
+                        <text x="140" y="258" fill="#6f7789" font-size="12" text-anchor="middle">when work was asserted</text>
+                        <rect x="40" y="282" width="200" height="54" rx="12" fill="#12151d" stroke="#f5b83d" stroke-width="1.3"/>
+                        <text x="140" y="306" fill="#f4f6fb" font-size="14" font-weight="600" text-anchor="middle">In-app editor</text>
+                        <text x="140" y="324" fill="#6f7789" font-size="12" text-anchor="middle">draft evolution (opt-in)</text>
+                        <path d="M244,200 L296,214" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#uSync)"/>
+                        <path d="M244,243 L296,232" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#uSync)"/>
+                        <path d="M244,309 L296,250" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#uSync)"/>
+                        <text x="250" y="120" fill="#f5b83d" font-size="12" text-anchor="middle">optional</text>
+                        <text x="250" y="134" fill="#f5b83d" font-size="12" text-anchor="middle">add-ons</text>
+
+                        <text x="470" y="392" fill="#6f7789" font-size="13" text-anchor="middle">The core proof (green path) needs none of the optional add-ons.</text>
+                    </svg>
+                    <div class="flowcap">Green is the always-on core path. Amber is the opt-in layers that add process and priority evidence on top.</div>
+                </div>
+            </section>
+
+            <section id="it">
+                <h2>2 &middot; IT</h2>
+                <p>IT runs the <strong>backup &amp; retention</strong> side. The interface shows the <strong>hot</strong> backups (the ones referenced by a signed record). It also <strong>synchronizes with the researcher side</strong>: if IT deletes a hot backup, the researcher sees it immediately, so a proof never points at nothing. The retention policy gets one rule: <strong>do not delete what a proof depends on.</strong></p>
+
+                <div class="flow">
+                    <div class="legend">
+                        <span><i class="lg-sync"></i> sync / status</span>
+                        <span><i class="lg-prot"></i> deletion &rarr; alert</span>
+                        <span><i class="lg-sign"></i> signed record</span>
+                    </div>
+                    <svg viewBox="0 0 940 430" role="img" aria-label="IT flow: backup manager, hot backups, sync to researcher, deletion alert">
+                        <defs>
+                            <marker id="iSync" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#f5b83d"/></marker>
+                            <marker id="iProt" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#ff6b6b"/></marker>
+                            <marker id="iSign" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#34d3a6"/></marker>
+                        </defs>
+
+                        <!-- IT backup manager -->
+                        <rect x="30" y="150" width="220" height="120" rx="12" fill="#171b26" stroke="#2f3648" stroke-width="1.5"/>
+                        <text x="140" y="182" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">IT &middot; Backup manager</text>
+                        <text x="140" y="205" fill="#6f7789" font-size="13" text-anchor="middle">runs existing backups</text>
+                        <text x="140" y="224" fill="#6f7789" font-size="13" text-anchor="middle">owns the retention policy</text>
+                        <text x="140" y="248" fill="#f5b83d" font-size="13" text-anchor="middle">marks the hot ones</text>
+
+                        <!-- backup pool -->
+                        <rect x="30" y="300" width="220" height="90" rx="12" fill="#1a130f" stroke="#f5b83d" stroke-width="1.3"/>
+                        <text x="140" y="326" fill="#f4f6fb" font-size="14" font-weight="600" text-anchor="middle">Backup pool</text>
+                        <rect x="55" y="338" width="42" height="30" rx="5" fill="#3a2a12" stroke="#f5b83d"/>
+                        <text x="76" y="358" fill="#f5b83d" font-size="12" text-anchor="middle">hot</text>
+                        <rect x="110" y="338" width="42" height="30" rx="5" fill="#141821" stroke="#2f3648"/>
+                        <text x="131" y="358" fill="#6f7789" font-size="12" text-anchor="middle">cold</text>
+                        <rect x="165" y="338" width="42" height="30" rx="5" fill="#141821" stroke="#2f3648"/>
+                        <text x="186" y="358" fill="#6f7789" font-size="12" text-anchor="middle">cold</text>
+                        <path d="M140,270 L140,298" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#iSync)"/>
+
+                        <!-- hot set referenced by records -->
+                        <rect x="360" y="60" width="250" height="90" rx="12" fill="#0f2019" stroke="#34d3a6" stroke-width="1.5"/>
+                        <text x="485" y="90" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Signed records (log)</text>
+                        <text x="485" y="112" fill="#6f7789" font-size="13" text-anchor="middle">each points to a backup</text>
+                        <text x="485" y="131" fill="#6f7789" font-size="13" text-anchor="middle">referenced set = HOT</text>
+
+                        <!-- sync hub -->
+                        <rect x="360" y="210" width="250" height="70" rx="12" fill="#12151d" stroke="#f5b83d" stroke-width="1.5"/>
+                        <text x="485" y="238" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Synchronizer</text>
+                        <text x="485" y="259" fill="#6f7789" font-size="13" text-anchor="middle">watches pool &harr; records</text>
+
+                        <!-- researcher view -->
+                        <rect x="700" y="210" width="210" height="70" rx="12" fill="#0f1a2e" stroke="#5b8cff" stroke-width="1.5"/>
+                        <text x="805" y="238" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Researcher UI</text>
+                        <text x="805" y="259" fill="#6f7789" font-size="13" text-anchor="middle">sees hot / at-risk proofs</text>
+
+                        <!-- arrows -->
+                        <path d="M250,180 C320,150 330,120 356,105" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#iSync)"/>
+                        <path d="M485,150 L485,206" fill="none" stroke="#34d3a6" stroke-width="2" marker-end="url(#iSign)"/>
+                        <path d="M610,245 L696,245" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#iSync)"/>
+                        <path d="M610,262 C660,262 660,245 696,250" fill="none" stroke="#f5b83d" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#iSync)"/>
+
+                        <!-- deletion alert path -->
+                        <path d="M250,330 C330,330 330,300 452,284" fill="none" stroke="#ff6b6b" stroke-width="2" marker-end="url(#iProt)"/>
+                        <rect x="430" y="356" width="330" height="46" rx="10" fill="#20131a" stroke="#ff6b6b" stroke-width="1.3"/>
+                        <text x="595" y="384" fill="#ff9d9d" font-size="13" text-anchor="middle">Hot backup deleted &rarr; researcher UI flagged immediately</text>
+                    </svg>
+                    <div class="flowcap">IT keeps running its existing backups. WorkSigned marks the backups referenced by a signed record as hot and immediately surfaces any hot deletion to the researcher.</div>
+                </div>
+
+                <div class="doc-callout ok"><strong>How IT&rsquo;s retention changes:</strong> IT operates nothing new. The one added rule is <strong>never delete a hot backup</strong> without telling the researcher. The interface marks backups hot or cold, and a deleted hot backup alerts the researcher immediately.</div>
+            </section>
+
+            <section id="admin">
+                <h2>3 &middot; Administration</h2>
+                <p>Administration&rsquo;s job is choosing <strong>how much to run</strong>. WorkSigned supports <strong>any backup scheme</strong>, and you can switch every dimension independently: run just the core, add layers, manage the backups yourself or through IT, or turn backups off entirely.</p>
+
+                <div class="flow">
+                    <div class="legend">
+                        <span><i class="lg-sign"></i> always on</span>
+                        <span><i class="lg-sync"></i> optional layer</span>
+                        <span><i class="lg-data"></i> either way</span>
+                    </div>
+                    <svg viewBox="0 0 940 470" role="img" aria-label="Administration flow: plug and play, every dimension switchable">
+                        <defs>
+                            <marker id="aSign" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#34d3a6"/></marker>
+                            <marker id="aOpt" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#f5b83d"/></marker>
+                            <marker id="aAny" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5b8cff"/></marker>
+                        </defs>
+
+                        <!-- admin node -->
+                        <rect x="30" y="196" width="180" height="78" rx="12" fill="#171b26" stroke="#2f3648" stroke-width="1.5"/>
+                        <text x="120" y="226" fill="#f4f6fb" font-size="16" font-weight="600" text-anchor="middle">Administration</text>
+                        <text x="120" y="248" fill="#6f7789" font-size="13" text-anchor="middle">sets the dials</text>
+
+                        <!-- any backup scheme -->
+                        <rect x="270" y="40" width="230" height="70" rx="12" fill="#0f1a2e" stroke="#5b8cff" stroke-width="1.5"/>
+                        <text x="385" y="68" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Any backup scheme</text>
+                        <text x="385" y="89" fill="#6f7789" font-size="13" text-anchor="middle">git &middot; GFS &middot; object &middot; tape &middot; none</text>
+
+                        <!-- optional layers -->
+                        <rect x="270" y="150" width="230" height="70" rx="12" fill="#12151d" stroke="#f5b83d" stroke-width="1.3"/>
+                        <text x="385" y="178" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Optional layers</text>
+                        <text x="385" y="199" fill="#6f7789" font-size="13" text-anchor="middle">AI proxy &middot; mail &middot; editor</text>
+
+                        <!-- managed by -->
+                        <rect x="270" y="260" width="230" height="70" rx="12" fill="#0f1a2e" stroke="#5b8cff" stroke-width="1.5"/>
+                        <text x="385" y="288" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Backups managed by</text>
+                        <text x="385" y="309" fill="#6f7789" font-size="13" text-anchor="middle">IT &middot; or the researcher &middot; or both</text>
+
+                        <!-- store more / none -->
+                        <rect x="270" y="370" width="230" height="70" rx="12" fill="#1a130f" stroke="#f5b83d" stroke-width="1.3"/>
+                        <text x="385" y="398" fill="#f4f6fb" font-size="15" font-weight="600" text-anchor="middle">Retention depth</text>
+                        <text x="385" y="419" fill="#6f7789" font-size="13" text-anchor="middle">more &middot; standard &middot; none</text>
+
+                        <!-- WorkSigned core -->
+                        <rect x="600" y="180" width="240" height="100" rx="14" fill="#0f2019" stroke="#34d3a6" stroke-width="2"/>
+                        <text x="720" y="215" fill="#f4f6fb" font-size="17" font-weight="600" text-anchor="middle">WorkSigned core</text>
+                        <text x="720" y="238" fill="#34d3a6" font-size="13" text-anchor="middle">sign &middot; chain &middot; anchor &middot; log</text>
+                        <text x="720" y="259" fill="#6f7789" font-size="13" text-anchor="middle">stores fingerprints + pointers only</text>
+
+                        <!-- arrows -->
+                        <path d="M210,214 C250,150 250,110 266,80" fill="none" stroke="#5b8cff" stroke-width="2" marker-end="url(#aAny)"/>
+                        <path d="M210,226 L266,182" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#aOpt)"/>
+                        <path d="M210,240 L266,290" fill="none" stroke="#5b8cff" stroke-width="2" marker-end="url(#aAny)"/>
+                        <path d="M210,252 C250,320 250,380 266,400" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#aOpt)"/>
+
+                        <!-- all feed core -->
+                        <path d="M500,75 C560,110 560,150 596,196" fill="none" stroke="#5b8cff" stroke-width="2" marker-end="url(#aAny)"/>
+                        <path d="M500,185 L596,215" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#aOpt)"/>
+                        <path d="M500,295 L596,245" fill="none" stroke="#5b8cff" stroke-width="2" marker-end="url(#aAny)"/>
+                        <path d="M500,405 C560,370 560,300 596,258" fill="none" stroke="#f5b83d" stroke-width="2" marker-end="url(#aOpt)"/>
+
+                        <text x="720" y="330" fill="#6f7789" font-size="13" text-anchor="middle">Every dial is independent.</text>
+                        <text x="720" y="349" fill="#6f7789" font-size="13" text-anchor="middle">The core runs in every combination.</text>
+                    </svg>
+                    <div class="flowcap">Blue covers the either-way choices (any scheme, any manager). Amber covers the optional add-ons. The green core does not change with any dial; that is the plug-and-play guarantee.</div>
+                </div>
+
+                <div class="doc-callout ok"><strong>Plug and play:</strong> any backup scheme (or none), IT-managed or self-managed, more backups or fewer, every optional layer on or off. The signing core works in every combination; administration sets the dials and it runs.</div>
+            </section>
+
+            <section id="hashflow">
+                <h2>How a day becomes proof</h2>
+                <p>One day of work becomes one signed, time-anchored record &mdash; watch it happen.</p>
+                <div class="hashflow-wrap">
+                    <div class="hf-stage" id="hfStage" role="img" aria-label="Animated flow: a day of work items is fingerprinted, merged into one hash, packaged, signed, added to a public log with one time-stamp, and returned as a signed record">
+                        <div class="hf-stepnum" id="hfStep">1 / 7</div>
+                        <div class="hf-caption" id="hfCap" aria-live="polite">Your work, as it changed today</div>
+                    </div>
+                    <div class="hf-controls">
+                        <button class="hf-step-btn" id="hfPrev" type="button">&#8592; Back</button>
+                        <button class="hf-step-btn" id="hfNext" type="button">Next &#8594;</button>
+                        <button class="hf-step-btn" id="hfReplay" type="button">Replay</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <script>    // ---------- Animated hash-flow: one continuous animation over ONE persistent cast ----------
+    // Architecture (v5):
+    //  - A fixed set of named nodes is created ONCE. Nodes are never deleted;
+    //    steps move / morph / fade the SAME nodes, so every step shows the
+    //    previous step's elements still in view (dimmed or morphed).
+    //  - apply(n) is a PURE position table. Step n's end-state IS step n+1's
+    //    start-state because both come from this one table. No step recreates
+    //    anything, so nothing can desync.
+    //  - Every navigation kills all pending timers and settles the previous
+    //    step's end-state first, so re-entry mid-animation is safe.
+    //  - All nodes are snap-positioned (transition:none) to their initial slot
+    //    at opacity 0 before the first paint, so nothing can ever flash at (0,0).
+    (function(){
+        var stage = document.getElementById('hfStage');
+        if (!stage) return;
+        var capEl = document.getElementById('hfCap');
+        var stepEl = document.getElementById('hfStep');
+
+        var N = 7;
+        var CAPTIONS = [
+            'Your work, as it changed today',
+            'Each item becomes a fingerprint',
+            'Fingerprints merge into one root',
+            'Bound with the day \u2014 and yesterday',
+            'The platform signs it',
+            'Added to the public log, time-stamped once',
+            'Your signed record'
+        ];
+        var DWELL = [2300, 2600, 3400, 3300, 2500, 2800, 0];
+
+        var G = {};
+        function computeG(){
+            var W = stage.clientWidth, H = stage.clientHeight, cx = W / 2;
+            G.itemW = Math.min(148, (W - 96) / 5 - 12);
+            G.itemX = []; for (var i = 0; i < 5; i++) G.itemX.push((W - 5 * G.itemW - 4 * 12) / 2 + i * (G.itemW + 12));
+            G.chipW = Math.min(118, (W - 130) / 5 - 10);
+            G.chipX = []; for (var j = 0; j < 5; j++) G.chipX.push((W - 5 * G.chipW - 4 * 10) / 2 + j * (G.chipW + 10));
+            G.yItem = H * 0.40;
+            G.yChip = H * 0.40 + 92;
+            G.root  = { x: cx - 110, y: H * 0.40 + 4, w: 220, h: 64 };
+            G.fin   = { x: cx - 120, y: H * 0.40 - 32, w: 240, h: 64 };
+            G.sig   = { x: cx - 168, y: H * 0.40 - 76, w: 336, h: 116 };
+            G.rowW  = Math.min(460, W - 120); G.rowX = cx - G.rowW / 2; G.rowY = H * 0.24;
+            G.tsa   = { x: cx - 220, y: G.rowY + 4 * 44 + 14, w: 440, h: 40 };
+            G.pills = [
+                { x: G.fin.x - 120, y: H * 0.40 - 40 },
+                { x: G.fin.x + G.fin.w + 120, y: H * 0.40 - 40 },
+                { x: G.fin.x - 120, y: H * 0.40 + 56 },
+                { x: G.fin.x + G.fin.w + 120, y: H * 0.40 + 56 }
+            ];
+        }
+
+        var ITEMS = [
+            ['item0', '<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg><span class="t">database records</span>'],
+            ['item1', '<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><span class="t">files &amp; docs</span>'],
+            ['item2', '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span class="t">web searches</span>'],
+            ['item3', '<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z"/></svg><span class="t">AI turns</span>'],
+            ['item4', '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="t">emails</span>']
+        ];
+        var HASH = ['7a11\u2026c02d','2f38\u202691ab','8c40\u202633e1','b2e4\u202644aa','de02\u202691cc'];
+        var PILL_TXT = ['manifest 1c81\u2026','753 items','dr.chen / zinc-kinase','prev final de02\u2026'];
+
+        var nodes = {};
+        function mk(id, cls, inner){
+            var el = document.createElement('div');
+            el.className = 'hf-block ' + cls;
+            el.innerHTML = inner || '';
+            el.style.left = '0px'; el.style.top = '0px';
+            el.style.width = '2px'; el.style.height = '2px';
+            el.style.opacity = '0';
+            stage.appendChild(el);
+            nodes[id] = { el: el };
+            return nodes[id];
+        }
+        function set(n, r, op, settle){
+            if (settle) n.el.classList.add('snap');
+            n.el.style.left = r.x + 'px'; n.el.style.top = r.y + 'px';
+            if (r.w != null) n.el.style.width = r.w + 'px';
+            if (r.h != null) n.el.style.height = r.h + 'px';
+            n.el.style.opacity = op;
+            if (settle) requestAnimationFrame(function(){ n.el.classList.remove('snap'); });
+        }
+        function pillTo(n, x, y, op, settle){
+            var el = n.el;
+            if (settle) el.style.transition = 'none';
+            el.style.left = (x - el.offsetWidth / 2) + 'px';
+            el.style.top = y + 'px'; el.style.opacity = op;
+            if (settle) requestAnimationFrame(function(){ el.style.transition = ''; });
+        }
+
+        computeG();
+        for (var i = 0; i < 5; i++) mk('item' + i, 'hf-item', ITEMS[i][1]);
+        mk('row0', 'hf-logrow', '');
+        mk('row1', 'hf-logrow', '');
+        mk('row2', 'hf-logrow me', '3082 010a 06 092a 86f7 0a09 2a86 \u2026');
+        mk('row3', 'hf-logrow', '\u2026 one row per signature, today');
+        mk('tsa', 'hf-tsa', '\u23F0 one TSA time-stamp over the whole tree');
+        mk('sig', 'hf-sigframe', '<span class="slabel">RSA-2048 SIGNATURE \u00B7 SERVER S</span>');
+        mk('root', 'hf-root', '<span class="t">DAY ROOT</span><span class="h">a4b1 4dc7 \u2026 3f9a</span>');
+        for (var p = 0; p < 4; p++){
+            var pel = document.createElement('div');
+            pel.className = 'hf-pill';
+            pel.textContent = PILL_TXT[p];
+            pel.style.left = '0px'; pel.style.top = '0px'; pel.style.opacity = '0';
+            stage.appendChild(pel);
+            nodes['pill' + p] = { el: pel, pill: true };
+        }
+
+        var timers = [];
+        function killTimers(){ timers.forEach(clearTimeout); timers = []; }
+
+        function step1(){
+            var L = [];
+            for (var i = 0; i < 5; i++) L.push([ 'item' + i, { x: G.itemX[i], y: G.yItem, w: G.itemW, h: 92 }, 1 ]);
+            return { place: L, morph: [], extra: [] };
+        }
+        function step2(){
+            var L = [];
+            for (var i = 0; i < 5; i++) L.push([ 'item' + i, { x: G.chipX[i], y: G.yChip, w: G.chipW, h: 40 }, 1 ]);
+            var M = [];
+            for (var k = 0; k < 5; k++) M.push([ 'item' + k, 'hf-chip', HASH[k], 100 + k * 120 ]);
+            return { place: L, morph: M, extra: [] };
+        }
+        function step3(){
+            // All five chips fly to center and vanish; the root fades in
+            // on top as the merged result.
+            var L = [];
+            for (var i = 0; i < 5; i++)
+                L.push([ 'item' + i, { x: G.chipX[i], y: G.yChip, w: G.chipW, h: 40 }, 1 ]);
+            var extra = [
+                { t: 200, fn: function(){
+                    for (var k = 0; k < 5; k++)
+                        set(nodes['item' + k], G.root, 1);
+                }},
+                { t: 900, fn: function(){
+                    set(nodes.root, G.root, 1);
+                }},
+                { t: 1000, fn: function(){
+                    for (var k = 0; k < 5; k++) nodes['item' + k].el.style.opacity = 0;
+                }}
+            ];
+            return { place: L, morph: [], extra: extra };
+        }
+        function step4(){
+            var cx = stage.clientWidth / 2;
+            var L = [
+                [ 'root', G.fin, 1 ]
+            ];
+            for (var p = 0; p < 4; p++){
+                L.push([ 'pill' + p, G.pills[p], 0 ]);
+            }
+            var extra = [
+                { t: 320, fn: function(){
+                    for (var p = 0; p < 4; p++){
+                        (function(p){
+                            var sp = G.pills[p];
+                            pillTo(nodes['pill' + p], sp.x, sp.y, 1);
+                        })(p);
+                    }
+                }},
+                { t: 1500, fn: function(){
+                    for (var p = 0; p < 4; p++){
+                        (function(p){
+                            var h = nodes['pill' + p].el.offsetHeight;
+                            pillTo(nodes['pill' + p], cx, G.fin.y + G.fin.h / 2 - h / 2, 0);
+                        })(p);
+                    }
+                }},
+                { t: 1900, fn: function(){
+                    nodes.root.el.className = 'hf-block hf-final';
+                    nodes.root.el.innerHTML = '<span class="t">DAY FINAL</span><span class="h">7021 a311 \u2026 fe90 1209</span>';
+                }}
+            ];
+            return { place: L, morph: [], extra: extra };
+        }
+        function step5(){
+            var L = [
+                [ 'root', G.fin, 1 ],
+                [ 'row0', { x: G.rowX, y: G.rowY, w: G.rowW, h: 34 }, 0.35 ],
+                [ 'row1', { x: G.rowX, y: G.rowY + 44, w: G.rowW, h: 34 }, 0.35 ],
+                [ 'row3', { x: G.rowX, y: G.rowY + 3 * 44, w: G.rowW, h: 34 }, 0.35 ]
+            ];
+            var extra = [
+                { t: 120, fn: function(){ set(nodes.sig, G.sig, 1); } },
+                { t: 200, fn: function(){
+                    for (var p = 0; p < 4; p++) nodes['pill' + p].el.style.opacity = 0;
+                }}
+            ];
+            return { place: L, morph: [], extra: extra };
+        }
+        function step6(){
+            var L = [
+                [ 'row0', { x: G.rowX, y: G.rowY, w: G.rowW, h: 34 }, 0.8 ],
+                [ 'row1', { x: G.rowX, y: G.rowY + 44, w: G.rowW, h: 34 }, 0.8 ],
+                [ 'row2', { x: G.rowX, y: G.rowY + 2 * 44, w: G.rowW, h: 34 }, 1 ],
+                [ 'row3', { x: G.rowX, y: G.rowY + 3 * 44, w: G.rowW, h: 34 }, 0.8 ],
+                [ 'tsa', G.tsa, 1 ]
+            ];
+            var M = [
+                [ 'row0', 'hf-logrow', '3802 010a \u2026 (elsewhere)', 0 ],
+                [ 'row1', 'hf-logrow', '3882 010b \u2026 (elsewhere)', 0 ],
+                [ 'row3', 'hf-logrow', '\u2026 one row per signature, today', 0 ]
+            ];
+            var extra = [
+                { t: 100, fn: function(){
+                    set(nodes.root, { x: G.rowX + 8, y: G.rowY + 2 * 44 + 3, w: G.rowW - 16, h: 28 }, 1);
+                }},
+                { t: 260, fn: function(){
+                    set(nodes.root, { x: G.rowX + 8, y: G.rowY + 2 * 44 + 3, w: G.rowW - 16, h: 28 }, 0);
+                    set(nodes.sig, { x: G.sig.x - 40, y: G.sig.y - 60, w: G.sig.w + 80, h: G.sig.h + 40 }, 0);
+                }}
+            ];
+            return { place: L, morph: M, extra: extra };
+        }
+        function step7(){
+            var cx = stage.clientWidth / 2, W = stage.clientWidth;
+            var bw = Math.min(440, W - 110);
+            var by = G.tsa.y - 190;
+            var L = [
+                [ 'row1', { x: cx - 200, y: 40, w: 300, h: 34 }, 0 ],
+                [ 'row3', { x: cx - 200, y: 40, w: 300, h: 34 }, 0 ],
+                [ 'tsa', { x: cx - 200, y: 40, w: 300, h: 34 }, 0 ],
+                [ 'root', { x: cx - bw / 2, y: by, w: bw, h: 34 }, 1 ],
+                [ 'row2', { x: cx - 150, y: 40, w: 300, h: 34 }, 0 ]
+            ];
+            var extra = [
+                { t: 450, fn: function(){
+                    nodes.root.el.className = 'hf-block hf-final';
+                    nodes.root.el.innerHTML = '<span class="t">SIGNED RECORD</span>' +
+                        '<span class="h">7021 a311 \u2026 fe90 1209</span>' +
+                        '<span class="h">manifest \u00B7 merkle path \u00B7 tsa token</span>' +
+                        '<span class="h">verify: recompute \u2192 compare</span>';
+                    set(nodes.root, { x: cx - bw / 2, y: by, w: bw, h: 168 }, 1);
+                    nodes.root.el.style.justifyContent = 'center';
+                }}
+            ];
+            return { place: L, morph: [], extra: extra };
+        }
+
+        var STEPS = [null, step1, step2, step3, step4, step5, step6, step7];
+
+        function apply(n, settle){
+            killTimers();
+            computeG();
+            var spec = STEPS[n]();
+            // Hide all nodes NOT in the current spec (from previous steps).
+            var inSpec = {};
+            spec.place.forEach(function(p){ inSpec[p[0]] = true; });
+            spec.morph.forEach(function(m){ inSpec[m[0]] = true; });
+            for (var k in nodes){
+                if (!inSpec[k]){
+                    nodes[k].el.style.opacity = '0';
+                    nodes[k].el.style.left = '0px';
+                    nodes[k].el.style.top = '0px';
+                    if (!nodes[k].pill) { nodes[k].el.style.width = '2px'; nodes[k].el.style.height = '2px'; }
+                }
+            }
+            if (settle){
+                // full snap: EVERY node goes to its step-n target instantly.
+                // Used for backward jumps: the old scene must not play in reverse.
+                for (var k2 in nodes) nodes[k2].el.classList.add('snap');
+                for (var k3 in nodes) nodes[k3].el.style.transition = 'none';
+            }
+            spec.place.forEach(function(p){
+                set(nodes[p[0]], p[1], p[2], true);
+            });
+            spec.morph.forEach(function(m){
+                var nd = nodes[m[0]];
+                if (settle){
+                    nd.el.className = 'hf-block ' + m[1];
+                    if (m[2] != null) nd.el.innerHTML = m[2];
+                } else {
+                    timers.push(setTimeout(function(){
+                        nd.el.className = 'hf-block ' + m[1];
+                        if (m[2] != null) nd.el.innerHTML = m[2];
+                    }, m[3] || 0));
+                }
+            });
+            (spec.extra || []).forEach(function(b){
+                if (settle) b.fn();
+                else timers.push(setTimeout(b.fn, b.t));
+            });
+            if (settle) requestAnimationFrame(function(){
+                for (var k3 in nodes){
+                    nodes[k3].el.classList.remove('snap');
+                    if (nodes[k3].pill) nodes[k3].el.style.transition = '';
+                }
+            });
+            stepEl.textContent = n + ' / 7';
+            capEl.textContent = CAPTIONS[n - 1];
+            document.getElementById('hfPrev').disabled = (n === 1);
+            document.getElementById('hfNext').disabled = (n === N);
+        }
+
+        var cur = 0, autoTimer = null;
+        function show(n, auto){
+            n = Math.max(1, Math.min(N, n));
+            killTimers();
+            var backward = (cur > 0 && n < cur);
+            cur = n;
+            apply(n, backward);
+            clearTimeout(autoTimer);
+            if (auto && cur < N) autoTimer = setTimeout(function(){ show(cur + 1, true); }, DWELL[cur - 1]);
+        }
+
+        document.getElementById('hfPrev').addEventListener('click', function(){ show(cur - 1, false); });
+        document.getElementById('hfNext').addEventListener('click', function(){ show(cur + 1, false); });
+        document.getElementById('hfReplay').addEventListener('click', function(){ show(1, true); });
+
+        for (var k in nodes){
+            var nd = nodes[k];
+            nd.el.classList.add('snap');
+            nd.el.style.left = '0px'; nd.el.style.top = '0px';
+            if (!nd.pill) { nd.el.style.width = '2px'; nd.el.style.height = '2px'; }
+            nd.el.style.opacity = '0';
+        }
+        requestAnimationFrame(function(){
+            for (var k2 in nodes) nodes[k2].el.classList.remove('snap');
+        });
+
+        var started = false;
+        function maybeStart(){
+            if (started) return;
+            var r = stage.getBoundingClientRect();
+            if (r.top < window.innerHeight * 0.75 && r.bottom > 0){ started = true; show(1, true); }
+        }
+        window.addEventListener('scroll', maybeStart, {passive:true});
+        maybeStart();
+    })();
+</script>
+</body>
+</html>

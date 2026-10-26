@@ -113,6 +113,9 @@
             border-radius: 14px; overflow: hidden; background: #f8fafc;
         }
         .hero-showcase .mobile-compare { display: none; }
+        @media (min-width: 769px) {
+            .hero-showcase .desktop-table-wrap { display: block !important; }
+        }
         @media (max-width: 768px) {
             .hero-showcase .desktop-table-wrap { display: none !important; }
             .hero-showcase .mobile-compare { display: block !important; font-size: 1.05rem !important; }
@@ -229,7 +232,7 @@
                         <span style="font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text, #1a2a3a); text-transform: uppercase;" class="desktop-title">WorkSigned vs Alternatives</span>
                         <span style="font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; color: var(--text, #1a2a3a); text-transform: uppercase; display: none;" class="mobile-compare-title">Why Use WorkSigned</span>
                     </div>
-                    <div class="desktop-table-wrap" style="overflow-x: auto; padding: 40px 20px 32px;">
+                    <div class="desktop-table-wrap" style="overflow-x: auto; padding: 40px 20px 32px; display: none;">
                         <table style="min-width: 1000px; width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--fs-body, 1rem); color: var(--text, #1a2a3a); table-layout: fixed; line-height: 1.3;">
                             <colgroup>
                                     <col style="width: 300px;">

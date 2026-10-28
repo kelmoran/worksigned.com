@@ -49,75 +49,88 @@
 
             <section id="overview" style="margin-top: 40px;">
                 <h2>Overview</h2>
-                <p>WorkSigned operates completely on institutional networks. Only record fingerprints (hash sequences which do not contain any data or carry any real meaning) are sent to WorkSigned's servers for signing. No telemetry or sensitive data is ever collected. This is the minimal amount of external network interaction that can happen while using a 3rd party signing authority. In other words, there is zero chance for WorkSigned or any third party cloud to interact with user data.</p>
+                <p>The core WorkSigned software operates completely on institutional networks. Only record fingerprints (hash sequences which do not contain any data or carry any real meaning) are sent to WorkSigned's servers for signing. No telemetry or sensitive data is ever collected. This is the minimal amount of external network interaction that can happen while using a 3rd party signing authority. In other words, there is zero chance for WorkSigned or any third party cloud to interact with user data.</p>
             </section>
 
             <section id="privacy">
                 <h2>How data privacy is achieved</h2>
                 <div style="margin: 20px 0 30px;">
-                    <div class="arch-diagram" style="position: relative; border-radius: 14px; padding: 24px 20px; margin-bottom: 16px;">
+                    <div class="arch-diagram" style="position: relative; border-radius: 14px; padding: 24px 20px; margin-bottom: 16px; background: var(--bg-elev); border: 1px solid var(--border);">
+                        <style>
+                            @media (max-width: 640px) {
+                                .arch-diagram svg { min-width: 600px; }
+                                .arch-diagram .svg-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+                                .info-boxes { flex-direction: column !important; }
+                                .info-boxes > div { min-width: unset !important; }
+                                .svg-scroll-hint { display: block !important; }
+                            }
+                            .svg-scroll-hint { display: none; text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; opacity: 0.7; }
+                        </style>
                         <div style="text-align: center; font-size: 1.8rem; font-weight: 700; color: var(--text); margin-bottom: 24px;">WorkSigned Deployment Architecture</div>
-                        <div style="display: flex; align-items: center; justify-content: center; flex-wrap: nowrap;">
-                            <!-- Client -->
-                            <div style="flex: 0 0 170px; border: 2px solid var(--text-muted); border-radius: 12px; padding: 14px; text-align: center;">
-                                <svg width="65" height="50" viewBox="0 0 70 55" style="margin: 0 auto 10px; display: block;">
-                                </svg>
-                                <div style="font-weight: 700; font-size: 1.2rem; color: var(--text);">WorkSigned Client</div>
-                                <div style="font-size: 1rem; color: var(--text-muted); margin-top: 4px;">Researcher's machine</div>
-                            </div>
-                            <!-- Arrow 1 -->
-                            <div style="flex: 0 0 80px; text-align: center; padding: 8px 0;">
-                                <svg width="80" height="40" viewBox="0 0 80 40">
-                                    <line x1="5" y1="20" x2="65" y2="20" stroke="#4a9ede" stroke-width="3.5"/>
-                                    <polygon points="65,14 78,20 65,26" fill="#4a9ede"/>
-                                </svg>
-                                <div style="font-size: 0.9rem; color: #4a9ede; margin-top: 4px; line-height: 1.4;">AI, email, search<br>file hashes</div>
-                            </div>
-                            <!-- Witness -->
-                            <div style="flex: 0 0 170px; border: 2px solid var(--text-muted); border-radius: 12px; padding: 14px; text-align: center;">
-                                <svg width="65" height="50" viewBox="0 0 70 55" style="margin: 0 auto 10px; display: block;">
-                                </svg>
-                                <div style="font-weight: 700; font-size: 1.2rem; color: var(--text);">Local Witness</div>
-                                <div style="font-size: 1rem; color: var(--text-muted); margin-top: 4px;">Institution's server</div>
-                            </div>
-                            <!-- Arrow 2 -->
-                            <div style="flex: 0 0 100px; text-align: center; padding: 8px 0;">
-                                <svg width="100" height="40" viewBox="0 0 100 40">
-                                    <line x1="5" y1="15" x2="85" y2="15" stroke="#4ec99a" stroke-width="3.5"/>
-                                    <polygon points="85,9 98,15 85,21" fill="#4ec99a"/>
-                                    <line x1="95" y1="30" x2="10" y2="30" stroke="#4ec99a" stroke-width="2.5" stroke-dasharray="6,4"/>
-                                    <polygon points="10,24 -3,30 10,36" fill="#4ec99a"/>
-                                </svg>
-                                <div style="font-size: 0.9rem; color: #4ec99a; margin-top: 4px; line-height: 1.4;"><strong>Fingerprints only</strong><br>(no data, no content)<br>Signature + TSA returned</div>
-                            </div>
-                            <!-- Signing -->
-                            <div style="flex: 0 0 170px; border: 2px solid var(--text-muted); border-radius: 12px; padding: 14px; text-align: center;">
-                                <svg width="44" height="52" viewBox="0 0 50 60" style="margin: 0 auto 10px; display: block;">
-                                    <rect x="8" y="22" width="34" height="30" rx="4" fill="none" stroke="#d4a832" stroke-width="3"/>
-                                    <path d="M14,22 v-10 a11,11 0 0,1 22,0 v10" fill="none" stroke="#d4a832" stroke-width="3"/>
-                                    <circle cx="25" cy="37" r="4.5" fill="none" stroke="#d4a832" stroke-width="2.5"/>
-                                    <line x1="25" y1="41" x2="25" y2="48" stroke="#d4a832" stroke-width="2.5"/>
-                                </svg>
-                                <div style="font-weight: 700; font-size: 1.2rem; color: var(--text);">WorkSigned Signing</div>
-                                <div style="font-size: 1rem; color: var(--text-muted); margin-top: 4px;">Remote server</div>
-                            </div>
+                        <div class="svg-wrap" style="display: flex; justify-content: center;">
+                            <svg viewBox="0 0 720 200" style="width: 100%; max-width: 780px;" color="#7ba3d4">
+                                <!-- Client box -->
+                                <rect x="10" y="20" width="160" height="115" rx="12" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <!-- Monitor icon -->
+                                <rect x="52" y="32" width="76" height="44" rx="4" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <line x1="72" y1="76" x2="108" y2="76" stroke="currentColor" stroke-width="3"/>
+                                <line x1="90" y1="76" x2="90" y2="85" stroke="currentColor" stroke-width="3"/>
+                                <line x1="78" y1="85" x2="102" y2="85" stroke="currentColor" stroke-width="3"/>
+                                <text x="90" y="108" text-anchor="middle" fill="currentColor" font-size="12" font-weight="700" font-family="system-ui, sans-serif">WorkSigned Client</text>
+                                <text x="90" y="126" text-anchor="middle" fill="currentColor" font-size="11" font-family="system-ui, sans-serif" opacity="0.7">Researcher's machine</text>
+                                <!-- Arrow 1: Client to Witness (touches both boxes) -->
+                                <line x1="170" y1="78" x2="280" y2="78" stroke="#4a9ede" stroke-width="3"/>
+                                <polyline points="273,71 283,78 273,85" fill="none" stroke="#4a9ede" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <text x="225" y="62" text-anchor="middle" fill="#4a9ede" font-size="12" font-family="system-ui, sans-serif">AI, email, search</text>
+                                <text x="225" y="104" text-anchor="middle" fill="#4a9ede" font-size="12" font-family="system-ui, sans-serif">file hashes</text>
+                                <!-- Witness box -->
+                                <rect x="283" y="20" width="160" height="115" rx="12" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <!-- Server icon -->
+                                <rect x="330" y="34" width="66" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <rect x="330" y="58" width="66" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <circle cx="388" cy="43" r="3" fill="currentColor"/>
+                                <circle cx="388" cy="67" r="3" fill="currentColor"/>
+                                <text x="363" y="108" text-anchor="middle" fill="currentColor" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Local Witness</text>
+                                <text x="363" y="126" text-anchor="middle" fill="currentColor" font-size="11" font-family="system-ui, sans-serif" opacity="0.7">Institution's server</text>
+                                <!-- Arrow 2: Witness to Signing (forward, touches both boxes) -->
+                                <line x1="443" y1="60" x2="553" y2="60" stroke="#4ec99a" stroke-width="3"/>
+                                <polyline points="546,53 556,60 546,67" fill="none" stroke="#4ec99a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <text x="498" y="48" text-anchor="middle" fill="#4ec99a" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Fingerprints</text>
+                                <!-- Arrow 2 return: Signing to Witness (dashed, touches both boxes) -->
+                                <line x1="556" y1="96" x2="446" y2="96" stroke="#4ec99a" stroke-width="3" stroke-dasharray="7,4"/>
+                                <polyline points="453,89 443,96 453,103" fill="none" stroke="#4ec99a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <text x="498" y="118" text-anchor="middle" fill="#4ec99a" font-size="12" font-family="system-ui, sans-serif">Sig + TSA</text>
+                                <!-- Signing box -->
+                                <rect x="559" y="20" width="160" height="115" rx="12" fill="none" stroke="currentColor" stroke-width="3"/>
+                                <!-- Lock icon (moved down so shackle stays inside box) -->
+                                <rect x="614" y="52" width="50" height="38" rx="4" fill="none" stroke="#d4a832" stroke-width="3"/>
+                                <path d="M621,52 v-8 a16,16 0 0,1 32,0 v8" fill="none" stroke="#d4a832" stroke-width="3"/>
+                                <circle cx="639" cy="70" r="5" fill="none" stroke="#d4a832" stroke-width="3"/>
+                                <line x1="639" y1="75" x2="639" y2="86" stroke="#d4a832" stroke-width="3"/>
+                                <text x="639" y="108" text-anchor="middle" fill="currentColor" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Signing Server</text>
+                                <text x="639" y="126" text-anchor="middle" fill="currentColor" font-size="11" font-family="system-ui, sans-serif" opacity="0.7">Remote server</text>
+                                <!-- Network boundary: one continuous line -->
+                                
+                                <text x="228" y="170" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600" font-family="system-ui, sans-serif" opacity="0.8">Your network</text>
+                                <text x="639" y="170" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600" font-family="system-ui, sans-serif" opacity="0.8">Cloud network</text>
+                                <!-- Bottom note -->
+                            </svg>
                         </div>
-                        <!-- Institutional label -->
-                        
+                        <div class="svg-scroll-hint">← scroll to view full diagram →</div>
                     </div>
                     <!-- Info boxes -->
-                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px;">
-                        <div style="border: 1.5px solid var(--text-muted); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
+                    <div class="info-boxes" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 16px;">
+                        <div style="border: 1.5px solid var(--border-strong, var(--border)); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
                             <strong style="color: var(--text);">Client:</strong> Runs locally, no external connections
                         </div>
-                        <div style="border: 1.5px solid var(--text-muted); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
+                        <div style="border: 1.5px solid var(--border-strong, var(--border)); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
                             <strong style="color: var(--text);">Witness:</strong> Hosted by institution IT, relays traffic
                         </div>
-                        <div style="border: 1.5px solid var(--text-muted); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
+                        <div style="border: 1.5px solid var(--border-strong, var(--border)); border-radius: 8px; padding: 12px 16px; font-size: 1rem; color: var(--text-muted); text-align: center; flex: 1; min-width: 160px;">
                             <strong style="color: var(--text);">Signing:</strong> Signs fingerprints only, no data access
                         </div>
                     </div>
-                    <p style="text-align: center; font-size: 1rem; color: var(--text-muted); margin: 0;">Only cryptographic hash fingerprints cross the institutional boundary. No research data, files, or telemetry ever leave the network.</p>
+                    <p style="text-align: center; font-size: 1rem; color: var(--text-muted); margin: 8px 0 0;">No research data, files, or telemetry ever leave the network.</p>
                 </div>
                 <p><strong>WorkSigned local client software.</strong> The researcher-facing desktop interface. The package is downloaded and runs locally on the researcher's machine of choice - usually an institutional issued laptop or workstation. This software only talks to institution-controlled machines, and NEVER sends data, telemetry, or other information outside of the institution's own networks.</p>
                 <p><strong>WorkSigned local witness server.</strong> The institution installs this component onto their own servers. This server acts as a central relay to direct traffic: AI, email, and web search activity all occur via this relay. The purpose of the relay is to provide credibility to the record. The traffic passing through here is witnessed and signed, meaning that it cannot possibly be tampered with by the user. This makes the record robust as evidence in a legal setting. The relay submits the fingerprints only (without any data) to the external WorkSigned server for signing, so that WorkSigned may attest to the validity of the record.</p>

@@ -122,7 +122,7 @@
 /* Primary button: keep dark text (gradient bg), but deepen shadow for light bg */
 .lightbody .btn-primary { color: #ffffff; box-shadow: 0 8px 24px rgba(47,107,255,0.30); }
 /* Ghost button on light: dark text + light border */
-.lightbody .btn-ghost { color: var(--text); border-color: var(--border-strong); }
+.lightbody .btn-ghost { color: var(--text); border: 2px solid #6b7280; }
 .lightbody .btn-ghost:hover { border-color: var(--accent); background: var(--accent-soft); }
 /* Step / trust cards: white surface, soft shadow, light border */
 .lightbody .step,
@@ -344,6 +344,7 @@ body::before {
 .hero .sub a:hover { color: #a8fff2; border-color: #a8fff2; }
 .hero-cta { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 100px; }
 .hero-cta .btn { padding: 19px 40px; font-size: var(--fs-body); font-weight: 700; border-radius: 999px; }
+.cta-band .alpha-note { margin: 20px auto 0; max-width: 100%; font-size: 15px; line-height: 1.6; text-align: center; color: rgba(255,255,255,0.75); font-weight: 500; }
 .apply-form .alpha-note { margin: 16px auto 0; max-width: 100%; font-size: 14px; line-height: 1.5; text-align: center; color: #6b7280; }
 .hero-note { font-size: var(--fs-small); color: var(--text-faint); }
 
@@ -398,7 +399,8 @@ body::before {
 .btn:active { transform: translateY(1px); }
 .btn-primary { background: var(--grad); color: #0b0d12; box-shadow: 0 8px 24px rgba(91,140,255,0.28); }
 .btn-primary:hover { box-shadow: 0 10px 30px rgba(91,140,255,0.4); transform: translateY(-2px); }
-.btn-ghost { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.btn-ghost { background: transparent; color: var(--text); border: 2px solid #6b7280; }
+[data-theme="dark"] .btn-ghost { border-color: #5b8cff; }
 .btn-ghost:hover { border-color: var(--accent); background: var(--accent-soft); }
 .btn-wide { width: 100%; }
 
@@ -880,6 +882,17 @@ body::before {
     color: var(--text-muted); font-style: italic;
 }
 
+/* section visuals (inline SVG diagrams) */
+.doc-content .sec-visual {
+    margin: 28px 0 12px;
+    padding: 28px 24px;
+    border-radius: 14px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+.doc-content .sec-visual svg { display: block; }
+
 /* tables */
 .doc-content table {
     width: 100%; border-collapse: collapse; margin: 18px 0 24px;
@@ -1043,7 +1056,7 @@ body::before {
 [data-theme="dark"] .lightbody .section,
 [data-theme="dark"] .lightbody .showcase { border-top-color: #1a1f2b; }
 [data-theme="dark"] .lightbody .btn-primary { color: #0b0d12; box-shadow: 0 8px 24px rgba(91,140,255,0.35); }
-[data-theme="dark"] .lightbody .btn-ghost { color: #f4f6fb; border-color: #2f3648; }
+[data-theme="dark"] .lightbody .btn-ghost { color: #f4f6fb; border: 2px solid #5b8cff; }
 [data-theme="dark"] .lightbody .btn-ghost:hover { border-color: #5b8cff; background: rgba(91,140,255,0.16); }
 [data-theme="dark"] .lightbody .step,
 [data-theme="dark"] .lightbody .trust-card { background: #12151d; border-color: #232838; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
